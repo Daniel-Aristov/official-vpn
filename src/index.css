@@ -1,0 +1,16 @@
+@import 'tailwindcss';
+@config '../tailwind.config.ts';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+}
+
+#root {
+  min-height: 100svh;
+}
