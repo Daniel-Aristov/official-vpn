@@ -1,6 +1,15 @@
 @import 'tailwindcss';
 @config '../tailwind.config.ts';
 
+@theme {
+  --color-primary: #255de0;
+  --color-secondary: #39393D;
+  --color-btn-dark: #1c1c1e;
+  --color-glow-blue: #2543f2;
+  --color-glow-cyan: #00e1ff;
+  --color-glow-soft: rgba(68, 148, 252, 0.4);
+}
+
 *,
 *::before,
 *::after {
@@ -9,6 +18,8 @@
 
 body {
   margin: 0;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
 }
 
 #root {
