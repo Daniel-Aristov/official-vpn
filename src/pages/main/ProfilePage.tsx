@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CreditCardIcon } from '@/components/icons/CreditCardIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
@@ -6,8 +7,11 @@ import { SupportIcon } from '@/components/icons/SupportIcon'
 import { MonitorIcon } from '@/components/icons/MonitorIcon'
 import { ShareIcon } from '@/components/icons/ShareIcon'
 import { ShieldIcon } from '@/components/icons/ShieldIcon'
+import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
 import { useAuth } from '@/store/auth/useAuth'
+
+const TELEGRAM_BOT_URL = 'https://t.me/official_vpnbot'
 
 interface MenuItemProps {
   icon: React.ReactNode
@@ -42,9 +46,43 @@ function MenuItem({ icon, title, subtitle, onClick }: MenuItemProps) {
 export function ProfilePage() {
   const navigate = useNavigate()
   const { email } = useAuth()
+  const [isTelegramLinked, setIsTelegramLinked] = useState(false)
+
+  const handleLinkTelegram = () => {
+    setIsTelegramLinked(true)
+    window.open(TELEGRAM_BOT_URL, '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
+      {!isTelegramLinked && (
+        <div
+          className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10"
+          style={{
+            background:
+              'linear-gradient(135deg, rgba(37, 93, 224, 0.28) 0%, rgba(19, 157, 118, 0.12) 100%), rgba(0, 0, 0, 0.4)',
+          }}
+        >
+          <div className="flex flex-col gap-2">
+            <h2 className="text-white text-[18px] font-semibold leading-[120%]">
+              Вам необходимо привязать Telegram
+            </h2>
+            <p className="text-white/80 text-[16px] leading-[120%]">
+              Это позволит привязать ваш аккаунт и даёт возможность не потерять
+              доступ
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleLinkTelegram}
+            className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[14px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"
+          >
+            <TelegramIcon fill="white" fillOpacity={1} />
+            Привязать telegram
+          </button>
+        </div>
+      )}
+
       <div className="flex items-center gap-3 bg-[#000000]/40 border border-[#FFFFFF]/10 rounded-full p-4">
         <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/20 text-white shrink-0">
           <UserIcon />
@@ -53,8 +91,12 @@ export function ProfilePage() {
           <span className="text-white text-[16px] font-semibold leading-[130%]">
             {email ?? '—'}
           </span>
-          <span className="text-[#FF9696]/80 text-[16px] leading-[130%]">
-            Не привязан telegram
+          <span
+            className={`text-[16px] leading-[130%] ${
+              isTelegramLinked ? 'text-[#139D76]' : 'text-[#FF9696]/80'
+            }`}
+          >
+            {isTelegramLinked ? 'Telegram привязан' : 'Не привязан telegram'}
           </span>
         </div>
         <button
