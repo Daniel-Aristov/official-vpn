@@ -128,6 +128,7 @@ export function ProfilePage() {
             icon={<CreditCardIcon />}
             title="Способ оплаты и история"
             subtitle="Настройка оплаты и транзакции"
+            onClick={() => navigate('/main/profile/payment')}
             last
           />
         </div>
