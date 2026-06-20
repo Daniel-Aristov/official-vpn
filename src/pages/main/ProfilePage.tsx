@@ -1,24 +1,27 @@
-import { CreditCardIcon } from '../../components/icons/CreditCardIcon'
-import { DocumentIcon } from '../../components/icons/DocumentIcon'
-import { GiftIcon } from '../../components/icons/GiftIcon'
-import { SupportIcon } from '../../components/icons/SupportIcon'
-import { MonitorIcon } from '../../components/icons/MonitorIcon'
-import { ShareIcon } from '../../components/icons/ShareIcon'
-import { ShieldIcon } from '../../components/icons/ShieldIcon'
-import { UserIcon } from '../../components/icons/UserIcon'
-import { useAuth } from '../../store/useAuth'
+import { useNavigate } from 'react-router-dom'
+import { CreditCardIcon } from '@/components/icons/CreditCardIcon'
+import { DocumentIcon } from '@/components/icons/DocumentIcon'
+import { GiftIcon } from '@/components/icons/GiftIcon'
+import { SupportIcon } from '@/components/icons/SupportIcon'
+import { MonitorIcon } from '@/components/icons/MonitorIcon'
+import { ShareIcon } from '@/components/icons/ShareIcon'
+import { ShieldIcon } from '@/components/icons/ShieldIcon'
+import { UserIcon } from '@/components/icons/UserIcon'
+import { useAuth } from '@/store/useAuth'
 
 interface MenuItemProps {
   icon: React.ReactNode
   title: string
   subtitle: string
   last?: boolean
+  onClick?: () => void
 }
 
-function MenuItem({ icon, title, subtitle }: MenuItemProps) {
+function MenuItem({ icon, title, subtitle, onClick }: MenuItemProps) {
   return (
     <button
       type="button"
+      onClick={onClick}
       className="flex items-center gap-3 w-full text-left cursor-pointer"
     >
       <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white/10 text-white/50! shrink-0">
@@ -37,10 +40,11 @@ function MenuItem({ icon, title, subtitle }: MenuItemProps) {
 }
 
 export function ProfilePage() {
+  const navigate = useNavigate()
   const { email } = useAuth()
 
   return (
-    <main className="flex flex-col flex-1 px-4 pt-6 gap-4">
+    <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
       <div className="flex items-center gap-3 bg-[#000000]/40 border border-[#FFFFFF]/10 rounded-full p-4">
         <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/20 text-white shrink-0">
           <UserIcon />
@@ -97,6 +101,7 @@ export function ProfilePage() {
             icon={<SupportIcon />}
             title="Связаться с поддержкой"
             subtitle="Бонусы и деньги за приглашения"
+            onClick={() => navigate('/main/support')}
           />
           <MenuItem
             icon={<DocumentIcon />}

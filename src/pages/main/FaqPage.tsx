@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react'
-import { QuestionIcon } from '../../components/icons/QuestionIcon'
+import { QuestionIcon } from '@/components/icons/QuestionIcon'
 
 interface FaqItemData {
   title: string
@@ -273,7 +273,7 @@ function FaqItem({ number, title, content }: FaqItemData & { number: number }) {
 
 export function FaqPage() {
   return (
-    <main className="flex flex-col flex-1 px-4 pt-4 gap-4">
+    <main className="flex flex-col flex-1 px-4 pt-4 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
         <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
           <QuestionIcon className="w-6 h-6" solid />

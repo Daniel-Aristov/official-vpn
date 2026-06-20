@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowRightIcon } from '../../components/icons/ArrowRightIcon'
-import { ChevronDownIcon } from '../../components/icons/ChevronDownIcon'
-import { ChevronLeftIcon } from '../../components/icons/ChevronLeftIcon'
-import { DownloadIcon } from '../../components/icons/DownloadIcon'
+import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
+import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
+import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
+import { DownloadIcon } from '@/components/icons/DownloadIcon'
 
 const TOTAL_STEPS = 3
 const CIRCLE_SIZE = 240
@@ -26,7 +26,7 @@ export function SetupPage() {
   const gap = CIRCUMFERENCE - progress
 
   return (
-    <main className="flex flex-col flex-1 px-4 pt-4">
+    <main className="flex flex-col flex-1 px-4 pt-4 max-w-[768px] mx-auto w-full">
       <div className="flex items-center justify-between py-2">
         <button
           type="button"

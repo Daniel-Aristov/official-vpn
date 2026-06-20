@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { InfoCircleIcon } from '../icons/InfoCircleIcon'
-import { CheckmarkIcon } from '../icons/CheckmarkIcon'
-import { BlockedCircleIcon } from '../icons/BlockedCircleIcon'
-import { CloseIcon } from '../icons/CloseIcon'
+import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
+import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
+import { BlockedCircleIcon } from '@/components/icons/BlockedCircleIcon'
+import { CloseIcon } from '@/components/icons/CloseIcon'
 
 type NotificationVariant = 'warning' | 'success' | 'blocked'
 
@@ -21,7 +21,7 @@ const variantConfig: Record<
 > = {
   warning: {
     color: '#FF6B6B',
-    icon: <InfoCircleIcon />,
+    icon: <InfoCircleIcon className="text-[#FF6B6B]" />,
   },
   success: {
     color: '#139D76',

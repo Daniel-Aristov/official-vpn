@@ -1,10 +1,11 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { DownloadIcon } from '../../components/icons/DownloadIcon'
-import { GlobeIcon } from '../../components/icons/GlobeIcon'
-import { SmartphoneIcon } from '../../components/icons/SmartphoneIcon'
-import { ChevronRightIcon } from '../../components/icons/ChevronRightIcon'
-import { NotificationBanner } from '../../components/UI/NotificationBanner'
+import { useEffect, useState } from 'react'
+import { useNavigate, useOutletContext } from 'react-router-dom'
+import type { MainLayoutOutletContext } from '@/components/MainLayout'
+import { DownloadIcon } from '@/components/icons/DownloadIcon'
+import { GlobeIcon } from '@/components/icons/GlobeIcon'
+import { SmartphoneIcon } from '@/components/icons/SmartphoneIcon'
+import { ChevronRightIcon } from '@/components/icons/ChevronRightIcon'
+import { NotificationBanner } from '@/components/UI/NotificationBanner'
 
 type DemoVariant = 'warning' | 'success' | 'blocked' | null
 
@@ -27,13 +28,19 @@ const notificationData = {
 
 export function MainPage() {
   const navigate = useNavigate()
+  const { setHideTabBar } = useOutletContext<MainLayoutOutletContext>()
   const [demoIndex, setDemoIndex] = useState(0)
   const variant = demoVariants[demoIndex]
 
   const cycleVariant = () => setDemoIndex((i) => (i + 1) % demoVariants.length)
 
+  useEffect(() => {
+    setHideTabBar(variant === 'blocked')
+    return () => setHideTabBar(false)
+  }, [variant, setHideTabBar])
+
   return (
-    <main className="flex flex-col flex-1 px-4 pt-4">
+    <main className="flex flex-col flex-1 px-4 pt-4 max-w-[768px] mx-auto w-full">
       {variant && (
         <NotificationBanner
           variant={variant}
@@ -44,8 +51,12 @@ export function MainPage() {
         />
       )}
 
-      <div className="flex flex-col flex-1 justify-end">
-        <div className="flex items-center justify-center mb-[120px]">
+      <div
+        className={`flex flex-col flex-1 ${variant === 'blocked' ? 'justify-center' : 'justify-end'}`}
+      >
+        <div
+          className={`flex items-center justify-center ${variant === 'blocked' ? '' : 'mb-[120px]'}`}
+        >
           <button type="button" onClick={cycleVariant} className="cursor-pointer">
             <img
               src="/logoWithText.svg"
@@ -55,6 +66,7 @@ export function MainPage() {
           </button>
         </div>
 
+        {variant !== 'blocked' && (
         <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
           <div className="flex items-start justify-between mb-[16px]">
             <div className="flex flex-col">
@@ -107,6 +119,7 @@ export function MainPage() {
             </button>
           </div>
         </div>
+        )}
       </div>
     </main>
   )

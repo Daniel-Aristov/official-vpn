@@ -1,8 +1,8 @@
 import { NavLink, useLocation } from 'react-router-dom'
-import { GearIcon } from './icons/GearIcon'
-import { HeadphonesIcon } from './icons/HeadphonesIcon'
-import { HomeIcon } from './icons/HomeIcon'
-import { PersonIcon } from './icons/PersonIcon'
+import { GearIcon } from '@/components/icons/GearIcon'
+import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
+import { HomeIcon } from '@/components/icons/HomeIcon'
+import { PersonIcon } from '@/components/icons/PersonIcon'
 
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },

@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { PrimaryButton } from '../../components/UI/PrimaryButton'
-import { AtIcon } from '../../components/icons/AtIcon'
-import { ChevronLeftIcon } from '../../components/icons/ChevronLeftIcon'
+import { PrimaryButton } from '@/components/UI/PrimaryButton'
+import { AtIcon } from '@/components/icons/AtIcon'
+import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 

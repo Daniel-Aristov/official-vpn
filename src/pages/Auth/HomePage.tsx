@@ -1,30 +1,12 @@
 import { useNavigate } from 'react-router-dom'
-import { PrimaryButton } from '../../components/UI/PrimaryButton'
-import { ArrowLeftIcon } from '../../components/icons/ArrowLeftIcon'
+import { PrimaryButton } from '@/components/UI/PrimaryButton'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const fromAnotherApplication = true
-
-  const handleGoBack = () => {
-    return
-  }
 
   return (
     <main className="flex flex-col flex-1 px-4 py-[100px] max-w-[768px] mx-auto w-full">
       <div className="flex flex-col justify-end flex-1 gap-6 pt-4">
-        {fromAnotherApplication && (
-          <section className="flex flex-col gap-3 p-4 rounded-3xl bg-black/40 border border-white/10">
-            <p className="text-[18px] font-semibold text-white leading-[130%] tracking-[-0.3px]">
-              Вы перешли из приложения
-            </p>
-            <PrimaryButton size="large" onClick={handleGoBack}>
-              <ArrowLeftIcon />
-              Вернуться обратно
-            </PrimaryButton>
-          </section>
-        )}
-
         <section className="flex flex-col justify-end items-center flex-1 gap-3">
           <img
             src="/logo.png"

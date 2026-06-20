@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom'
-import { SupportIcon } from '../../components/icons/SupportIcon'
-import { HeadphonesIcon } from '../../components/icons/HeadphonesIcon'
-import { MonitorIcon } from '../../components/icons/MonitorIcon'
-import { QuestionIcon } from '../../components/icons/QuestionIcon'
+import { SupportIcon } from '@/components/icons/SupportIcon'
+import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
+import { MonitorIcon } from '@/components/icons/MonitorIcon'
+import { QuestionIcon } from '@/components/icons/QuestionIcon'
 
 interface MenuItemProps {
   icon: React.ReactNode
@@ -38,7 +38,7 @@ export function SupportPage() {
   const navigate = useNavigate()
 
   return (
-    <main className="flex flex-col flex-1 px-4 pt-6 gap-4">
+    <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
         <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[12px] bg-white/10 text-white">
           <HeadphonesIcon className="w-6 h-6" />
@@ -71,6 +71,7 @@ export function SupportPage() {
           icon={<SupportIcon />}
           title="Поддержка"
           subtitle="Связаться с поддержкой"
+          onClick={() => navigate('/main/support/contact')}
           last
         />
       </div>
