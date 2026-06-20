@@ -7,7 +7,7 @@ import { MonitorIcon } from '@/components/icons/MonitorIcon'
 import { ShareIcon } from '@/components/icons/ShareIcon'
 import { ShieldIcon } from '@/components/icons/ShieldIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
-import { useAuth } from '@/store/useAuth'
+import { useAuth } from '@/store/auth/useAuth'
 
 interface MenuItemProps {
   icon: React.ReactNode

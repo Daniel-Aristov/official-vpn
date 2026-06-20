@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '@/components/icons/PasswordIcon'
-import { useAuth } from '@/store/useAuth'
+import { useAuth } from '@/store/auth/useAuth'
 
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42

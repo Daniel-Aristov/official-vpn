@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
-import type { MainLayoutOutletContext } from '@/components/MainLayout'
+import type { MainViewOutletContext } from '@/views/MainView'
 import { DownloadIcon } from '@/components/icons/DownloadIcon'
 import { GlobeIcon } from '@/components/icons/GlobeIcon'
 import { SmartphoneIcon } from '@/components/icons/SmartphoneIcon'
 import { ChevronRightIcon } from '@/components/icons/ChevronRightIcon'
-import { NotificationBanner } from '@/components/UI/NotificationBanner'
+import { NotificationBanner } from '@/components/NotificationBanner'
 
 type DemoVariant = 'warning' | 'success' | 'blocked' | null
 
@@ -28,7 +28,7 @@ const notificationData = {
 
 export function MainPage() {
   const navigate = useNavigate()
-  const { setHideTabBar } = useOutletContext<MainLayoutOutletContext>()
+  const { setHideTabBar } = useOutletContext<MainViewOutletContext>()
   const [demoIndex, setDemoIndex] = useState(0)
   const variant = demoVariants[demoIndex]
 

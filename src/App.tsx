@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Route, Routes, useNavigate } from 'react-router-dom'
 import { AppBackground } from '@/components/UI/AppBackground'
-import { ErrorNotificationModal } from '@/components/UI/ErrorNotificationModal'
-import { SuccessRegistrationModal } from '@/components/UI/SuccessRegistrationModal'
-import { MainLayout } from '@/components/MainLayout'
+import { ErrorNotificationModal } from '@/components/ErrorNotificationModal'
+import { SuccessRegistrationModal } from '@/components/SuccessRegistrationModal'
+import { MainView } from '@/views/MainView'
 import { EmailAuthPage } from '@/pages/auth/EmailAuthPage'
 import { EmailVerifyPage } from '@/pages/auth/EmailVerifyPage'
 import { HomePage } from '@/pages/auth/HomePage'
@@ -38,7 +38,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/auth/email" element={<EmailAuthPage />} />
         <Route path="/auth/email/verify" element={<EmailVerifyPage />} />
-        <Route path="/main" element={<MainLayout />}>
+        <Route path="/main" element={<MainView />}>
           <Route index element={<MainPage />} />
           <Route path="setup" element={<SetupPage />} />
           <Route path="profile" element={<ProfilePage />} />
