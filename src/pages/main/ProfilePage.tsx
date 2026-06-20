@@ -141,6 +141,7 @@ export function ProfilePage() {
             icon={<MonitorIcon />}
             title="Установка на другом устройстве"
             subtitle="Подробная инструкция для установки"
+            onClick={() => navigate('/main/setup')}
           />
           <MenuItem
             icon={<SupportIcon />}
