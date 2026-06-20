@@ -74,6 +74,7 @@ export function ProfilePage() {
             icon={<ShieldIcon />}
             title="Сохранение доступа"
             subtitle="Доступ к VPN без перебоев"
+            onClick={() => navigate('/main/profile/access')}
           />
           <MenuItem
             icon={<GiftIcon />}
