@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon } from '../../components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '../../components/icons/PasswordIcon'
+import { useAuth } from '../../store/useAuth'
 
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42
@@ -9,6 +10,7 @@ const RESEND_SECONDS = 42
 export function EmailVerifyPage() {
   const navigate = useNavigate()
   const location = useLocation()
+  const { setEmail } = useAuth()
   const email =
     (location.state as { email?: string } | null)?.email ??
     'something12@gmail.com'
@@ -132,6 +134,10 @@ export function EmailVerifyPage() {
 
         <button
           type="button"
+          onClick={() => {
+            setEmail(email)
+            navigate('/main')
+          }}
           className="w-full py-[16px] rounded-2xl bg-primary text-white font-semibold text-[16px] leading-[20px] cursor-pointer"
         >
           Авторизоваться

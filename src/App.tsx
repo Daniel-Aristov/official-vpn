@@ -1,8 +1,14 @@
 import { Route, Routes } from 'react-router-dom'
 import { AppBackground } from './components/UI/AppBackground'
-import { EmailAuthPage } from './pages/Auth/EmailAuthPage'
-import { EmailVerifyPage } from './pages/Auth/EmailVerifyPage'
-import { HomePage } from './pages/Auth/HomePage'
+import { MainLayout } from './components/MainLayout'
+import { EmailAuthPage } from './pages/auth/EmailAuthPage'
+import { EmailVerifyPage } from './pages/auth/EmailVerifyPage'
+import { HomePage } from './pages/auth/HomePage'
+import { MainPage } from './pages/main/MainPage'
+import { ProfilePage } from './pages/main/ProfilePage'
+import { SetupPage } from './pages/main/SetupPage'
+import { FaqPage } from './pages/main/FaqPage'
+import { SupportPage } from './pages/main/SupportPage'
 
 function App() {
   return (
@@ -11,6 +17,13 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/auth/email" element={<EmailAuthPage />} />
         <Route path="/auth/email/verify" element={<EmailVerifyPage />} />
+        <Route path="/main" element={<MainLayout />}>
+          <Route index element={<MainPage />} />
+          <Route path="setup" element={<SetupPage />} />
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="support" element={<SupportPage />} />
+          <Route path="support/faq" element={<FaqPage />} />
+        </Route>
       </Routes>
     </AppBackground>
   )
