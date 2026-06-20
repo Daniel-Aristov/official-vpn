@@ -45,7 +45,7 @@ export function SuccessRegistrationModal({
             </p>
           </div>
           <div className="flex items-center gap-3 bg-secondary border border-white/10 rounded-[16px] px-4 py-[8px]">
-            <LinkIcon className="w-6 h-6 shrink-0" />
+            <LinkIcon className="w-6 h-6 shrink-0 text-white" />
             <div className="flex flex-col min-w-0 flex-1">
               <span className="text-white/80 text-[16px] leading-[130%]">
                 Ссылка на сайт

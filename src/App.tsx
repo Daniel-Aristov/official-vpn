@@ -11,6 +11,7 @@ import { MainPage } from '@/pages/main/MainPage'
 import { ProfilePage } from '@/pages/main/ProfilePage'
 import { SetupPage } from '@/pages/main/SetupPage'
 import { AccessPreservationPage } from '@/pages/main/AccessPreservationPage'
+import { ReferralProgramPage } from '@/pages/main/ReferralProgramPage'
 import { ContactSupportPage } from '@/pages/main/ContactSupportPage'
 import { FaqPage } from '@/pages/main/FaqPage'
 import { SupportPage } from '@/pages/main/SupportPage'
@@ -43,6 +44,7 @@ function App() {
           <Route path="setup" element={<SetupPage />} />
           <Route path="profile" element={<ProfilePage />} />
           <Route path="profile/access" element={<AccessPreservationPage />} />
+          <Route path="profile/referral" element={<ReferralProgramPage />} />
           <Route path="support" element={<SupportPage />} />
           <Route path="support/faq" element={<FaqPage />} />
           <Route path="support/contact" element={<ContactSupportPage />} />

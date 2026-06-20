@@ -80,6 +80,7 @@ export function ProfilePage() {
             icon={<GiftIcon />}
             title="Реферальная программа"
             subtitle="Бонусы и деньги за приглашения"
+            onClick={() => navigate('/main/profile/referral')}
           />
           <MenuItem
             icon={<CreditCardIcon />}
