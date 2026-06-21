@@ -16,6 +16,8 @@ import { PaymentHistoryPage } from '@/pages/main/PaymentHistoryPage'
 import { ContactSupportPage } from '@/pages/main/ContactSupportPage'
 import { FaqPage } from '@/pages/main/FaqPage'
 import { SupportPage } from '@/pages/main/SupportPage'
+import { DevicesPage } from '@/pages/main/DevicesPage'
+import { BuySlotsPage } from '@/pages/main/BuySlotsPage'
 
 function App() {
   const navigate = useNavigate()
@@ -50,6 +52,8 @@ function App() {
           <Route path="support" element={<SupportPage />} />
           <Route path="support/faq" element={<FaqPage />} />
           <Route path="support/contact" element={<ContactSupportPage />} />
+          <Route path="devices" element={<DevicesPage />} />
+          <Route path="devices/slots" element={<BuySlotsPage />} />
         </Route>
       </Routes>
     </AppBackground>

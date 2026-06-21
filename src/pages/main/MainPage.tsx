@@ -57,7 +57,11 @@ export function MainPage() {
         <div
           className={`flex items-center justify-center ${variant === 'blocked' ? '' : 'mb-[120px]'}`}
         >
-          <button type="button" onClick={cycleVariant} className="cursor-pointer">
+          <button
+            type="button"
+            onClick={cycleVariant}
+            className="cursor-pointer"
+          >
             <img
               src="/logoWithText.svg"
               alt="Official VPN"
@@ -67,58 +71,65 @@ export function MainPage() {
         </div>
 
         {variant !== 'blocked' && (
-        <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
-          <div className="flex items-start justify-between mb-[16px]">
-            <div className="flex flex-col">
-              <p className="text-white font-bold text-[18px]">до 27 мая 2026</p>
-              <p className="text-[#139D76] text-[16px] font-medium">online</p>
-            </div>
-            <span className="text-white/50 text-[12px] bg-white/10 font-medium border border-white/20 px-3 py-2 rounded-full">
-              бесплатный период
-            </span>
-          </div>
-
-          <button
-            type="button"
-            className="flex items-center justify-between bg-primary p-4 rounded-[16px] cursor-pointer"
-          >
-            <div className="flex items-center gap-2 text-white">
-              <GlobeIcon />
-              <span className="font-semibold text-[16px]">Продлить подписку</span>
-            </div>
-            <span className="text-white font-semibold text-[16px]">от 199 Р</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => navigate('/main/setup')}
-            className="flex items-center justify-between bg-[#B4CBFF] p-4 rounded-[16px] cursor-pointer mt-[8px]"
-          >
-            <div className="flex items-center gap-2 text-[#1D4297]">
-              <DownloadIcon fill="#1D4297" />
-              <span className="font-semibold text-[16px]">
-                Установка и настройка
+          <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
+            <div className="flex items-start justify-between mb-[16px]">
+              <div className="flex flex-col">
+                <p className="text-white font-bold text-[18px]">
+                  до 27 мая 2026
+                </p>
+                <p className="text-[#139D76] text-[16px] font-medium">online</p>
+              </div>
+              <span className="text-white/50 text-[12px] bg-white/10 font-medium border border-white/20 px-3 py-2 rounded-full">
+                бесплатный период
               </span>
             </div>
-            <span className="text-white/50">
-              <SmartphoneIcon />
-            </span>
-          </button>
-          <div className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px]">
-            <span className="text-white text-[14px] leading-[110%]">
-              Ваши <br /> устройства:
-            </span>
-            <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
-              3
-            </span>
+
             <button
               type="button"
-              className="flex items-center gap-1 text-white text-[14px] font-medium cursor-pointer"
+              className="flex items-center justify-between bg-primary p-4 rounded-[16px] cursor-pointer"
             >
-              Посмотреть
-              <ChevronRightIcon />
+              <div className="flex items-center gap-2 text-white">
+                <GlobeIcon />
+                <span className="font-semibold text-[16px]">
+                  Продлить подписку
+                </span>
+              </div>
+              <span className="text-white font-semibold text-[16px]">
+                от 199 Р
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/main/setup')}
+              className="flex items-center justify-between bg-[#B4CBFF] p-4 rounded-[16px] cursor-pointer mt-[8px]"
+            >
+              <div className="flex items-center gap-2 text-[#1D4297]">
+                <DownloadIcon fill="#1D4297" />
+                <span className="font-semibold text-[16px]">
+                  Установка и настройка
+                </span>
+              </div>
+              <span className="text-white/50">
+                <SmartphoneIcon />
+              </span>
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate('/main/devices')}
+              className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px] cursor-pointer"
+            >
+              <span className="text-white text-[14px] leading-[110%]">
+                Ваши <br /> устройства:
+              </span>
+              <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
+                3
+              </span>
+              <div className="flex items-center gap-1 text-white text-[14px] font-medium">
+                Посмотреть
+                <ChevronRightIcon />
+              </div>
             </button>
           </div>
-        </div>
         )}
       </div>
     </main>

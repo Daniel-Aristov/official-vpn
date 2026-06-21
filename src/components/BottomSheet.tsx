@@ -34,7 +34,7 @@ export function BottomSheet({
         }`}
       >
         <div className="flex items-start justify-between gap-3">
-          <h2 className="text-white font-semibold text-[24px] leading-[130%]">
+          <h2 className="text-white font-semibold text-[24px] leading-[120%]">
             {title}
           </h2>
           <button
