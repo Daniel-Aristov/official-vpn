@@ -74,18 +74,21 @@ export function MainPage() {
           <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
             <div className="flex items-start justify-between mb-[16px]">
               <div className="flex flex-col">
-                <p className="text-white font-bold text-[18px]">
+                <p className="text-white font-bold text-[16px] leading-[130%]">
                   до 27 сентября 2026
                 </p>
-                <p className="text-[#139D76] text-[16px] font-medium">online</p>
+                <p className="text-[#139D76] text-[16px] font-medium leading-[130%]">
+                  online
+                </p>
               </div>
-              <span className="text-white/50 text-[12px] bg-white/10 font-medium border border-white/20 px-3 py-2 rounded-full">
+              <span className="text-white/50 text-[12px] leading-[120%] bg-white/10 font-medium border border-white/20 px-[10px] py-2 rounded-full">
                 бесплатный период
               </span>
             </div>
 
             <button
               type="button"
+              onClick={() => navigate('/main/subscription')}
               className="flex items-center justify-between bg-primary p-4 rounded-[16px] cursor-pointer"
             >
               <div className="flex items-center gap-2 text-white">

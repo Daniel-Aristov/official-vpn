@@ -18,6 +18,7 @@ import { FaqPage } from '@/pages/main/FaqPage'
 import { SupportPage } from '@/pages/main/SupportPage'
 import { DevicesPage } from '@/pages/main/DevicesPage'
 import { BuySlotsPage } from '@/pages/main/BuySlotsPage'
+import { BuySubscriptionPage } from '@/pages/main/BuySubscriptionPage'
 
 function App() {
   const navigate = useNavigate()
@@ -54,6 +55,7 @@ function App() {
           <Route path="support/contact" element={<ContactSupportPage />} />
           <Route path="devices" element={<DevicesPage />} />
           <Route path="devices/slots" element={<BuySlotsPage />} />
+          <Route path="subscription" element={<BuySubscriptionPage />} />
         </Route>
       </Routes>
     </AppBackground>

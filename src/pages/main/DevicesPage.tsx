@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { AddSubscriptionAlert } from '@/components/AddSubscriptionAlert'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { AndroidIcon } from '@/components/icons/AndroidIcon'
 import { AndroidTvIcon } from '@/components/icons/AndroidTvIcon'
@@ -51,6 +52,8 @@ const FAKE_DEVICES: Device[] = [
 ]
 
 const TOTAL_SLOTS = 6
+const SUBSCRIPTION_DEEP_LINK =
+  'happ://add/https://official.vpn/s/sfRasfjgaAd412s41#OfficialVPN'
 
 function DevicePlatformIcon({ platform }: { platform: string }) {
   const normalizedPlatform = platform.toLowerCase()
@@ -127,8 +130,15 @@ export function DevicesPage() {
   const navigate = useNavigate()
   const [hasSubscription, setHasSubscription] = useState(false)
   const [slotCount, setSlotCount] = useState(1)
+  const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
+
+  const confirmAddSubscription = () => {
+    window.open(SUBSCRIPTION_DEEP_LINK, '_blank', 'noopener,noreferrer')
+    setIsSubscriptionAlertOpen(false)
+  }
 
   return (
+    <>
     <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10">
         <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10">
@@ -164,7 +174,11 @@ export function DevicesPage() {
               У вас ещё нет активных подписок для добавления устройств
             </span>
           </button>
-          <PrimaryButton size="large" className="mt-4">
+          <PrimaryButton
+            size="large"
+            className="mt-4"
+            onClick={() => setIsSubscriptionAlertOpen(true)}
+          >
             Приобрести подписку
           </PrimaryButton>
         </>
@@ -225,5 +239,12 @@ export function DevicesPage() {
         </>
       )}
     </main>
+    <AddSubscriptionAlert
+      isOpen={isSubscriptionAlertOpen}
+      deepLink={SUBSCRIPTION_DEEP_LINK}
+      onClose={() => setIsSubscriptionAlertOpen(false)}
+      onConfirm={confirmAddSubscription}
+    />
+    </>
   )
 }

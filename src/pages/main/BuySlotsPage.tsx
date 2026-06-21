@@ -1,6 +1,7 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BottomSheet } from '@/components/BottomSheet'
+import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { GlobeIcon } from '@/components/icons/GlobeIcon'
@@ -234,31 +235,13 @@ export function BuySlotsPage() {
         </div>
       </main>
 
-      <BottomSheet
+      <PricingExplanationSheet
         isMounted={explanation.mounted}
         isVisible={explanation.visible}
-        title="Пояснение к расчёту стоимости"
         onClose={explanation.close}
-      >
-        <p className="text-white/80 text-[16px] leading-[130%]">
-          Итоговая стоимость подписки формируется из базового тарифа и
-          подключённых дополнительных опций.
-        </p>
-        <div className="flex flex-col text-white/80 text-[16px] leading-[130%]">
-          <p>Цена за 1 устройство: 60 Р в месяц.</p>
-          <p>Остаток подписки: 60 дней.</p>
-          <p>Доплата за текущий период: 120 Р.</p>
-        </div>
-        <p className="text-white/80 text-[16px] leading-[130%]">
-          Оплата за следующие периоды: 259 Р в месяц.
-        </p>
-        <p className="text-white/80 text-[16px] leading-[130%]">
-          Итого: 120 + 259 = 379 Р
-        </p>
-        <PrimaryButton size="large" onClick={explanation.close}>
-          Всё понять, закрыть
-        </PrimaryButton>
-      </BottomSheet>
+        currentPeriodSurcharge={currentPrice}
+        nextPeriodMonthlyPrice={monthlyPrice}
+      />
 
       <BottomSheet
         isMounted={payment.mounted}

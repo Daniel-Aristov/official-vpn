@@ -303,7 +303,7 @@ export function SetupPage() {
         </div>
 
         <div className="flex flex-col gap-3 mb-4">
-          {!started && platform === 'IOS' && !showPlatforms && (
+          {!started && platform === 'IOS' && (
             <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-4 py-3 rounded-[24px]">
               <InfoCircleIcon className="w-6 h-6 text-white/60 shrink-0" />
               <span className="text-white/80 text-[16px] leading-[120%]">
