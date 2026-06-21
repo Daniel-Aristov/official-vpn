@@ -4,23 +4,26 @@ import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
 import { ReferralGiftIcon } from '@/components/icons/ReferralGiftIcon'
 import { UsefulLinkArrowIcon } from '@/components/icons/UsefulLinkArrowIcon'
-
-const REFERRAL_LINK = 'https://oflvpn.com?start=234674624'
-const MONEY_REFERRAL_LINK = 'https://oflvpn.com?start=rp-234674624'
-const TELEGRAM_SUPPORT_URL = 'https://t.me/vpnbot_support'
-const TELEGRAM_PARTNERS_URL = 'https://t.me/official_vpnbot_partners'
+import {
+  REFERRAL_LINK,
+  MONEY_REFERRAL_LINK,
+  TELEGRAM_SUPPORT_URL,
+  TELEGRAM_PARTNERS_URL,
+} from '@/js/constants/urls'
+import { copyToClipboard } from '@/js/helpers/clipboard'
+import { splitLinkAtQuery } from '@/js/helpers/link'
 
 type ReferralTab = 'bonuses' | 'money'
 
 function formatReferralLink(link: string) {
-  const queryIndex = link.indexOf('?')
-  if (queryIndex === -1) return link
+  const { prefix, suffix } = splitLinkAtQuery(link)
+  if (suffix === null) return link
 
   return (
     <>
-      {link.slice(0, queryIndex + 1)}
+      {prefix}
       <br />
-      {link.slice(queryIndex + 1)}
+      {suffix}
     </>
   )
 }
@@ -99,9 +102,7 @@ interface ReferralLinkCardProps {
 }
 
 function ReferralLinkCard({ link }: ReferralLinkCardProps) {
-  const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(link)
-  }
+  const handleCopyLink = () => copyToClipboard(link)
 
   return (
     <div className="flex items-start gap-3 bg-white border border-white/10 rounded-[16px] px-4 py-[6px]">

@@ -3,8 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { AtIcon } from '@/components/icons/AtIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+import { isValidEmail } from '@/js/helpers/validation'
 
 export function EmailAuthPage() {
   const navigate = useNavigate()
@@ -12,7 +11,7 @@ export function EmailAuthPage() {
 
   const trimmedEmail = email.trim()
   const isEmpty = trimmedEmail === ''
-  const isValid = EMAIL_REGEX.test(trimmedEmail)
+  const isValid = isValidEmail(trimmedEmail)
   const showError = !isEmpty && !isValid
   const canContinue = !isEmpty && isValid
 

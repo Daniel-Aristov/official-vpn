@@ -1,8 +1,20 @@
-import { useRef, useMemo, useState, useEffect } from 'react'
+import { useMemo, useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { AddSubscriptionAlert } from '@/components/AddSubscriptionAlert'
 import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
+import {
+  SUBSCRIPTION_DEEP_LINK,
+  VPN_LINK,
+  type InstallPlatform,
+} from '@/js/constants/urls'
+import { openInNewTab } from '@/js/helpers/browser'
+import {
+  detectCurrentDevice,
+  INSTALL_PLATFORMS,
+  SETUP_PLATFORM_LABELS,
+} from '@/js/helpers/platform'
+import { useSheet } from '@/js/helpers/useSheet'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
@@ -14,45 +26,12 @@ import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
 import { PlusCircleIcon } from '@/components/icons/PlusCircleIcon'
 
-const SHEET_ANIMATION_MS = 300
-
 const TOTAL_STEPS = 3
 const CIRCLE_SIZE = 240
 const STROKE_WIDTH = 7
 const CIRCLE_CENTER = CIRCLE_SIZE / 2
 const CIRCLE_R = CIRCLE_CENTER - STROKE_WIDTH / 2
 const CIRCUMFERENCE = 2 * Math.PI * CIRCLE_R
-
-const VPN_LINK = 'https://a.my-keyboards.shop/configure-happ-official-vpn'
-const SUBSCRIPTION_DEEP_LINK =
-  'happ://add/https://official.vpn/s/sfRasfjgaAd412s41#OfficialVPN'
-
-type Platform = 'IOS' | 'Android' | 'Windows' | 'Macbook' | 'Android TV'
-
-function detectCurrentDevice(): Platform {
-  const ua = navigator.userAgent
-  if (/iPhone|iPad|iPod/.test(ua)) return 'IOS'
-  if (/Android/.test(ua)) return 'Android'
-  if (/Win/.test(ua)) return 'Windows'
-  if (/Mac/.test(ua)) return 'Macbook'
-  return 'Windows'
-}
-
-const platforms: Platform[] = [
-  'IOS',
-  'Android',
-  'Windows',
-  'Macbook',
-  'Android TV',
-]
-
-const platformLabels: Record<Platform, string> = {
-  IOS: 'IOS',
-  Android: 'Android',
-  Windows: 'Windows',
-  Macbook: 'macOS',
-  'Android TV': 'Android TV',
-}
 
 export function SetupPage() {
   const navigate = useNavigate()
@@ -62,16 +41,12 @@ export function SetupPage() {
       ?.openPlatformSelect,
   )
   const [step, setStep] = useState(1)
-  const [platform, setPlatform] = useState<Platform>('IOS')
+  const [platform, setPlatform] = useState<InstallPlatform>('IOS')
   const [showPlatforms, setShowPlatforms] = useState(openPlatformSelect)
   const [started, setStarted] = useState(false)
-  const [isSheetMounted, setIsSheetMounted] = useState(false)
-  const [isSheetVisible, setIsSheetVisible] = useState(false)
+  const installSheet = useSheet()
+  const telegramSheet = useSheet()
   const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
-  const [isTelegramSheetMounted, setIsTelegramSheetMounted] = useState(false)
-  const [isTelegramSheetVisible, setIsTelegramSheetVisible] = useState(false)
-  const sheetCloseTimerRef = useRef<number | null>(null)
-  const telegramSheetCloseTimerRef = useRef<number | null>(null)
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
 
   useEffect(() => {
@@ -79,46 +54,8 @@ export function SetupPage() {
     navigate(location.pathname, { replace: true, state: null })
   }, [openPlatformSelect, location.pathname, navigate])
 
-  const openInstallSheet = () => {
-    if (sheetCloseTimerRef.current !== null) {
-      window.clearTimeout(sheetCloseTimerRef.current)
-      sheetCloseTimerRef.current = null
-    }
-    setIsSheetMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setIsSheetVisible(true))
-    })
-  }
-
-  const closeInstallSheet = () => {
-    setIsSheetVisible(false)
-    sheetCloseTimerRef.current = window.setTimeout(() => {
-      setIsSheetMounted(false)
-      sheetCloseTimerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
-
-  const openTelegramSheet = () => {
-    if (telegramSheetCloseTimerRef.current !== null) {
-      window.clearTimeout(telegramSheetCloseTimerRef.current)
-      telegramSheetCloseTimerRef.current = null
-    }
-    setIsTelegramSheetMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setIsTelegramSheetVisible(true))
-    })
-  }
-
-  const closeTelegramSheet = () => {
-    setIsTelegramSheetVisible(false)
-    telegramSheetCloseTimerRef.current = window.setTimeout(() => {
-      setIsTelegramSheetMounted(false)
-      telegramSheetCloseTimerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
-
   const goToMain = () => {
-    closeTelegramSheet()
+    telegramSheet.close()
     navigate('/main')
   }
 
@@ -127,7 +64,7 @@ export function SetupPage() {
   }
 
   const confirmAddSubscription = () => {
-    window.open(SUBSCRIPTION_DEEP_LINK, '_blank', 'noopener,noreferrer')
+    openInNewTab(SUBSCRIPTION_DEEP_LINK)
     setIsSubscriptionAlertOpen(false)
   }
 
@@ -144,7 +81,7 @@ export function SetupPage() {
     setStarted(false)
   }
 
-  const handlePlatformChange = (p: Platform) => {
+  const handlePlatformChange = (p: InstallPlatform) => {
     setPlatform(p)
     setShowPlatforms(false)
     setStarted(false)
@@ -153,7 +90,7 @@ export function SetupPage() {
 
   const progress = (step / TOTAL_STEPS) * CIRCUMFERENCE
   const gap = CIRCUMFERENCE - progress
-  const label = platformLabels[platform]
+  const label = SETUP_PLATFORM_LABELS[platform]
 
   return (
     <>
@@ -184,7 +121,7 @@ export function SetupPage() {
             </button>
             {showPlatforms && (
               <div className="absolute right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl z-10 min-w-[140px] py-1">
-                {platforms
+                {INSTALL_PLATFORMS
                   .filter((p) => p !== platform)
                   .map((p) => (
                     <button
@@ -193,7 +130,7 @@ export function SetupPage() {
                       onClick={() => handlePlatformChange(p)}
                       className="w-full px-4 py-1.5 text-left text-white text-[16px] font-semibold cursor-pointer"
                     >
-                      {platformLabels[p]}
+                      {SETUP_PLATFORM_LABELS[p]}
                     </button>
                   ))}
               </div>
@@ -333,7 +270,7 @@ export function SetupPage() {
           ) : step === 3 ? (
             <button
               type="button"
-              onClick={openTelegramSheet}
+              onClick={telegramSheet.open}
               className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
             >
               Завершить настройку
@@ -361,7 +298,7 @@ export function SetupPage() {
             <>
               <button
                 type="button"
-                onClick={openInstallSheet}
+                onClick={installSheet.open}
                 className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
               >
                 <DownloadIcon />
@@ -400,11 +337,11 @@ export function SetupPage() {
         </div>
       </main>
       <InstallSheet
-        isMounted={isSheetMounted}
-        isVisible={isSheetVisible}
+        isMounted={installSheet.mounted}
+        isVisible={installSheet.visible}
         platform={platform}
         currentDevice={currentDevice}
-        onClose={closeInstallSheet}
+        onClose={installSheet.close}
         onProceed={proceedToInstall}
       />
       <AddSubscriptionAlert
@@ -414,9 +351,9 @@ export function SetupPage() {
         onConfirm={confirmAddSubscription}
       />
       <TelegramLinkSheet
-        isMounted={isTelegramSheetMounted}
-        isVisible={isTelegramSheetVisible}
-        onClose={closeTelegramSheet}
+        isMounted={telegramSheet.mounted}
+        isVisible={telegramSheet.visible}
+        onClose={telegramSheet.close}
         onLink={goToMain}
         onLater={goToMain}
       />

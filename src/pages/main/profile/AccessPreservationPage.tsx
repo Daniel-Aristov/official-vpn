@@ -4,10 +4,13 @@ import { CopyIcon } from '@/components/icons/CopyIcon'
 import { DocumentCheckIcon } from '@/components/icons/DocumentCheckIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
-
-const TELEGRAM_BOT_URL = 'https://t.me/official_vpnbot'
-const TELEGRAM_CHANNEL_URL = 'https://t.me/official_vpnbot'
-const PERSONAL_CABINET_URL = 'https://t.me/officail_vpnbot/12312333423413123'
+import {
+  TELEGRAM_BOT_URL,
+  TELEGRAM_CHANNEL_URL,
+  PERSONAL_CABINET_URL,
+} from '@/js/constants/urls'
+import { openInNewTab } from '@/js/helpers/browser'
+import { copyToClipboard } from '@/js/helpers/clipboard'
 
 interface ActionCardProps {
   icon: React.ReactNode
@@ -59,13 +62,11 @@ function ActionCard({
 export function AccessPreservationPage() {
   const [isTelegramLinked, setIsTelegramLinked] = useState(false)
 
-  const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(PERSONAL_CABINET_URL)
-  }
+  const handleCopyLink = () => copyToClipboard(PERSONAL_CABINET_URL)
 
   const handleLinkTelegram = () => {
     setIsTelegramLinked(true)
-    window.open(TELEGRAM_BOT_URL, '_blank', 'noopener,noreferrer')
+    openInNewTab(TELEGRAM_BOT_URL)
   }
 
   return (

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
@@ -10,6 +10,7 @@ import {
   type PaymentMethod,
   type PaymentMethodId,
 } from '@/data/paymentMethods'
+import { useSheet } from '@/js/helpers/useSheet'
 
 type PaymentTab = 'methods' | 'transactions'
 
@@ -157,35 +158,11 @@ const paymentTabs = [
   { id: 'transactions' as const, label: 'Транзакции' },
 ] as const
 
-const SHEET_ANIMATION_MS = 300
-
 export function PaymentHistoryPage() {
   const [activeTab, setActiveTab] = useState<PaymentTab>('methods')
   const [isAutoRenewalEnabled, setIsAutoRenewalEnabled] = useState(true)
-  const [isSheetMounted, setIsSheetMounted] = useState(false)
-  const [isSheetVisible, setIsSheetVisible] = useState(false)
-  const sheetCloseTimerRef = useRef<number | null>(null)
+  const disableSheet = useSheet()
   const activeIndex = paymentTabs.findIndex((tab) => tab.id === activeTab)
-
-  const openDisableSheet = () => {
-    if (sheetCloseTimerRef.current !== null) {
-      window.clearTimeout(sheetCloseTimerRef.current)
-      sheetCloseTimerRef.current = null
-    }
-
-    setIsSheetMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setIsSheetVisible(true))
-    })
-  }
-
-  const closeDisableSheet = () => {
-    setIsSheetVisible(false)
-    sheetCloseTimerRef.current = window.setTimeout(() => {
-      setIsSheetMounted(false)
-      sheetCloseTimerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
 
   return (
     <>
@@ -238,7 +215,7 @@ export function PaymentHistoryPage() {
         {activeTab === 'methods' ? (
           <PaymentMethodsTabContent
             isAutoRenewalEnabled={isAutoRenewalEnabled}
-            onDisableClick={openDisableSheet}
+            onDisableClick={disableSheet.open}
             onEnableClick={() => setIsAutoRenewalEnabled(true)}
           />
         ) : (
@@ -247,9 +224,9 @@ export function PaymentHistoryPage() {
       </main>
 
       <DisableAutoRenewalSheet
-        isMounted={isSheetMounted}
-        isVisible={isSheetVisible}
-        onClose={closeDisableSheet}
+        isMounted={disableSheet.mounted}
+        isVisible={disableSheet.visible}
+        onClose={disableSheet.close}
         onConfirm={() => setIsAutoRenewalEnabled(false)}
       />
     </>

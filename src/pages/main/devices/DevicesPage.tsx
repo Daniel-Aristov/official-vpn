@@ -10,6 +10,9 @@ import { MonitorIcon } from '@/components/icons/MonitorIcon'
 import { TrashIcon } from '@/components/icons/TrashIcon'
 import { WindowsIcon } from '@/components/icons/WindowsIcon'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
+import { SUBSCRIPTION_DEEP_LINK } from '@/js/constants/urls'
+import { openInNewTab } from '@/js/helpers/browser'
+import { getDevicePlatformKind } from '@/js/helpers/platform'
 
 interface Device {
   id: string
@@ -52,29 +55,27 @@ const FAKE_DEVICES: Device[] = [
 ]
 
 const TOTAL_SLOTS = 6
-const SUBSCRIPTION_DEEP_LINK =
-  'happ://add/https://official.vpn/s/sfRasfjgaAd412s41#OfficialVPN'
 
 function DevicePlatformIcon({ platform }: { platform: string }) {
-  const normalizedPlatform = platform.toLowerCase()
+  const kind = getDevicePlatformKind(platform)
 
-  if (normalizedPlatform.startsWith('ios')) {
+  if (kind === 'ios') {
     return <IosIcon className="w-6 h-6" />
   }
 
-  if (normalizedPlatform.includes('android tv')) {
+  if (kind === 'android-tv') {
     return <AndroidTvIcon className="w-6 h-6" />
   }
 
-  if (normalizedPlatform.startsWith('android')) {
+  if (kind === 'android') {
     return <AndroidIcon className="w-6 h-6" />
   }
 
-  if (normalizedPlatform.startsWith('windows')) {
+  if (kind === 'windows') {
     return <WindowsIcon className="w-6 h-6" />
   }
 
-  if (normalizedPlatform.startsWith('mac')) {
+  if (kind === 'mac') {
     return <MacOsIcon className="w-6 h-6" />
   }
 
@@ -133,7 +134,7 @@ export function DevicesPage() {
   const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
 
   const confirmAddSubscription = () => {
-    window.open(SUBSCRIPTION_DEEP_LINK, '_blank', 'noopener,noreferrer')
+    openInNewTab(SUBSCRIPTION_DEEP_LINK)
     setIsSubscriptionAlertOpen(false)
   }
 

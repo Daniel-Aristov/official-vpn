@@ -11,8 +11,8 @@ import { ShieldIcon } from '@/components/icons/ShieldIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
 import { useAuth } from '@/store/auth/useAuth'
-
-const TELEGRAM_BOT_URL = 'https://t.me/official_vpnbot'
+import { TELEGRAM_BOT_URL } from '@/js/constants/urls'
+import { openInNewTab } from '@/js/helpers/browser'
 
 interface MenuItemProps {
   icon: React.ReactNode
@@ -51,7 +51,7 @@ export function ProfilePage() {
 
   const handleLinkTelegram = () => {
     setIsTelegramLinked(true)
-    window.open(TELEGRAM_BOT_URL, '_blank', 'noopener,noreferrer')
+    openInNewTab(TELEGRAM_BOT_URL)
   }
 
   return (

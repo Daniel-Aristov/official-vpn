@@ -2,10 +2,12 @@ import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { MailIcon } from '@/components/icons/MailIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { CopyIcon } from '@/components/icons/CopyIcon'
-
-const TELEGRAM_HANDLE = '@vpnbot_support'
-const TELEGRAM_URL = 'https://t.me/vpnbot_support'
-const SUPPORT_EMAIL = 'support@oflvpn.com'
+import {
+  TELEGRAM_SUPPORT_HANDLE,
+  TELEGRAM_SUPPORT_URL,
+  SUPPORT_EMAIL,
+} from '@/js/constants/urls'
+import { copyToClipboard } from '@/js/helpers/clipboard'
 
 interface ContactCardProps {
   icon: React.ReactNode
@@ -36,9 +38,7 @@ function ContactCard({ icon, title, value, children }: ContactCardProps) {
 }
 
 export function ContactSupportPage() {
-  const handleCopyEmail = async () => {
-    await navigator.clipboard.writeText(SUPPORT_EMAIL)
-  }
+  const handleCopyEmail = () => copyToClipboard(SUPPORT_EMAIL)
 
   return (
     <main className="flex flex-col flex-1 px-4 pt-4 gap-4 max-w-[768px] mx-auto w-full">
@@ -57,10 +57,10 @@ export function ContactSupportPage() {
       <ContactCard
         icon={<TelegramIcon />}
         title="Чат поддержки в Telegram"
-        value={TELEGRAM_HANDLE}
+        value={TELEGRAM_SUPPORT_HANDLE}
       >
         <a
-          href={TELEGRAM_URL}
+          href={TELEGRAM_SUPPORT_URL}
           target="_blank"
           rel="noopener noreferrer"
           className="w-fit flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[10px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"

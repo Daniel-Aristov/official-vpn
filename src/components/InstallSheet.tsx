@@ -3,8 +3,10 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { CopyIcon } from '@/components/icons/CopyIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-
-type InstallPlatform = 'IOS' | 'Android' | 'Windows' | 'Macbook' | 'Android TV'
+import {
+  DOWNLOAD_LINKS,
+  type InstallPlatform,
+} from '@/js/constants/urls'
 
 interface InstallSheetProps {
   isMounted: boolean
@@ -17,14 +19,6 @@ interface InstallSheetProps {
 
 const DESCRIPTION =
   'После установки приложения Happ, обязательно вернитесь на этот экран и нажмите «Следующий шаг», чтобы добавить конфигурацию в приложение, без этого VPN работать не будет'
-
-const DOWNLOAD_LINKS: Record<InstallPlatform, string> = {
-  IOS: 'https://apps.apple.com/app/happ-proxy-utility/id6504287215',
-  Android: 'https://play.google.com/store/apps/details?id=com.happ.vpn',
-  Windows: 'https://a.my-keyboards.shop/download/happ-windows.exe',
-  Macbook: 'https://a.my-keyboards.shop/download/happ-mac.dmg',
-  'Android TV': 'https://a.my-keyboards.shop/download/happ-tv.apk',
-}
 
 const PLATFORM_LABELS: Record<InstallPlatform, string> = {
   IOS: 'iOS',

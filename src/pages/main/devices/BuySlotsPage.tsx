@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
@@ -18,38 +18,12 @@ import {
   type PaymentMethod,
   type PaymentMethodId,
 } from '@/data/paymentMethods'
-
-const SHEET_ANIMATION_MS = 300
-const PRICE_PER_SLOT_PERIOD = 60
-const PRICE_PER_SLOT_MONTHLY = 80
-const BASE_MONTHLY = 259
-
-function useSheet() {
-  const [mounted, setMounted] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const timerRef = useRef<number | null>(null)
-
-  const open = () => {
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current)
-      timerRef.current = null
-    }
-    setMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setVisible(true))
-    })
-  }
-
-  const close = () => {
-    setVisible(false)
-    timerRef.current = window.setTimeout(() => {
-      setMounted(false)
-      timerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
-
-  return { mounted, visible, open, close }
-}
+import {
+  PRICE_PER_SLOT_PERIOD,
+  PRICE_PER_SLOT_MONTHLY,
+  BASE_MONTHLY_SLOTS,
+} from '@/js/constants/subscription'
+import { useSheet } from '@/js/helpers/useSheet'
 
 interface LocationState {
   slotCount?: number
@@ -105,7 +79,7 @@ export function BuySlotsPage() {
   const usedDevices = state?.usedDevices ?? 3
 
   const currentPrice = slotCount * PRICE_PER_SLOT_PERIOD
-  const monthlyPrice = BASE_MONTHLY + slotCount * PRICE_PER_SLOT_MONTHLY
+  const monthlyPrice = BASE_MONTHLY_SLOTS + slotCount * PRICE_PER_SLOT_MONTHLY
   const totalDevices = currentSlots + slotCount
   const availableDevices = currentSlots - usedDevices + slotCount
 

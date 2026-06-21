@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { DeviceLimitExceededSheet } from '@/components/DeviceLimitExceededSheet'
@@ -10,76 +10,18 @@ import { StepSlider } from '@/components/UI/StepSlider'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { StarIcon } from '@/components/icons/StarIcon'
 import { PAYMENT_METHODS, type PaymentMethodId } from '@/data/paymentMethods'
-
-const PERIODS = [
-  { id: '1m', label: '1 месяц', price: 199, description: 'Оплата за 1 месяц' },
-  {
-    id: '3m',
-    label: '3 месяца',
-    price: 597,
-    description: 'Оплата за 3 месяца',
-  },
-  {
-    id: '6m',
-    label: '6 месяцев',
-    price: 1194,
-    description: 'Оплата за 6 месяцев',
-  },
-  { id: '1y', label: '1 год', price: 2388, description: 'Оплата за 1 год' },
-]
-
-const DEVICE_OPTIONS = [3, 4, 5, 6]
-const PRO_DEVICE_OPTIONS = [6, 7, 8, 9]
-const PRO_MONTHLY_PRICE = 299
-const BASIC_MONTHLY_PRICE = PERIODS[0].price
-
-const PERIOD_MONTHS: Record<string, number> = {
-  '1m': 1,
-  '3m': 3,
-  '6m': 6,
-  '1y': 12,
-}
-
-const YEAR_PRICE = 2388
-const SHEET_ANIMATION_MS = 300
-const PRICE_PER_EXTRA_DEVICE = 60
-
-function formatSubscriptionEndDate(months: number): string {
-  const date = new Date()
-  date.setMonth(date.getMonth() + months)
-  return date.toLocaleDateString('ru-RU', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  })
-}
-
-function useSheet() {
-  const [mounted, setMounted] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const timerRef = useRef<number | null>(null)
-
-  const open = () => {
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current)
-      timerRef.current = null
-    }
-    setMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setVisible(true))
-    })
-  }
-
-  const close = () => {
-    setVisible(false)
-    timerRef.current = window.setTimeout(() => {
-      setMounted(false)
-      timerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
-
-  return { mounted, visible, open, close }
-}
+import {
+  PERIODS,
+  PERIOD_MONTHS,
+  DEVICE_OPTIONS,
+  PRO_DEVICE_OPTIONS,
+  PRO_MONTHLY_PRICE,
+  BASIC_MONTHLY_PRICE,
+  YEAR_PRICE,
+  PRICE_PER_EXTRA_DEVICE,
+} from '@/js/constants/subscription'
+import { formatSubscriptionEndDate } from '@/js/helpers/date'
+import { useSheet } from '@/js/helpers/useSheet'
 
 export function BuySubscriptionPage() {
   const navigate = useNavigate()
