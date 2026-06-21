@@ -18,11 +18,12 @@ const plans = [
   },
   {
     label: 'BASIC',
-    className: 'text-blue-300 bg-blue-500/20 border-blue-400/40',
+    className: 'text-primary bg-primary/20 border-primary/40 px-[14px]',
   },
   {
     label: 'PRO',
-    className: 'text-yellow-300 bg-yellow-500/20 border-yellow-400/40',
+    className:
+      'text-yellow-300 bg-yellow-500/20 border-yellow-400/40 px-[18px]',
   },
 ]
 
@@ -58,7 +59,7 @@ export function MainPage() {
   }, [variant, setHideTabBar])
 
   return (
-    <main className="flex flex-col flex-1 px-4 pt-4 max-w-[768px] mx-auto w-full">
+    <main className="flex flex-col flex-1 min-h-0 px-4 pt-4 max-w-[768px] mx-auto w-full gap-5">
       {variant && (
         <NotificationBanner
           variant={variant}
@@ -73,12 +74,8 @@ export function MainPage() {
         />
       )}
 
-      <div
-        className={`flex flex-col flex-1 ${variant === 'blocked' ? 'justify-center' : 'justify-end'}`}
-      >
-        <div
-          className={`flex items-center justify-center ${variant === 'blocked' ? '' : 'mb-[120px]'}`}
-        >
+      <div className="flex flex-col flex-1 min-h-0">
+        <div className="flex flex-1 items-center justify-center min-h-0">
           <button
             type="button"
             onClick={cycleVariant}

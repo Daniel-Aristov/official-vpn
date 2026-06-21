@@ -21,7 +21,7 @@ export function AddSubscriptionAlert({
         onClick={onClose}
         className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default"
       />
-      <div className="relative w-full max-w-[300px] bg-white/40 backdrop-blur-xl border border-white/40 rounded-[24px] p-[12px] flex flex-col gap-8">
+      <div className="relative w-full max-w-[300px] bg-white/40 border border-white/50 rounded-[32px] p-[12px] flex flex-col gap-8">
         <p className="text-white text-[17px] leading-[130%] break-all p-2">
           Открыть {deepLink}
         </p>
