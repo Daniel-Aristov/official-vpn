@@ -11,6 +11,7 @@ import {
   type PaymentMethodId,
 } from '@/data/paymentMethods'
 import { useSheet } from '@/js/helpers/useSheet'
+import { usePayment } from '@/store/payment/usePayment'
 
 type PaymentTab = 'methods' | 'transactions'
 
@@ -100,20 +101,24 @@ function PaymentMethodItem({
 }
 
 interface PaymentMethodsTabContentProps {
+  hasPaymentMethods: boolean
+  activePaymentMethodId: PaymentMethodId
   isAutoRenewalEnabled: boolean
   onDisableClick: () => void
   onEnableClick: () => void
+  onEnablePaymentMethods: () => void
+  onSelectPaymentMethod: (id: PaymentMethodId) => void
 }
 
 function PaymentMethodsTabContent({
+  hasPaymentMethods,
+  activePaymentMethodId,
   isAutoRenewalEnabled,
   onDisableClick,
   onEnableClick,
+  onEnablePaymentMethods,
+  onSelectPaymentMethod,
 }: PaymentMethodsTabContentProps) {
-  const [hasPaymentMethods, setHasPaymentMethods] = useState(false)
-  const [activePaymentMethodId, setActivePaymentMethodId] =
-    useState<PaymentMethodId>('card')
-
   return (
     <>
       {hasPaymentMethods ? (
@@ -123,7 +128,7 @@ function PaymentMethodsTabContent({
               key={method.id}
               method={method}
               isActive={activePaymentMethodId === method.id}
-              onSelect={() => setActivePaymentMethodId(method.id)}
+              onSelect={() => onSelectPaymentMethod(method.id)}
             />
           ))}
         </div>
@@ -131,7 +136,7 @@ function PaymentMethodsTabContent({
         <EmptyStateBlock
           message="У вас ещё нет добавленных способов оплаты"
           minHeight={193}
-          onClick={() => setHasPaymentMethods(true)}
+          onClick={onEnablePaymentMethods}
         />
       )}
       <button
@@ -149,8 +154,32 @@ function PaymentMethodsTabContent({
   )
 }
 
-function TransactionsTabContent() {
-  return <EmptyStateBlock message="У вас ещё нет транзакций" minHeight={261} />
+function TransactionsTabContent({
+  transactions,
+}: {
+  transactions: { id: string; description: string }[]
+}) {
+  if (transactions.length === 0) {
+    return (
+      <EmptyStateBlock
+        message="У вас ещё нет транзакций"
+        minHeight={261}
+      />
+    )
+  }
+
+  return (
+    <div className="flex flex-col gap-3">
+      {transactions.map((tx) => (
+        <div
+          key={tx.id}
+          className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 text-white text-[16px]"
+        >
+          {tx.description}
+        </div>
+      ))}
+    </div>
+  )
 }
 
 const paymentTabs = [
@@ -160,9 +189,28 @@ const paymentTabs = [
 
 export function PaymentHistoryPage() {
   const [activeTab, setActiveTab] = useState<PaymentTab>('methods')
-  const [isAutoRenewalEnabled, setIsAutoRenewalEnabled] = useState(true)
+  const {
+    settings,
+    transactions,
+    setAutoRenewal,
+    setActivePaymentMethod,
+    enablePaymentMethods,
+  } = usePayment()
   const disableSheet = useSheet()
   const activeIndex = paymentTabs.findIndex((tab) => tab.id === activeTab)
+
+  const isAutoRenewalEnabled = settings?.isAutoRenewalEnabled ?? true
+  const hasPaymentMethods = settings?.hasPaymentMethods ?? false
+  const activePaymentMethodId = settings?.activePaymentMethodId ?? 'card'
+
+  const handleDisableAutoRenewal = () => {
+    void setAutoRenewal(false)
+    disableSheet.close()
+  }
+
+  const handleEnableAutoRenewal = () => {
+    void setAutoRenewal(true)
+  }
 
   return (
     <>
@@ -214,12 +262,16 @@ export function PaymentHistoryPage() {
 
         {activeTab === 'methods' ? (
           <PaymentMethodsTabContent
+            hasPaymentMethods={hasPaymentMethods}
+            activePaymentMethodId={activePaymentMethodId}
             isAutoRenewalEnabled={isAutoRenewalEnabled}
             onDisableClick={disableSheet.open}
-            onEnableClick={() => setIsAutoRenewalEnabled(true)}
+            onEnableClick={handleEnableAutoRenewal}
+            onEnablePaymentMethods={() => void enablePaymentMethods()}
+            onSelectPaymentMethod={(id) => void setActivePaymentMethod(id)}
           />
         ) : (
-          <TransactionsTabContent />
+          <TransactionsTabContent transactions={transactions} />
         )}
       </main>
 
@@ -227,7 +279,7 @@ export function PaymentHistoryPage() {
         isMounted={disableSheet.mounted}
         isVisible={disableSheet.visible}
         onClose={disableSheet.close}
-        onConfirm={() => setIsAutoRenewalEnabled(false)}
+        onConfirm={handleDisableAutoRenewal}
       />
     </>
   )

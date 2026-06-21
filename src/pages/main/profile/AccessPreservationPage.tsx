@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { CopyIcon } from '@/components/icons/CopyIcon'
 import { DocumentCheckIcon } from '@/components/icons/DocumentCheckIcon'
@@ -11,6 +10,7 @@ import {
 } from '@/js/constants/urls'
 import { openInNewTab } from '@/js/helpers/browser'
 import { copyToClipboard } from '@/js/helpers/clipboard'
+import { useUser } from '@/store/user/useUser'
 
 interface ActionCardProps {
   icon: React.ReactNode
@@ -60,12 +60,13 @@ function ActionCard({
 }
 
 export function AccessPreservationPage() {
-  const [isTelegramLinked, setIsTelegramLinked] = useState(false)
+  const { user, linkTelegram } = useUser()
+  const isTelegramLinked = user?.isTelegramLinked ?? false
 
   const handleCopyLink = () => copyToClipboard(PERSONAL_CABINET_URL)
 
   const handleLinkTelegram = () => {
-    setIsTelegramLinked(true)
+    void linkTelegram()
     openInNewTab(TELEGRAM_BOT_URL)
   }
 

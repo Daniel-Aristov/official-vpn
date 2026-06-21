@@ -5,7 +5,6 @@ import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
 import {
   SUBSCRIPTION_DEEP_LINK,
-  VPN_LINK,
   type InstallPlatform,
 } from '@/js/constants/urls'
 import { openInNewTab } from '@/js/helpers/browser'
@@ -15,6 +14,8 @@ import {
   SETUP_PLATFORM_LABELS,
 } from '@/js/helpers/platform'
 import { useSheet } from '@/js/helpers/useSheet'
+import { useSubscription } from '@/store/subscription/useSubscription'
+import { copyToClipboard } from '@/js/helpers/clipboard'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
@@ -46,6 +47,8 @@ export function SetupPage() {
   const [started, setStarted] = useState(false)
   const installSheet = useSheet()
   const telegramSheet = useSheet()
+  const { subscription } = useSubscription()
+  const vpnKey = subscription?.vpnKey ?? ''
   const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
 
@@ -323,11 +326,12 @@ export function SetupPage() {
                   Ссылка на VPN
                 </span>
                 <span className="text-white text-[16px] leading-[120%] truncate">
-                  {VPN_LINK}
+                  {vpnKey}
                 </span>
               </div>
               <button
                 type="button"
+                onClick={() => copyToClipboard(vpnKey)}
                 className="bg-primary text-white p-2 rounded-full cursor-pointer shrink-0 w-[46px] h-[46px] flex items-center justify-center"
               >
                 <CopyIcon className="w-5 h-5" />

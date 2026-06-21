@@ -5,13 +5,13 @@ import { LinkIcon } from '@/components/icons/LinkIcon'
 import { ReferralGiftIcon } from '@/components/icons/ReferralGiftIcon'
 import { UsefulLinkArrowIcon } from '@/components/icons/UsefulLinkArrowIcon'
 import {
-  REFERRAL_LINK,
-  MONEY_REFERRAL_LINK,
   TELEGRAM_SUPPORT_URL,
   TELEGRAM_PARTNERS_URL,
 } from '@/js/constants/urls'
 import { copyToClipboard } from '@/js/helpers/clipboard'
 import { splitLinkAtQuery } from '@/js/helpers/link'
+import { useReferral } from '@/store/referral/useReferral'
+import { formatMoney } from '@/js/services/referralService'
 
 type ReferralTab = 'bonuses' | 'money'
 
@@ -127,12 +127,20 @@ function ReferralLinkCard({ link }: ReferralLinkCardProps) {
   )
 }
 
-function BonusesTabContent() {
+function BonusesTabContent({
+  invitedCount,
+  bonusDays,
+  referralLink,
+}: {
+  invitedCount: number
+  bonusDays: number
+  referralLink: string
+}) {
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <StatCard value="344" label="Приглашено" />
-        <StatCard value="12" label="Получено дней" />
+        <StatCard value={String(invitedCount)} label="Приглашено" />
+        <StatCard value={String(bonusDays)} label="Получено дней" />
       </div>
 
       <InfoBlock>
@@ -147,19 +155,31 @@ function BonusesTabContent() {
       </InfoBlock>
 
       <EmptyRecordsBlock />
-      <ReferralLinkCard link={REFERRAL_LINK} />
+      <ReferralLinkCard link={referralLink} />
     </>
   )
 }
 
-function MoneyTabContent() {
+function MoneyTabContent({
+  invitedCount,
+  balance,
+  earned,
+  withdrawn,
+  referralLink,
+}: {
+  invitedCount: number
+  balance: number
+  earned: number
+  withdrawn: number
+  referralLink: string
+}) {
   return (
     <>
       <div className="grid grid-cols-2 gap-3">
-        <StatCard value="344" label="Приглашено" />
-        <StatCard value="0 ₽" label="Баланс" />
-        <StatCard value="12.412 ₽" label="Заработано" />
-        <StatCard value="12.412 ₽" label="Выведено" />
+        <StatCard value={String(invitedCount)} label="Приглашено" />
+        <StatCard value={formatMoney(balance)} label="Баланс" />
+        <StatCard value={formatMoney(earned)} label="Заработано" />
+        <StatCard value={formatMoney(withdrawn)} label="Выведено" />
       </div>
 
       <InfoBlock>
@@ -195,7 +215,7 @@ function MoneyTabContent() {
       <div className="bg-secondary rounded-[16px] p-4 flex items-center justify-center text-white text-[16px] font-semibold leading-[130%]">
         Запросы на вывод
       </div>
-      <ReferralLinkCard link={MONEY_REFERRAL_LINK} />
+      <ReferralLinkCard link={referralLink} />
     </>
   )
 }
@@ -207,7 +227,11 @@ const referralTabs = [
 
 export function ReferralProgramPage() {
   const [activeTab, setActiveTab] = useState<ReferralTab>('bonuses')
+  const { data } = useReferral()
   const activeIndex = referralTabs.findIndex((tab) => tab.id === activeTab)
+
+  const bonuses = data?.bonuses
+  const money = data?.money
 
   return (
     <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
@@ -249,7 +273,21 @@ export function ReferralProgramPage() {
         ))}
       </div>
 
-      {activeTab === 'bonuses' ? <BonusesTabContent /> : <MoneyTabContent />}
+      {activeTab === 'bonuses' ? (
+        <BonusesTabContent
+          invitedCount={bonuses?.invitedCount ?? 0}
+          bonusDays={bonuses?.bonusDays ?? 0}
+          referralLink={bonuses?.referralLink ?? ''}
+        />
+      ) : (
+        <MoneyTabContent
+          invitedCount={money?.invitedCount ?? 0}
+          balance={money?.balance ?? 0}
+          earned={money?.earned ?? 0}
+          withdrawn={money?.withdrawn ?? 0}
+          referralLink={money?.referralLink ?? ''}
+        />
+      )}
     </main>
   )
 }

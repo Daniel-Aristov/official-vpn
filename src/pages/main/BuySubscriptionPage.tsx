@@ -22,10 +22,14 @@ import {
 } from '@/js/constants/subscription'
 import { formatSubscriptionEndDate } from '@/js/helpers/date'
 import { useSheet } from '@/js/helpers/useSheet'
+import { useSubscription } from '@/store/subscription/useSubscription'
+import { usePayment } from '@/store/payment/usePayment'
 
 export function BuySubscriptionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
+  const { renewalPeriods, purchaseSubscription } = useSubscription()
+  const { settings } = usePayment()
   const isPro = searchParams.get('plan') === 'pro'
   const payment = useSheet()
   const paymentMethodChange = useSheet()
@@ -36,8 +40,10 @@ export function BuySubscriptionPage() {
   const [proDeviceIndex, setProDeviceIndex] = useState(0)
   const [periodId, setPeriodId] = useState('3m')
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] =
-    useState<PaymentMethodId>('sbp')
-  const [isAutoRenewalEnabled] = useState(true)
+    useState<PaymentMethodId>(settings?.activePaymentMethodId ?? 'sbp')
+  const isAutoRenewalEnabled = settings?.isAutoRenewalEnabled ?? true
+
+  const periods = renewalPeriods.length > 0 ? renewalPeriods : PERIODS
 
   const deviceOptions = isPro ? PRO_DEVICE_OPTIONS : DEVICE_OPTIONS
   const deviceIndex = isPro ? proDeviceIndex : basicDeviceIndex
@@ -50,7 +56,7 @@ export function BuySubscriptionPage() {
   const extraDevicePrice = extraDeviceCount * PRICE_PER_EXTRA_DEVICE
   const nextPeriodMonthlyPrice =
     BASIC_MONTHLY_PRICE + extraDeviceCount * PRICE_PER_EXTRA_DEVICE
-  const selectedPeriod = PERIODS.find((p) => p.id === periodId) ?? PERIODS[1]
+  const selectedPeriod = periods.find((p) => p.id === periodId) ?? periods[1]
   const selectedPaymentMethod =
     PAYMENT_METHODS.find((method) => method.id === selectedPaymentMethodId) ??
     PAYMENT_METHODS[1]
@@ -98,6 +104,16 @@ export function BuySubscriptionPage() {
       return
     }
     payment.open()
+  }
+
+  const handleConfirmPayment = () => {
+    void purchaseSubscription({
+      planType: isPro ? 'pro' : 'basic',
+      periodId,
+      deviceCount,
+      paymentMethodId: selectedPaymentMethodId,
+    })
+    payment.close()
   }
 
   return (
@@ -175,7 +191,7 @@ export function BuySubscriptionPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {PERIODS.map((period) => {
+            {periods.map((period) => {
               const isSelected = period.id === periodId
               return (
                 <button
@@ -254,6 +270,7 @@ export function BuySubscriptionPage() {
         isMounted={payment.mounted}
         isVisible={payment.visible}
         onClose={payment.close}
+        onConfirm={handleConfirmPayment}
         onChangePaymentMethod={paymentMethodChange.open}
         subscriptionEndDate={subscriptionEndDate}
         periodLabel={selectedPeriod.label}

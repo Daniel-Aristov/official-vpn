@@ -8,6 +8,7 @@ interface PaymentConfirmationSheetProps {
   isMounted: boolean
   isVisible: boolean
   onClose: () => void
+  onConfirm?: () => void
   onChangePaymentMethod: () => void
   subscriptionEndDate: string
   periodLabel: string
@@ -23,6 +24,7 @@ export function PaymentConfirmationSheet({
   isMounted,
   isVisible,
   onClose,
+  onConfirm,
   onChangePaymentMethod,
   subscriptionEndDate,
   periodLabel,
@@ -72,7 +74,9 @@ export function PaymentConfirmationSheet({
         </button>
       </div>
 
-      <PrimaryButton size="large">Оплатить {actualPrice} Р</PrimaryButton>
+      <PrimaryButton size="large" onClick={onConfirm}>
+        Оплатить {actualPrice} Р
+      </PrimaryButton>
 
       <p className="text-white/40 text-[12px] leading-[130%] text-center">
         Нажимая на кнопку Оплатить, Вы соглашаетесь с{' '}

@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { CreditCardIcon } from '@/components/icons/CreditCardIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
@@ -10,7 +9,7 @@ import { ShareIcon } from '@/components/icons/ShareIcon'
 import { ShieldIcon } from '@/components/icons/ShieldIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
 import { UserIcon } from '@/components/icons/UserIcon'
-import { useAuth } from '@/store/auth/useAuth'
+import { useUser } from '@/store/user/useUser'
 import { TELEGRAM_BOT_URL } from '@/js/constants/urls'
 import { openInNewTab } from '@/js/helpers/browser'
 
@@ -46,11 +45,13 @@ function MenuItem({ icon, title, subtitle, onClick }: MenuItemProps) {
 
 export function ProfilePage() {
   const navigate = useNavigate()
-  const { email } = useAuth()
-  const [isTelegramLinked, setIsTelegramLinked] = useState(false)
+  const { user, linkTelegram } = useUser()
+
+  const isTelegramLinked = user?.isTelegramLinked ?? false
+  const email = user?.email ?? '—'
 
   const handleLinkTelegram = () => {
-    setIsTelegramLinked(true)
+    void linkTelegram()
     openInNewTab(TELEGRAM_BOT_URL)
   }
 
@@ -90,7 +91,7 @@ export function ProfilePage() {
         </div>
         <div className="flex flex-col gap-0.5 flex-1">
           <span className="text-white text-[16px] font-semibold leading-[130%]">
-            {email ?? '—'}
+            {email}
           </span>
           <span
             className={`text-[16px] leading-[130%] ${

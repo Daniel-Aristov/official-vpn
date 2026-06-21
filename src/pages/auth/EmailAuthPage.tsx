@@ -4,10 +4,12 @@ import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { AtIcon } from '@/components/icons/AtIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { isValidEmail } from '@/js/helpers/validation'
+import { sendEmailCode } from '@/js/services/authService'
 
 export function EmailAuthPage() {
   const navigate = useNavigate()
   const [email, setEmail] = useState('')
+  const [isSending, setIsSending] = useState(false)
 
   const trimmedEmail = email.trim()
   const isEmpty = trimmedEmail === ''
@@ -72,12 +74,18 @@ export function EmailAuthPage() {
           </p>
           <PrimaryButton
             size="large"
-            disabled={!canContinue}
-            onClick={() =>
-              navigate('/auth/email/verify', {
-                state: { email: trimmedEmail },
-              })
-            }
+            disabled={!canContinue || isSending}
+            onClick={async () => {
+              setIsSending(true)
+              try {
+                await sendEmailCode(trimmedEmail)
+                navigate('/auth/email/verify', {
+                  state: { email: trimmedEmail },
+                })
+              } finally {
+                setIsSending(false)
+              }
+            }}
           >
             Продолжить
           </PrimaryButton>

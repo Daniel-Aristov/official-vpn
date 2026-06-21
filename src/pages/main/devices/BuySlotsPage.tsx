@@ -24,6 +24,12 @@ import {
   BASE_MONTHLY_SLOTS,
 } from '@/js/constants/subscription'
 import { useSheet } from '@/js/helpers/useSheet'
+import { useSubscription } from '@/store/subscription/useSubscription'
+import { usePayment } from '@/store/payment/usePayment'
+import {
+  formatEndDateShort,
+  getPlanLabel,
+} from '@/js/services/subscriptionService'
 
 interface LocationState {
   slotCount?: number
@@ -64,19 +70,36 @@ function PaymentMethodIcon({
 export function BuySlotsPage() {
   const navigate = useNavigate()
   const { state } = useLocation() as { state: LocationState | null }
+  const { subscription, purchaseSlots } = useSubscription()
+  const { settings, setActivePaymentMethod } = usePayment()
   const explanation = useSheet()
   const payment = useSheet()
   const paymentMethodChange = useSheet()
   const [slotCount, setSlotCount] = useState(state?.slotCount ?? 1)
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] =
-    useState<PaymentMethodId>('sbp')
+    useState<PaymentMethodId>(settings?.activePaymentMethodId ?? 'sbp')
 
   const selectedPaymentMethod =
     PAYMENT_METHODS.find((method) => method.id === selectedPaymentMethodId) ??
     PAYMENT_METHODS[1]
 
-  const currentSlots = state?.currentSlots ?? 6
-  const usedDevices = state?.usedDevices ?? 3
+  const currentSlots = state?.currentSlots ?? subscription?.totalSlots ?? 6
+  const usedDevices =
+    state?.usedDevices ?? subscription?.devices.length ?? 0
+  const planLabel = subscription
+    ? getPlanLabel(subscription.planType).toUpperCase()
+    : 'PRO'
+  const endDateShort = subscription
+    ? formatEndDateShort(subscription.endDate)
+    : '27.02.2026'
+
+  const handlePay = () => {
+    void purchaseSlots({
+      slotCount,
+      paymentMethodId: selectedPaymentMethodId,
+    })
+    payment.close()
+  }
 
   const currentPrice = slotCount * PRICE_PER_SLOT_PERIOD
   const monthlyPrice = BASE_MONTHLY_SLOTS + slotCount * PRICE_PER_SLOT_MONTHLY
@@ -116,10 +139,10 @@ export function BuySlotsPage() {
             </div>
             <div className="flex flex-col flex-1 gap-1 min-w-0 text-left">
               <span className="text-white text-[16px] font-semibold leading-[130%]">
-                PRO • {currentSlots} устройств
+                {planLabel} • {currentSlots} устройств
               </span>
               <span className="text-[#139D76] text-[14px] leading-[110%]">
-                Активна до 27.02.2026
+                Активна до {endDateShort}
               </span>
             </div>
             <span className="bg-secondary rounded-full w-[46px] h-[46px] flex items-center justify-center shrink-0 text-white">
@@ -257,7 +280,9 @@ export function BuySlotsPage() {
           </button>
         </div>
 
-        <PrimaryButton size="large">Оплатить {currentPrice} Р</PrimaryButton>
+        <PrimaryButton size="large" onClick={handlePay}>
+          Оплатить {currentPrice} Р
+        </PrimaryButton>
 
         <p className="text-white/40 text-[12px] leading-[130%] text-center">
           Нажимая на кнопку Оплатить, Вы соглашаетесь с{' '}
@@ -280,6 +305,7 @@ export function BuySlotsPage() {
               type="button"
               onClick={() => {
                 setSelectedPaymentMethodId(method.id)
+                void setActivePaymentMethod(method.id)
                 paymentMethodChange.close()
               }}
               className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"

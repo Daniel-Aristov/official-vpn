@@ -3,6 +3,8 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '@/components/icons/PasswordIcon'
 import { useAuth } from '@/store/auth/useAuth'
+import { verifyEmailCode } from '@/js/services/authService'
+import { syncUserEmail } from '@/js/services/userService'
 
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42
@@ -17,6 +19,7 @@ export function EmailVerifyPage() {
 
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(''))
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS)
+  const [isVerifying, setIsVerifying] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
@@ -58,8 +61,21 @@ export function EmailVerifyPage() {
     inputRefs.current[Math.min(digits.length, CODE_LENGTH - 1)]?.focus()
   }
 
-  const handleResend = () => {
+  const handleResend = async () => {
     setSecondsLeft(RESEND_SECONDS)
+    await verifyEmailCode(email, '')
+  }
+
+  const handleLogin = async () => {
+    setIsVerifying(true)
+    try {
+      const result = await verifyEmailCode(email, code.join(''))
+      await syncUserEmail(result.email)
+      setEmail(result.email)
+      navigate('/main')
+    } finally {
+      setIsVerifying(false)
+    }
   }
 
   return (
@@ -130,11 +146,9 @@ export function EmailVerifyPage() {
 
         <button
           type="button"
-          onClick={() => {
-            setEmail(email)
-            navigate('/main')
-          }}
-          className="w-full py-[16px] rounded-2xl bg-primary text-white font-semibold text-[16px] leading-[20px] cursor-pointer"
+          disabled={isVerifying}
+          onClick={() => void handleLogin()}
+          className="w-full py-[16px] rounded-2xl bg-primary text-white font-semibold text-[16px] leading-[20px] cursor-pointer disabled:opacity-50"
         >
           Авторизоваться
         </button>

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo } from 'react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import type { MainViewOutletContext } from '@/views/MainView'
 import { DownloadIcon } from '@/components/icons/DownloadIcon'
@@ -6,69 +6,76 @@ import { GlobeIcon } from '@/components/icons/GlobeIcon'
 import { SmartphoneIcon } from '@/components/icons/SmartphoneIcon'
 import { ChevronRightIcon } from '@/components/icons/ChevronRightIcon'
 import { NotificationBanner } from '@/components/NotificationBanner'
+import { useUser } from '@/store/user/useUser'
+import { useSubscription } from '@/store/subscription/useSubscription'
+import {
+  formatEndDate,
+  getPlanLabel,
+} from '@/js/services/subscriptionService'
 
-type DemoVariant = 'warning' | 'success' | 'blocked' | null
+const planStyles: Record<string, string> = {
+  trial: 'text-white/50 bg-white/10 border-white/20',
+  basic: 'text-primary bg-primary/20 border-primary/40 px-[14px]',
+  pro: 'text-yellow-300 bg-yellow-500/20 border-yellow-400/40 px-[18px]',
+}
 
-const demoVariants: DemoVariant[] = ['warning', 'success', 'blocked', null]
-
-const plans = [
-  {
-    label: 'бесплатный период',
-    className: 'text-white/50 bg-white/10 border-white/20',
-  },
-  {
-    label: 'BASIC',
-    className: 'text-primary bg-primary/20 border-primary/40 px-[14px]',
-  },
-  {
-    label: 'PRO',
-    className:
-      'text-yellow-300 bg-yellow-500/20 border-yellow-400/40 px-[18px]',
-  },
-]
-
-const notificationData = {
-  warning: {
-    title: 'Подписка закончится через 7 дней',
-    message: 'Не забудьте продлить подписку, иначе вы потеряете доступ к VPN',
-  },
-  success: {
-    title: 'Подписка успешно добавлена!',
-    message: 'Период: до 27 май 2026',
-  },
-  blocked: {
-    title: 'Вы заблокированы!',
-    message: 'Вам необходимо обратиться в поддержку!',
-  },
+function getDaysUntilEnd(endDate: string): number {
+  const end = new Date(endDate)
+  const now = new Date()
+  return Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
 }
 
 export function MainPage() {
   const navigate = useNavigate()
   const { setHideTabBar } = useOutletContext<MainViewOutletContext>()
-  const [demoIndex, setDemoIndex] = useState(0)
-  const variant = demoVariants[demoIndex]
-  const [planIndex, setPlanIndex] = useState(0)
-  const plan = plans[planIndex]
+  const { user } = useUser()
+  const { subscription } = useSubscription()
 
-  const cycleVariant = () => setDemoIndex((i) => (i + 1) % demoVariants.length)
-  const cyclePlan = () => setPlanIndex((i) => (i + 1) % plans.length)
+  const isBlocked = user?.isBlocked ?? false
+  const daysUntilEnd = subscription ? getDaysUntilEnd(subscription.endDate) : 0
+  const isExpiringSoon =
+    subscription?.isActive && daysUntilEnd > 0 && daysUntilEnd <= 7
+
+  const notification = useMemo(() => {
+    if (isBlocked) {
+      return {
+        variant: 'blocked' as const,
+        title: 'Вы заблокированы!',
+        message: 'Вам необходимо обратиться в поддержку!',
+      }
+    }
+    if (isExpiringSoon && subscription) {
+      return {
+        variant: 'warning' as const,
+        title: `Подписка закончится через ${daysUntilEnd} ${daysUntilEnd === 1 ? 'день' : 'дней'}`,
+        message: 'Не забудьте продлить подписку, иначе вы потеряете доступ к VPN',
+      }
+    }
+    return null
+  }, [isBlocked, isExpiringSoon, daysUntilEnd, subscription])
 
   useEffect(() => {
-    setHideTabBar(variant === 'blocked')
+    setHideTabBar(isBlocked)
     return () => setHideTabBar(false)
-  }, [variant, setHideTabBar])
+  }, [isBlocked, setHideTabBar])
+
+  const planLabel = subscription ? getPlanLabel(subscription.planType) : ''
+  const planStyle =
+    planStyles[subscription?.planType ?? 'trial'] ?? planStyles.trial
 
   return (
     <main className="flex flex-col flex-1 min-h-0 px-4 pt-4 max-w-[768px] mx-auto w-full gap-5">
-      {variant && (
+      {notification && (
         <NotificationBanner
-          variant={variant}
-          title={notificationData[variant].title}
-          message={notificationData[variant].message}
-          onClose={cycleVariant}
+          variant={notification.variant}
+          title={notification.title}
+          message={notification.message}
+          onClose={() => {}}
           onAction={() =>
             navigate(
-              variant === 'warning' ? '/main/subscription' : '/main/support',
+              notification.variant === 'warning'
+                ? '/main/subscription'
+                : '/main/support',
             )
           }
         />
@@ -76,37 +83,33 @@ export function MainPage() {
 
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex flex-1 items-center justify-center min-h-0">
-          <button
-            type="button"
-            onClick={cycleVariant}
-            className="cursor-pointer"
-          >
-            <img
-              src="/logoWithText.svg"
-              alt="Official VPN"
-              className="w-full h-auto max-w-[249px]"
-            />
-          </button>
+          <img
+            src="/logoWithText.svg"
+            alt="Official VPN"
+            className="w-full h-auto max-w-[249px]"
+          />
         </div>
 
-        {variant !== 'blocked' && (
+        {!isBlocked && subscription && (
           <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
             <div className="flex items-start justify-between mb-[16px]">
               <div className="flex flex-col">
                 <p className="text-white font-bold text-[16px] leading-[130%]">
-                  до 27 мая 2026
+                  до {formatEndDate(subscription.endDate)}
                 </p>
-                <p className="text-[#139D76] text-[16px] font-medium leading-[130%]">
-                  online
+                <p
+                  className={`text-[16px] font-medium leading-[130%] ${
+                    subscription.isActive ? 'text-[#139D76]' : 'text-white/50'
+                  }`}
+                >
+                  {subscription.isActive ? 'online' : 'offline'}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={cyclePlan}
-                className={`text-[12px] leading-[120%] font-medium border px-[10px] py-2 rounded-full cursor-pointer ${plan.className}`}
+              <span
+                className={`text-[12px] leading-[120%] font-medium border px-[10px] py-2 rounded-full ${planStyle}`}
               >
-                {plan.label}
-              </button>
+                {planLabel}
+              </span>
             </div>
 
             <button
@@ -121,7 +124,7 @@ export function MainPage() {
                 </span>
               </div>
               <span className="text-white font-semibold text-[16px]">
-                от 199 Р
+                от {subscription.price} Р
               </span>
             </button>
             <button
@@ -144,12 +147,12 @@ export function MainPage() {
               onClick={() => navigate('/main/devices')}
               className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px] cursor-pointer"
             >
-              <div className="flex items-center justify-start gap-1">
+              <div className="flex items-center gap-1">
                 <span className="text-white text-[14px] leading-[110%]">
                   Ваши устройства:
                 </span>
                 <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
-                  3
+                  {subscription.devices.length}
                 </span>
               </div>
               <div className="flex items-center gap-1 text-white text-[14px] font-medium">
