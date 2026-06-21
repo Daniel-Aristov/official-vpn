@@ -1,5 +1,5 @@
-import { useRef, useMemo, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useRef, useMemo, useState, useEffect } from 'react'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { AddSubscriptionAlert } from '@/components/AddSubscriptionAlert'
 import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
@@ -56,9 +56,14 @@ const platformLabels: Record<Platform, string> = {
 
 export function SetupPage() {
   const navigate = useNavigate()
+  const location = useLocation()
+  const openPlatformSelect = Boolean(
+    (location.state as { openPlatformSelect?: boolean } | null)
+      ?.openPlatformSelect,
+  )
   const [step, setStep] = useState(1)
   const [platform, setPlatform] = useState<Platform>('IOS')
-  const [showPlatforms, setShowPlatforms] = useState(false)
+  const [showPlatforms, setShowPlatforms] = useState(openPlatformSelect)
   const [started, setStarted] = useState(false)
   const [isSheetMounted, setIsSheetMounted] = useState(false)
   const [isSheetVisible, setIsSheetVisible] = useState(false)
@@ -68,6 +73,11 @@ export function SetupPage() {
   const sheetCloseTimerRef = useRef<number | null>(null)
   const telegramSheetCloseTimerRef = useRef<number | null>(null)
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
+
+  useEffect(() => {
+    if (!openPlatformSelect) return
+    navigate(location.pathname, { replace: true, state: null })
+  }, [openPlatformSelect, location.pathname, navigate])
 
   const openInstallSheet = () => {
     if (sheetCloseTimerRef.current !== null) {

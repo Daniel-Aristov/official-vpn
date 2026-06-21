@@ -42,9 +42,23 @@ export function NotificationBanner({
   actionLabel = 'Поддержка',
 }: NotificationBannerProps) {
   const { color, icon } = variantConfig[variant]
+  const isWarningClickable = variant === 'warning' && onAction
 
   return (
-    <div className="bg-black/40 border border-white/10 rounded-[24px] p-4">
+    <div
+      className={`bg-black/40 border border-white/10 rounded-[24px] p-4${isWarningClickable ? ' cursor-pointer' : ''}`}
+      {...(isWarningClickable && {
+        role: 'button',
+        tabIndex: 0,
+        onClick: onAction,
+        onKeyDown: (e: React.KeyboardEvent) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault()
+            onAction()
+          }
+        },
+      })}
+    >
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start flex-col gap-3 flex-1 min-w-0">
           <div className="shrink-0 mt-0.5">{icon}</div>

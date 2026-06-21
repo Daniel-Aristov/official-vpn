@@ -4,6 +4,7 @@ import { CreditCardIcon } from '@/components/icons/CreditCardIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
 import { GiftIcon } from '@/components/icons/GiftIcon'
 import { SupportIcon } from '@/components/icons/SupportIcon'
+import { GearIcon } from '@/components/icons/GearIcon'
 import { MonitorIcon } from '@/components/icons/MonitorIcon'
 import { ShareIcon } from '@/components/icons/ShareIcon'
 import { ShieldIcon } from '@/components/icons/ShieldIcon'
@@ -129,6 +130,12 @@ export function ProfilePage() {
             title="Способ оплаты и история"
             subtitle="Настройка оплаты и транзакции"
             onClick={() => navigate('/main/profile/payment')}
+          />
+          <MenuItem
+            icon={<MonitorIcon />}
+            title="Устройства"
+            subtitle="Управление вашими устройствами"
+            onClick={() => navigate('/main/devices')}
             last
           />
         </div>
@@ -138,10 +145,12 @@ export function ProfilePage() {
         <span className="text-white/50 text-[16px] font-medium">Поддержка</span>
         <div className="flex flex-col gap-6">
           <MenuItem
-            icon={<MonitorIcon />}
+            icon={<GearIcon fillOpacity={0.5} />}
             title="Установка на другом устройстве"
             subtitle="Подробная инструкция для установки"
-            onClick={() => navigate('/main/setup')}
+            onClick={() =>
+              navigate('/main/setup', { state: { openPlatformSelect: true } })
+            }
           />
           <MenuItem
             icon={<SupportIcon />}

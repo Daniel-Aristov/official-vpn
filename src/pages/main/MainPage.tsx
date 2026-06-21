@@ -11,6 +11,21 @@ type DemoVariant = 'warning' | 'success' | 'blocked' | null
 
 const demoVariants: DemoVariant[] = ['warning', 'success', 'blocked', null]
 
+const plans = [
+  {
+    label: 'бесплатный период',
+    className: 'text-white/50 bg-white/10 border-white/20',
+  },
+  {
+    label: 'BASIC',
+    className: 'text-blue-300 bg-blue-500/20 border-blue-400/40',
+  },
+  {
+    label: 'PRO',
+    className: 'text-yellow-300 bg-yellow-500/20 border-yellow-400/40',
+  },
+]
+
 const notificationData = {
   warning: {
     title: 'Подписка закончится через 7 дней',
@@ -31,8 +46,11 @@ export function MainPage() {
   const { setHideTabBar } = useOutletContext<MainViewOutletContext>()
   const [demoIndex, setDemoIndex] = useState(0)
   const variant = demoVariants[demoIndex]
+  const [planIndex, setPlanIndex] = useState(0)
+  const plan = plans[planIndex]
 
   const cycleVariant = () => setDemoIndex((i) => (i + 1) % demoVariants.length)
+  const cyclePlan = () => setPlanIndex((i) => (i + 1) % plans.length)
 
   useEffect(() => {
     setHideTabBar(variant === 'blocked')
@@ -47,7 +65,11 @@ export function MainPage() {
           title={notificationData[variant].title}
           message={notificationData[variant].message}
           onClose={cycleVariant}
-          onAction={() => navigate('/main/support')}
+          onAction={() =>
+            navigate(
+              variant === 'warning' ? '/main/subscription' : '/main/support',
+            )
+          }
         />
       )}
 
@@ -75,15 +97,19 @@ export function MainPage() {
             <div className="flex items-start justify-between mb-[16px]">
               <div className="flex flex-col">
                 <p className="text-white font-bold text-[16px] leading-[130%]">
-                  до 27 сентября 2026
+                  до 27 мая 2026
                 </p>
                 <p className="text-[#139D76] text-[16px] font-medium leading-[130%]">
                   online
                 </p>
               </div>
-              <span className="text-white/50 text-[12px] leading-[120%] bg-white/10 font-medium border border-white/20 px-[10px] py-2 rounded-full">
-                бесплатный период
-              </span>
+              <button
+                type="button"
+                onClick={cyclePlan}
+                className={`text-[12px] leading-[120%] font-medium border px-[10px] py-2 rounded-full cursor-pointer ${plan.className}`}
+              >
+                {plan.label}
+              </button>
             </div>
 
             <button

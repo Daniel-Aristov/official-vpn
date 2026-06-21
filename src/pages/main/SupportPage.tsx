@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom'
 import { SupportIcon } from '@/components/icons/SupportIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
-import { MonitorIcon } from '@/components/icons/MonitorIcon'
+import { GearIcon } from '@/components/icons/GearIcon'
 import { QuestionIcon } from '@/components/icons/QuestionIcon'
 
 interface MenuItemProps {
@@ -63,10 +63,12 @@ export function SupportPage() {
           onClick={() => navigate('/main/support/faq')}
         />
         <MenuItem
-          icon={<MonitorIcon />}
+          icon={<GearIcon fillOpacity={0.5} />}
           title="Установка на другом устройстве"
           subtitle="Подробная инструкция для установки"
-          onClick={() => navigate('/main/setup')}
+          onClick={() =>
+            navigate('/main/setup', { state: { openPlatformSelect: true } })
+          }
         />
         <MenuItem
           icon={<SupportIcon />}
