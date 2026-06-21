@@ -3,33 +3,15 @@ import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
 import { SBPLogoIcon } from '@/components/icons/SBPLogoIcon'
+import { TetherLogoIcon } from '@/components/icons/TetherLogoIcon'
+import {
+  formatMaskedCardNumber,
+  PAYMENT_METHODS,
+  type PaymentMethod,
+  type PaymentMethodId,
+} from '@/data/paymentMethods'
 
 type PaymentTab = 'methods' | 'transactions'
-type PaymentMethodId = 'card' | 'sbp'
-
-interface PaymentMethod {
-  id: PaymentMethodId
-  cardNumber: string
-  subtitle: string
-}
-
-const FAKE_PAYMENT_METHODS: PaymentMethod[] = [
-  {
-    id: 'card',
-    cardNumber: '4276123456788324',
-    subtitle: 'Оплата картой',
-  },
-  {
-    id: 'sbp',
-    cardNumber: '2202201234568324',
-    subtitle: 'Сбербанк',
-  },
-]
-
-function formatMaskedCardNumber(cardNumber: string) {
-  const digits = cardNumber.replace(/\D/g, '')
-  return `**** ${digits.slice(-4)}`
-}
 
 interface EmptyStateBlockProps {
   message: string
@@ -85,17 +67,27 @@ function PaymentMethodItem({
       <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white/10 shrink-0 text-white">
         {method.id === 'card' ? (
           <PaymentHistoryIcon className="w-6 h-6" />
-        ) : (
+        ) : method.id === 'sbp' ? (
           <SBPLogoIcon className="h-[28px] w-auto" />
+        ) : (
+          <TetherLogoIcon className="h-[19px] w-auto" />
         )}
       </div>
       <div className="flex flex-col flex-1 min-w-0 text-left">
-        <span className="text-white text-[16px] font-semibold leading-[130%]">
-          {formatMaskedCardNumber(method.cardNumber)}
-        </span>
-        <span className="text-[#A5A6A7] text-[14px] leading-[110%]">
-          {method.subtitle}
-        </span>
+        {method.id === 'usdt' ? (
+          <span className="text-white text-[16px] font-semibold leading-[130%]">
+            {method.subtitle}
+          </span>
+        ) : (
+          <>
+            <span className="text-white text-[16px] font-semibold leading-[130%]">
+              {formatMaskedCardNumber(method.cardNumber)}
+            </span>
+            <span className="text-[#A5A6A7] text-[14px] leading-[110%]">
+              {method.subtitle}
+            </span>
+          </>
+        )}
       </div>
       {isActive && (
         <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
@@ -125,7 +117,7 @@ function PaymentMethodsTabContent({
     <>
       {hasPaymentMethods ? (
         <div className="flex flex-col gap-3">
-          {FAKE_PAYMENT_METHODS.map((method) => (
+          {PAYMENT_METHODS.map((method) => (
             <PaymentMethodItem
               key={method.id}
               method={method}

@@ -7,6 +7,7 @@ interface BottomSheetProps {
   title: string
   onClose: () => void
   children: ReactNode
+  zIndexClass?: string
 }
 
 export function BottomSheet({
@@ -15,11 +16,12 @@ export function BottomSheet({
   title,
   onClose,
   children,
+  zIndexClass = 'z-60',
 }: BottomSheetProps) {
   if (!isMounted) return null
 
   return (
-    <div className="fixed inset-0 z-60 flex items-end justify-center">
+    <div className={`fixed inset-0 ${zIndexClass} flex items-end justify-center`}>
       <button
         type="button"
         aria-label="Закрыть"

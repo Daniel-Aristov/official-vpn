@@ -75,7 +75,7 @@ export function MainPage() {
             <div className="flex items-start justify-between mb-[16px]">
               <div className="flex flex-col">
                 <p className="text-white font-bold text-[18px]">
-                  до 27 мая 2026
+                  до 27 сентября 2026
                 </p>
                 <p className="text-[#139D76] text-[16px] font-medium">online</p>
               </div>
@@ -118,12 +118,14 @@ export function MainPage() {
               onClick={() => navigate('/main/devices')}
               className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px] cursor-pointer"
             >
-              <span className="text-white text-[14px] leading-[110%]">
-                Ваши <br /> устройства:
-              </span>
-              <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
-                3
-              </span>
+              <div className="flex items-center justify-start gap-1">
+                <span className="text-white text-[14px] leading-[110%]">
+                  Ваши устройства:
+                </span>
+                <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
+                  3
+                </span>
+              </div>
               <div className="flex items-center gap-1 text-white text-[14px] font-medium">
                 Посмотреть
                 <ChevronRightIcon />
