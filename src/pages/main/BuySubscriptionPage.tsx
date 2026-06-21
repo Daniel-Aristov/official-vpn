@@ -1,23 +1,15 @@
 import { useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
-import { BottomSheet } from '@/components/BottomSheet'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { DeviceLimitExceededSheet } from '@/components/DeviceLimitExceededSheet'
+import { PaymentConfirmationSheet } from '@/components/PaymentConfirmationSheet'
+import { PaymentMethodChangeSheet } from '@/components/PaymentMethodChangeSheet'
 import { UpgradeToProSheet } from '@/components/UpgradeToProSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { StepSlider } from '@/components/UI/StepSlider'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { StarIcon } from '@/components/icons/StarIcon'
-import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
-import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
-import { SBPLogoIcon } from '@/components/icons/SBPLogoIcon'
-import { TetherLogoIcon } from '@/components/icons/TetherLogoIcon'
-import {
-  PAYMENT_METHODS,
-  type PaymentMethod,
-  type PaymentMethodId,
-} from '@/data/paymentMethods'
+import { PAYMENT_METHODS, type PaymentMethodId } from '@/data/paymentMethods'
 
 const PERIODS = [
   { id: '1m', label: '1 месяц', price: 199, description: 'Оплата за 1 месяц' },
@@ -89,36 +81,6 @@ function useSheet() {
   return { mounted, visible, open, close }
 }
 
-function PaymentMethodIcon({
-  method,
-  variant,
-}: {
-  method: PaymentMethod
-  variant: 'checkout' | 'picker'
-}) {
-  if (variant === 'checkout') {
-    if (method.id === 'card') {
-      return <PaymentHistoryIcon className="w-7 h-7 shrink-0 text-white" />
-    }
-    if (method.id === 'sbp') {
-      return <SBPLogoIcon className="h-7 w-auto shrink-0" />
-    }
-    return <TetherLogoIcon className="h-[19px] w-auto shrink-0" />
-  }
-
-  return (
-    <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white/10 shrink-0 text-white">
-      {method.id === 'card' ? (
-        <PaymentHistoryIcon className="w-6 h-6" />
-      ) : method.id === 'sbp' ? (
-        <SBPLogoIcon className="h-[28px] w-auto" />
-      ) : (
-        <TetherLogoIcon className="h-[19px] w-auto" />
-      )}
-    </div>
-  )
-}
-
 export function BuySubscriptionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
@@ -163,16 +125,12 @@ export function BuySubscriptionPage() {
     ? Math.ceil(YEAR_PRICE / 2) * proBillingMultiplier
     : Math.ceil(YEAR_PRICE / 2) * deviceCount
 
+  const lastDeviceIndex = deviceOptions.length - 1
+
   const handleDeviceChange = (index: number) => {
     setDeviceIndex(index)
-  }
-
-  const handleDeviceCommit = (index: number, previousIndex: number) => {
-    if (isPro) return
-    const prevCount = DEVICE_OPTIONS[previousIndex]
-    const nextCount = DEVICE_OPTIONS[index]
-    if (nextCount === 6 && prevCount !== 6) {
-      proUpgrade.open()
+    if (!isPro && index === lastDeviceIndex) {
+      window.setTimeout(() => proUpgrade.open(), 0)
     }
   }
 
@@ -223,7 +181,7 @@ export function BuySubscriptionPage() {
           )}
         </div>
 
-        <div className="flex flex-col flex-1 p-4 gap-4">
+        <div className="flex flex-col flex-1 px-4 pt-4 gap-4">
           <div className="flex flex-col gap-2">
             <h1 className="text-white text-[28px] font-semibold leading-[130%]">
               {isPro ? 'Покупка подписки PRO' : 'Покупка подписки'}
@@ -270,7 +228,6 @@ export function BuySubscriptionPage() {
               options={deviceOptions}
               value={deviceIndex}
               onChange={handleDeviceChange}
-              onCommit={handleDeviceCommit}
               getStepAriaLabel={(count) => `${count} устройств`}
             />
           </div>
@@ -351,87 +308,28 @@ export function BuySubscriptionPage() {
         nextPeriodMonthlyPrice={nextPeriodMonthlyPrice}
       />
 
-      <BottomSheet
+      <PaymentConfirmationSheet
         isMounted={payment.mounted}
         isVisible={payment.visible}
-        title="Подтверждение оплаты"
         onClose={payment.close}
-      >
-        <div className="bg-white/10 rounded-[16px] p-3 flex flex-col">
-          <p className="text-white/90 text-[14px] leading-[120%]">
-            Подписка до {subscriptionEndDate}, {selectedPeriod.label}
-          </p>
-          {!isPro && isAutoRenewalEnabled && (
-            <p className="text-white/50 text-[12px] leading-[120%]">
-              (далее {BASIC_MONTHLY_PRICE} рублей в месяц)
-            </p>
-          )}
-          <div className="h-px bg-white/20 my-3" />
-          <p className="text-white/80 text-[14px] leading-[120%]">
-            Количество устройств: {deviceCount}
-          </p>
-        </div>
+        onChangePaymentMethod={paymentMethodChange.open}
+        subscriptionEndDate={subscriptionEndDate}
+        periodLabel={selectedPeriod.label}
+        isPro={isPro}
+        isAutoRenewalEnabled={isAutoRenewalEnabled}
+        basicMonthlyPrice={BASIC_MONTHLY_PRICE}
+        deviceCount={deviceCount}
+        selectedPaymentMethod={selectedPaymentMethod}
+        actualPrice={actualPrice}
+      />
 
-        <div
-          onClick={paymentMethodChange.open}
-          className="bg-white/10 border border-white/10 rounded-[16px] p-4 flex items-center gap-3 w-full cursor-pointer"
-        >
-          <PaymentMethodIcon
-            method={selectedPaymentMethod}
-            variant="checkout"
-          />
-          <span className="text-white text-[16px] font-medium flex-1 text-left">
-            {selectedPaymentMethod.checkoutLabel}
-          </span>
-          <button
-            type="button"
-            aria-label="Изменить способ оплаты"
-            className="w-[28px] h-[28px] flex items-center justify-center rounded-full border border-white/10 bg-secondary shrink-0 text-white cursor-pointer"
-          >
-            <ChevronDownIcon className="shrink-0" />
-          </button>
-        </div>
-
-        <PrimaryButton size="large">Оплатить {actualPrice} Р</PrimaryButton>
-
-        <p className="text-white/40 text-[12px] leading-[130%] text-center">
-          Нажимая на кнопку Оплатить, Вы соглашаетесь с{' '}
-          <span className="underline cursor-pointer">офертой</span> и{' '}
-          <span className="underline cursor-pointer">политикой конф.</span>
-        </p>
-      </BottomSheet>
-
-      <BottomSheet
+      <PaymentMethodChangeSheet
         isMounted={paymentMethodChange.mounted}
         isVisible={paymentMethodChange.visible}
-        title="Изменить способ оплаты"
         onClose={paymentMethodChange.close}
-        zIndexClass="z-70"
-      >
-        <div className="flex flex-col gap-3">
-          {PAYMENT_METHODS.map((method) => (
-            <button
-              key={method.id}
-              type="button"
-              onClick={() => {
-                setSelectedPaymentMethodId(method.id)
-                paymentMethodChange.close()
-              }}
-              className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
-            >
-              <PaymentMethodIcon method={method} variant="picker" />
-              <span className="text-white text-[16px] font-semibold leading-[130%] flex-1 text-left">
-                {method.checkoutLabel}
-              </span>
-              {selectedPaymentMethodId === method.id && (
-                <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
-                  <CheckmarkIcon fill="white" className="w-4 h-4" />
-                </div>
-              )}
-            </button>
-          ))}
-        </div>
-      </BottomSheet>
+        selectedPaymentMethodId={selectedPaymentMethodId}
+        onSelectPaymentMethod={setSelectedPaymentMethodId}
+      />
     </>
   )
 }

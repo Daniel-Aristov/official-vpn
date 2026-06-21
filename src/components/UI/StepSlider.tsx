@@ -1,12 +1,12 @@
 import { useEffect, useRef } from 'react'
 
 const THUMB_SIZE = 28
+const DRAG_THRESHOLD = 3
 
 type StepSliderProps = {
   options: number[]
   value: number
   onChange: (index: number) => void
-  onCommit?: (index: number, previousIndex: number) => void
   getStepAriaLabel?: (option: number) => string
   className?: string
 }
@@ -15,20 +15,18 @@ export function StepSlider({
   options,
   value,
   onChange,
-  onCommit,
   getStepAriaLabel,
   className,
 }: StepSliderProps) {
   const trackRef = useRef<HTMLDivElement>(null)
-  const interactionStartIndexRef = useRef<number | null>(null)
   const currentIndexRef = useRef(value)
+  const pointerStartXRef = useRef(0)
+  const hasDraggedRef = useRef(false)
   const thumbOffset = THUMB_SIZE / 2
   const lastIndex = options.length - 1
 
   useEffect(() => {
-    if (interactionStartIndexRef.current === null) {
-      currentIndexRef.current = value
-    }
+    currentIndexRef.current = value
   }, [value])
 
   const getIndexFromPointer = (clientX: number): number => {
@@ -47,45 +45,41 @@ export function StepSlider({
     onChange(index)
   }
 
-  const commitInteraction = (finalIndex: number) => {
-    if (interactionStartIndexRef.current === null) return
-    const previousIndex = interactionStartIndexRef.current
-    interactionStartIndexRef.current = null
-    setIndex(finalIndex)
-    onCommit?.(finalIndex, previousIndex)
-  }
-
   const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
-    interactionStartIndexRef.current = currentIndexRef.current
     e.currentTarget.setPointerCapture(e.pointerId)
-    setIndex(getIndexFromPointer(e.clientX))
+    pointerStartXRef.current = e.clientX
+    hasDraggedRef.current = false
   }
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (e.buttons === 0) return
-    setIndex(getIndexFromPointer(e.clientX))
+    if (
+      !hasDraggedRef.current &&
+      Math.abs(e.clientX - pointerStartXRef.current) >= DRAG_THRESHOLD
+    ) {
+      hasDraggedRef.current = true
+    }
+    if (hasDraggedRef.current) {
+      setIndex(getIndexFromPointer(e.clientX))
+    }
   }
 
   const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
-    commitInteraction(getIndexFromPointer(e.clientX))
-  }
-
-  const handleLostPointerCapture = () => {
-    if (interactionStartIndexRef.current === null) return
-    commitInteraction(currentIndexRef.current)
-  }
-
-  const handleStepClick = (idx: number) => {
-    if (idx === value) return
-    const previousIndex = currentIndexRef.current
-    currentIndexRef.current = idx
-    onChange(idx)
-    onCommit?.(idx, previousIndex)
+    setIndex(getIndexFromPointer(e.clientX))
+    e.preventDefault()
+    hasDraggedRef.current = false
   }
 
   return (
     <div
       ref={trackRef}
+      role="slider"
+      aria-valuemin={0}
+      aria-valuemax={lastIndex}
+      aria-valuenow={value}
+      aria-valuetext={
+        getStepAriaLabel?.(options[value]) ?? String(options[value])
+      }
       className={[
         'relative h-[28px] touch-none select-none cursor-pointer overflow-hidden',
         className,
@@ -95,7 +89,6 @@ export function StepSlider({
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
-      onLostPointerCapture={handleLostPointerCapture}
     >
       <div className="absolute inset-0 bg-white/10 rounded-full" />
       <div
@@ -111,15 +104,13 @@ export function StepSlider({
         const p = idx / lastIndex
         const isSelected = idx === value
         return (
-          <button
+          <div
             key={option}
-            type="button"
-            onClick={() => handleStepClick(idx)}
-            aria-label={getStepAriaLabel?.(option) ?? String(option)}
+            aria-hidden
             style={{
               left: `calc(${p * 100}% + ${thumbOffset - p * THUMB_SIZE}px)`,
             }}
-            className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[44px] flex items-center justify-center z-10"
+            className="pointer-events-none absolute top-1/2 -translate-x-1/2 -translate-y-1/2 w-[44px] h-[44px] flex items-center justify-center z-10"
           >
             <div
               className={`transition-all duration-200 rounded-full pointer-events-none ${
@@ -128,7 +119,7 @@ export function StepSlider({
                   : 'w-3 h-3 bg-white/30'
               }`}
             />
-          </button>
+          </div>
         )
       })}
     </div>

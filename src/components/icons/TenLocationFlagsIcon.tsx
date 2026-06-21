@@ -8,7 +8,7 @@ export function TenLocationFlagsIcon({ className }: { className?: string }) {
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <g clip-path="url(#clip0_610_18154)">
+      <g clipPath="url(#clip0_610_18154)">
         <path d="M0 0H17V17H0V0Z" fill="#003399" />
         <path
           d="M8.49958 3.5166L8.27832 4.25413L8.64708 4.32788L8.49958 3.5166Z"
@@ -498,9 +498,9 @@ export function TenLocationFlagsIcon({ className }: { className?: string }) {
         height="15"
         rx="7.5"
         stroke="#B4CBFF"
-        stroke-width="2"
+        strokeWidth="2"
       />
-      <g clip-path="url(#clip1_610_18154)">
+      <g clipPath="url(#clip1_610_18154)">
         <path d="M13 0H30V17H13V0Z" fill="black" />
         <path d="M13 5.66699H30V17.0003H13V5.66699Z" fill="#DD0000" />
         <path d="M13 11.333H30V16.9997H13V11.333Z" fill="#FFCE00" />
@@ -512,9 +512,9 @@ export function TenLocationFlagsIcon({ className }: { className?: string }) {
         height="15"
         rx="7.5"
         stroke="#B4CBFF"
-        stroke-width="2"
+        strokeWidth="2"
       />
-      <g clip-path="url(#clip2_610_18154)">
+      <g clipPath="url(#clip2_610_18154)">
         <rect x="26" width="17" height="17" rx="8.5" fill="#9D2235" />
         <path d="M26 7.28613H43V10.929H26" fill="white" />
       </g>
@@ -525,9 +525,9 @@ export function TenLocationFlagsIcon({ className }: { className?: string }) {
         height="15"
         rx="7.5"
         stroke="#B4CBFF"
-        stroke-width="2"
+        strokeWidth="2"
       />
-      <g clip-path="url(#clip3_610_18154)">
+      <g clipPath="url(#clip3_610_18154)">
         <path d="M34.1426 0H59.6426V17H34.1426V0Z" fill="#21468B" />
         <path d="M34.1426 0H59.6426V11.3333H34.1426V0Z" fill="white" />
         <path d="M34.1426 0H59.6426V5.66667H34.1426V0Z" fill="#AE1C28" />
@@ -539,7 +539,7 @@ export function TenLocationFlagsIcon({ className }: { className?: string }) {
         height="15"
         rx="7.5"
         stroke="#B4CBFF"
-        stroke-width="2"
+        strokeWidth="2"
       />
       <rect x="52" width="17" height="17" rx="8.5" fill="#B4CBFF" />
       <path
