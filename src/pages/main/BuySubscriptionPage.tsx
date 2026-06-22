@@ -223,19 +223,21 @@ export function BuySubscriptionPage() {
             })}
           </div>
 
-          <div className="mt-auto">
-            <PrimaryButton size="large" onClick={handleSubscribe}>
-              <div className="flex items-center w-full justify-between gap-2 px-4">
-                <span>Продлить подписку</span>
-                <div className="flex items-center gap-2">
-                  <span className="text-white">{actualPrice} Р</span>
-                  <span className="text-white line-through">{fullPrice} Р</span>
-                </div>
-              </div>
-            </PrimaryButton>
-          </div>
+          <div className="shrink-0 h-[72px]" />
         </div>
       </main>
+
+      <div className="fixed bottom-[90px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
+        <PrimaryButton size="large" onClick={handleSubscribe}>
+          <div className="flex items-center w-full justify-between gap-2 px-4">
+            <span>Продлить подписку</span>
+            <div className="flex items-center gap-2">
+              <span className="text-white">{actualPrice} Р</span>
+              <span className="text-white line-through">{fullPrice} Р</span>
+            </div>
+          </div>
+        </PrimaryButton>
+      </div>
 
       {isPro && (
         <DeviceLimitExceededSheet

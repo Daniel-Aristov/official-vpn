@@ -130,11 +130,9 @@ function ReferralLinkCard({ link }: ReferralLinkCardProps) {
 function BonusesTabContent({
   invitedCount,
   bonusDays,
-  referralLink,
 }: {
   invitedCount: number
   bonusDays: number
-  referralLink: string
 }) {
   return (
     <>
@@ -155,7 +153,6 @@ function BonusesTabContent({
       </InfoBlock>
 
       <EmptyRecordsBlock />
-      <ReferralLinkCard link={referralLink} />
     </>
   )
 }
@@ -165,13 +162,11 @@ function MoneyTabContent({
   balance,
   earned,
   withdrawn,
-  referralLink,
 }: {
   invitedCount: number
   balance: number
   earned: number
   withdrawn: number
-  referralLink: string
 }) {
   return (
     <>
@@ -215,7 +210,6 @@ function MoneyTabContent({
       <div className="bg-secondary rounded-[16px] p-4 flex items-center justify-center text-white text-[16px] font-semibold leading-[130%]">
         Запросы на вывод
       </div>
-      <ReferralLinkCard link={referralLink} />
     </>
   )
 }
@@ -233,8 +227,13 @@ export function ReferralProgramPage() {
   const bonuses = data?.bonuses
   const money = data?.money
 
+  const referralLink =
+    activeTab === 'bonuses'
+      ? (bonuses?.referralLink ?? '')
+      : (money?.referralLink ?? '')
+
   return (
-    <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
+    <main className="flex flex-col flex-1 pt-4 px-4 pb-4 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white/10 border border-[#FFFFFF]/10">
         <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
           <ReferralGiftIcon className="w-6 h-6" />
@@ -277,7 +276,6 @@ export function ReferralProgramPage() {
         <BonusesTabContent
           invitedCount={bonuses?.invitedCount ?? 0}
           bonusDays={bonuses?.bonusDays ?? 0}
-          referralLink={bonuses?.referralLink ?? ''}
         />
       ) : (
         <MoneyTabContent
@@ -285,9 +283,14 @@ export function ReferralProgramPage() {
           balance={money?.balance ?? 0}
           earned={money?.earned ?? 0}
           withdrawn={money?.withdrawn ?? 0}
-          referralLink={money?.referralLink ?? ''}
         />
       )}
+
+      <div className="shrink-0 h-[72px]" />
+
+      <div className="fixed bottom-[85px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
+        <ReferralLinkCard link={referralLink} />
+      </div>
     </main>
   )
 }

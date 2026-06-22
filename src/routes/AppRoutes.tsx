@@ -11,6 +11,8 @@ import { ProfilePage } from '@/pages/main/profile/ProfilePage'
 import { AccessPreservationPage } from '@/pages/main/profile/AccessPreservationPage'
 import { ReferralProgramPage } from '@/pages/main/profile/ReferralProgramPage'
 import { PaymentHistoryPage } from '@/pages/main/profile/PaymentHistoryPage'
+import { UserAgreementPage } from '@/pages/main/profile/UserAgreementPage'
+import { PrivacyPolicyPage } from '@/pages/main/profile/PrivacyPolicyPage'
 import { SupportPage } from '@/pages/main/support/SupportPage'
 import { FaqPage } from '@/pages/main/support/FaqPage'
 import { ContactSupportPage } from '@/pages/main/support/ContactSupportPage'
@@ -21,6 +23,7 @@ export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<HomePage />} />
+      <Route path="/privacy" element={<PrivacyPolicyPage />} />
       <Route path="/auth/email" element={<EmailAuthPage />} />
       <Route path="/auth/email/verify" element={<EmailVerifyPage />} />
       <Route element={<PrivateRoute />}>
@@ -31,6 +34,7 @@ export function AppRoutes() {
           <Route path="profile/access" element={<AccessPreservationPage />} />
           <Route path="profile/referral" element={<ReferralProgramPage />} />
           <Route path="profile/payment" element={<PaymentHistoryPage />} />
+          <Route path="profile/agreement" element={<UserAgreementPage />} />
           <Route path="support" element={<SupportPage />} />
           <Route path="support/faq" element={<FaqPage />} />
           <Route path="support/contact" element={<ContactSupportPage />} />

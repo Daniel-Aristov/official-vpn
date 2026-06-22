@@ -58,13 +58,7 @@ export function ProfilePage() {
   return (
     <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
       {!isTelegramLinked && (
-        <div
-          className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(37, 93, 224, 0.28) 0%, rgba(19, 157, 118, 0.12) 100%), rgba(0, 0, 0, 0.4)',
-          }}
-        >
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
           <div className="flex flex-col gap-2">
             <h2 className="text-white text-[18px] font-semibold leading-[120%]">
               Вам необходимо привязать Telegram
@@ -156,13 +150,14 @@ export function ProfilePage() {
           <MenuItem
             icon={<SupportIcon />}
             title="Связаться с поддержкой"
-            subtitle="Бонусы и деньги за приглашения"
+            subtitle="Помощь в чате и по почте"
             onClick={() => navigate('/main/support')}
           />
           <MenuItem
             icon={<DocumentIcon />}
             title="Пользовательское соглашение"
             subtitle="Оферта и пользовательское соглашение"
+            onClick={() => navigate('/main/profile/agreement')}
             last
           />
         </div>

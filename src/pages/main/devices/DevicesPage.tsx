@@ -101,7 +101,7 @@ export function DevicesPage() {
   return (
     <>
       <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
-        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10">
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
           <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10">
             <MonitorIcon className="w-6 h-6" fillOpacity={1} />
           </div>

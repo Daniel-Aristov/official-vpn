@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 
 export function HomePage() {
@@ -39,9 +39,9 @@ export function HomePage() {
             Нажимая на кнопку Авторизоваться,
             <br />
             Вы соглашаетесь с{' '}
-            <a href="#" className="font-bold underline">
+            <Link to="/privacy" className="font-bold underline">
               политикой конфиденциальности
-            </a>
+            </Link>
           </p>
         </section>
       </div>

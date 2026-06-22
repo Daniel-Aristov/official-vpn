@@ -161,10 +161,7 @@ function TransactionsTabContent({
 }) {
   if (transactions.length === 0) {
     return (
-      <EmptyStateBlock
-        message="У вас ещё нет транзакций"
-        minHeight={261}
-      />
+      <EmptyStateBlock message="У вас ещё нет транзакций" minHeight={261} />
     )
   }
 
@@ -215,13 +212,7 @@ export function PaymentHistoryPage() {
   return (
     <>
       <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
-        <div
-          className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(37, 93, 224, 0.28) 0%, rgba(19, 157, 118, 0.12) 100%), rgba(0, 0, 0, 0.4)',
-          }}
-        >
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
           <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
             <PaymentHistoryIcon className="w-6 h-6" />
           </div>

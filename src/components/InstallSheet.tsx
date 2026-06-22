@@ -24,7 +24,7 @@ const PLATFORM_LABELS: Record<InstallPlatform, string> = {
   IOS: 'iOS',
   Android: 'Android',
   Windows: 'Windows',
-  Macbook: 'macOS',
+  Macbook: 'MacOS',
   'Android TV': 'Android TV',
 }
 

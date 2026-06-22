@@ -12,7 +12,7 @@ export const SETUP_PLATFORM_LABELS: Record<InstallPlatform, string> = {
   IOS: 'IOS',
   Android: 'Android',
   Windows: 'Windows',
-  Macbook: 'macOS',
+  Macbook: 'MacOS',
   'Android TV': 'Android TV',
 }
 

@@ -124,18 +124,16 @@ export function SetupPage() {
             </button>
             {showPlatforms && (
               <div className="absolute right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl z-10 min-w-[140px] py-1">
-                {INSTALL_PLATFORMS
-                  .filter((p) => p !== platform)
-                  .map((p) => (
-                    <button
-                      key={p}
-                      type="button"
-                      onClick={() => handlePlatformChange(p)}
-                      className="w-full px-4 py-1.5 text-left text-white text-[16px] font-semibold cursor-pointer"
-                    >
-                      {SETUP_PLATFORM_LABELS[p]}
-                    </button>
-                  ))}
+                {INSTALL_PLATFORMS.filter((p) => p !== platform).map((p) => (
+                  <button
+                    key={p}
+                    type="button"
+                    onClick={() => handlePlatformChange(p)}
+                    className="w-full px-4 py-1.5 text-left text-white text-[16px] font-semibold cursor-pointer"
+                  >
+                    {SETUP_PLATFORM_LABELS[p]}
+                  </button>
+                ))}
               </div>
             )}
           </div>
@@ -318,7 +316,7 @@ export function SetupPage() {
             </>
           )}
 
-          {!started && platform === 'Macbook' && (
+          {!started && (
             <div className="flex items-center gap-3 bg-secondary border border-white/10 px-4 py-2 rounded-[16px]">
               <LinkIcon className="w-6 h-6 text-white shrink-0" />
               <div className="flex flex-col flex-1 min-w-0">
