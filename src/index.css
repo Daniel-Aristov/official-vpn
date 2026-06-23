@@ -3,7 +3,7 @@
 
 @theme {
   --color-primary: #255de0;
-  --color-secondary: #39393D;
+  --color-secondary: #39393d;
   --color-btn-dark: #1c1c1e;
   --color-glow-blue: #2543f2;
   --color-glow-cyan: #00e1ff;
@@ -16,14 +16,29 @@
   box-sizing: border-box;
 }
 
+html {
+  background: #000;
+}
+
 body {
   margin: 0;
+  background-color: #000000;
   font-family:
     -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
 }
 
 #root {
   min-height: 100svh;
+  background: #000;
+}
+
+.app {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: #000;
+
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
 @keyframes glow-drift-1 {

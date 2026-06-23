@@ -169,7 +169,7 @@ export function SetupPage() {
           </p>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center py-4">
           <div
             className="relative flex items-center justify-center"
             style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}
