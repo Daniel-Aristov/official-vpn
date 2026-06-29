@@ -59,10 +59,6 @@ export function SetupPage() {
     navigate('/main')
   }
 
-  const proceedToInstall = () => {
-    setStep(2)
-  }
-
   const handleStartSetup = () => {
     setStep(1)
     setStarted(true)
@@ -335,7 +331,6 @@ export function SetupPage() {
         platform={platform}
         currentDevice={currentDevice}
         onClose={installSheet.close}
-        onProceed={proceedToInstall}
       />
       <TelegramLinkSheet
         isMounted={telegramSheet.mounted}

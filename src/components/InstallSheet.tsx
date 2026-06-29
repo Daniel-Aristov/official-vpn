@@ -7,6 +7,7 @@ import {
   DOWNLOAD_LINKS,
   type InstallPlatform,
 } from '@/js/constants/urls'
+import { openInNewTab } from '@/js/helpers/browser'
 
 interface InstallSheetProps {
   isMounted: boolean
@@ -14,7 +15,6 @@ interface InstallSheetProps {
   platform: InstallPlatform
   currentDevice?: InstallPlatform
   onClose: () => void
-  onProceed: () => void
 }
 
 const DESCRIPTION =
@@ -56,7 +56,6 @@ export function InstallSheet({
   platform,
   currentDevice,
   onClose,
-  onProceed,
 }: InstallSheetProps) {
   const [copied, setCopied] = useState(false)
   const isMismatch = !!currentDevice && currentDevice !== platform
@@ -64,13 +63,11 @@ export function InstallSheet({
   const downloadLink = DOWNLOAD_LINKS[platform]
 
   const handleProceed = () => {
-    if (isMismatch) {
-      window.open(downloadLink, '_blank', 'noopener,noreferrer')
-      onClose()
-    } else {
-      onProceed()
-      onClose()
-    }
+    const link = isMismatch
+      ? downloadLink
+      : DOWNLOAD_LINKS[currentDevice ?? platform]
+    openInNewTab(link)
+    onClose()
   }
 
   const handleCopy = () => {
