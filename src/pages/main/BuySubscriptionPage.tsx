@@ -112,8 +112,10 @@ export function BuySubscriptionPage() {
       periodId,
       deviceCount,
       paymentMethodId: selectedPaymentMethodId,
+    }).then(() => {
+      payment.close()
+      navigate('/main')
     })
-    payment.close()
   }
 
   return (

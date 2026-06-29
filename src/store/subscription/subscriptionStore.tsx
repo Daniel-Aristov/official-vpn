@@ -6,6 +6,7 @@ import type {
   PurchaseSubscriptionPayload,
   RenewalPeriod,
   Subscription,
+  SubscriptionPlanType,
 } from '@/js/types/subscription'
 import { SubscriptionContext } from '@/store/subscription/subscriptionContext'
 
@@ -13,6 +14,8 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [renewalPeriods, setRenewalPeriods] = useState<RenewalPeriod[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [purchaseSuccessPlanType, setPurchaseSuccessPlanType] =
+    useState<SubscriptionPlanType | null>(null)
 
   const fetchSubscription = useCallback(async () => {
     setIsLoading(true)
@@ -38,9 +41,14 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     async (payload: PurchaseSubscriptionPayload) => {
       const data = await subscriptionService.purchaseSubscription(payload)
       setSubscription(data)
+      setPurchaseSuccessPlanType(payload.planType)
     },
     [],
   )
+
+  const clearPurchaseSuccess = useCallback(() => {
+    setPurchaseSuccessPlanType(null)
+  }, [])
 
   const purchaseSlots = useCallback(async (payload: PurchaseSlotsPayload) => {
     const data = await subscriptionService.purchaseSlots(payload)
@@ -53,11 +61,13 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
         subscription,
         renewalPeriods,
         isLoading,
+        purchaseSuccessPlanType,
         fetchSubscription,
         fetchRenewalPeriods,
         removeDevice,
         purchaseSubscription,
         purchaseSlots,
+        clearPurchaseSuccess,
       }}
     >
       {children}

@@ -25,13 +25,23 @@ const BASE_SLOTS: Record<SubscriptionPlanType, number> = {
 
 let subscriptionCache: Partial<Subscription> = {}
 
+async function getCurrentSubscription(): Promise<Subscription> {
+  if (subscriptionCache.id) {
+    return subscriptionCache as Subscription
+  }
+
+  return loadSubscription()
+}
+
 async function loadSubscription(): Promise<Subscription> {
   const [posts, todo] = await Promise.all([
     api.get<PlaceholderPost[]>(apiEndpoints.posts),
     api.get<PlaceholderTodo>(apiEndpoints.todo()),
   ])
 
-  return mapPlaceholderPostsToSubscription(posts, todo, subscriptionCache)
+  void posts
+
+  return mapPlaceholderPostsToSubscription(todo, subscriptionCache)
 }
 
 export function getBaseSlots(planType: SubscriptionPlanType): number {
@@ -60,9 +70,7 @@ export async function removeDevice(deviceId: string): Promise<Subscription> {
   const postId = parseDevicePostId(deviceId)
   await api.delete(apiEndpoints.post(postId))
 
-  const current = subscriptionCache.devices?.length
-    ? (subscriptionCache as Subscription)
-    : await loadSubscription()
+  const current = await getCurrentSubscription()
 
   subscriptionCache = {
     ...current,
@@ -85,9 +93,7 @@ export async function purchaseSubscription(
   const endDate = new Date()
   endDate.setMonth(endDate.getMonth() + months)
 
-  const current = subscriptionCache.devices?.length
-    ? (subscriptionCache as Subscription)
-    : await loadSubscription()
+  const current = await getCurrentSubscription()
 
   subscriptionCache = {
     ...current,
@@ -95,6 +101,7 @@ export async function purchaseSubscription(
     planType: payload.planType,
     totalSlots: Math.max(payload.deviceCount, BASE_SLOTS[payload.planType]),
     endDate: endDate.toISOString().slice(0, 10),
+    devices: current.devices,
   }
 
   return subscriptionCache as Subscription
@@ -109,9 +116,7 @@ export async function purchaseSlots(
     userId: 1,
   })
 
-  const current = subscriptionCache.devices?.length
-    ? (subscriptionCache as Subscription)
-    : await loadSubscription()
+  const current = await getCurrentSubscription()
 
   subscriptionCache = {
     ...current,

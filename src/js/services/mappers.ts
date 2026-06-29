@@ -1,3 +1,4 @@
+import { getTrialEndDateIso } from '@/js/helpers/date'
 import {
   MONEY_REFERRAL_LINK,
   REFERRAL_LINK,
@@ -19,11 +20,11 @@ import type { User } from '@/js/types/user'
 
 const DEFAULT_SUBSCRIPTION: Omit<Subscription, 'devices'> = {
   id: 'sub_1',
-  endDate: '2026-05-27',
+  endDate: getTrialEndDateIso(),
   isActive: true,
   planType: 'trial',
   price: 199,
-  totalSlots: 6,
+  totalSlots: 3,
   vpnKey: VPN_LINK,
 }
 
@@ -52,17 +53,23 @@ export function mapPlaceholderPostToDevice(post: PlaceholderPost): SubscriptionD
 }
 
 export function mapPlaceholderPostsToSubscription(
-  posts: PlaceholderPost[],
   todo: PlaceholderTodo,
   overrides: Partial<Subscription> = {},
 ): Subscription {
-  const devices = posts.slice(0, 5).map(mapPlaceholderPostToDevice)
-
-  return {
+  const subscription = {
     ...DEFAULT_SUBSCRIPTION,
     isActive: todo.completed,
-    devices,
+    devices: overrides.devices ?? [],
     ...overrides,
+  }
+
+  return {
+    ...subscription,
+    endDate:
+      overrides.endDate ??
+      (subscription.planType === 'trial'
+        ? getTrialEndDateIso()
+        : subscription.endDate),
   }
 }
 

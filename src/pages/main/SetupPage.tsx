@@ -1,13 +1,11 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import { AddSubscriptionAlert } from '@/components/AddSubscriptionAlert'
 import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
 import {
   SUBSCRIPTION_DEEP_LINK,
   type InstallPlatform,
 } from '@/js/constants/urls'
-import { openInNewTab } from '@/js/helpers/browser'
 import {
   detectCurrentDevice,
   INSTALL_PLATFORMS,
@@ -49,7 +47,6 @@ export function SetupPage() {
   const telegramSheet = useSheet()
   const { subscription } = useSubscription()
   const vpnKey = subscription?.vpnKey ?? ''
-  const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
 
   useEffect(() => {
@@ -64,11 +61,6 @@ export function SetupPage() {
 
   const proceedToInstall = () => {
     setStep(2)
-  }
-
-  const confirmAddSubscription = () => {
-    openInNewTab(SUBSCRIPTION_DEEP_LINK)
-    setIsSubscriptionAlertOpen(false)
   }
 
   const handleStartSetup = () => {
@@ -278,14 +270,13 @@ export function SetupPage() {
             </button>
           ) : step === 2 ? (
             <>
-              <button
-                type="button"
-                onClick={() => setIsSubscriptionAlertOpen(true)}
-                className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
+              <a
+                href={SUBSCRIPTION_DEEP_LINK}
+                className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer no-underline"
               >
                 <PlusCircleIcon className="w-6 h-6" />
                 Добавить подписку
-              </button>
+              </a>
               <button
                 type="button"
                 onClick={() => setStep((s) => Math.min(s + 1, TOTAL_STEPS))}
@@ -345,12 +336,6 @@ export function SetupPage() {
         currentDevice={currentDevice}
         onClose={installSheet.close}
         onProceed={proceedToInstall}
-      />
-      <AddSubscriptionAlert
-        isOpen={isSubscriptionAlertOpen}
-        deepLink={SUBSCRIPTION_DEEP_LINK}
-        onClose={() => setIsSubscriptionAlertOpen(false)}
-        onConfirm={confirmAddSubscription}
       />
       <TelegramLinkSheet
         isMounted={telegramSheet.mounted}

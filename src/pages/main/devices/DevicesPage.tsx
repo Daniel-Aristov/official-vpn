@@ -1,6 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { AddSubscriptionAlert } from '@/components/AddSubscriptionAlert'
+import { Link, useNavigate } from 'react-router-dom'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { AndroidIcon } from '@/components/icons/AndroidIcon'
 import { AndroidTvIcon } from '@/components/icons/AndroidTvIcon'
@@ -10,8 +9,6 @@ import { MonitorIcon } from '@/components/icons/MonitorIcon'
 import { TrashIcon } from '@/components/icons/TrashIcon'
 import { WindowsIcon } from '@/components/icons/WindowsIcon'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
-import { SUBSCRIPTION_DEEP_LINK } from '@/js/constants/urls'
-import { openInNewTab } from '@/js/helpers/browser'
 import { getDevicePlatformKind } from '@/js/helpers/platform'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import type { SubscriptionDevice } from '@/js/types/subscription'
@@ -83,16 +80,10 @@ export function DevicesPage() {
   const navigate = useNavigate()
   const { subscription, removeDevice } = useSubscription()
   const [slotCount, setSlotCount] = useState(1)
-  const [isSubscriptionAlertOpen, setIsSubscriptionAlertOpen] = useState(false)
 
   const hasSubscription = subscription?.isActive ?? false
   const devices = subscription?.devices ?? []
   const totalSlots = subscription?.totalSlots ?? 0
-
-  const confirmAddSubscription = () => {
-    openInNewTab(SUBSCRIPTION_DEEP_LINK)
-    setIsSubscriptionAlertOpen(false)
-  }
 
   const handleRemoveDevice = (deviceId: string) => {
     void removeDevice(deviceId)
@@ -133,13 +124,12 @@ export function DevicesPage() {
                 У вас ещё нет активных подписок для добавления устройств
               </span>
             </div>
-            <PrimaryButton
-              size="large"
-              className="mt-4"
-              onClick={() => setIsSubscriptionAlertOpen(true)}
+            <Link
+              to="/main/subscription"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl text-white font-semibold text-[16px] tracking-[-0.3px] cursor-pointer bg-primary py-[16px] leading-[20px] mt-4 no-underline"
             >
               Приобрести подписку
-            </PrimaryButton>
+            </Link>
           </>
         ) : (
           <>
@@ -152,14 +142,26 @@ export function DevicesPage() {
                   {devices.length}/{totalSlots}
                 </span>
               </div>
-              <div className="flex flex-col gap-4">
-                {devices.map((device) => (
-                  <DeviceItem
-                    key={device.id}
-                    device={device}
-                    onRemove={handleRemoveDevice}
-                  />
-                ))}
+              <div
+                className={`flex flex-col gap-4${
+                  devices.length === 0
+                    ? ' min-h-[140px] items-center justify-center text-center'
+                    : ''
+                }`}
+              >
+                {devices.length === 0 ? (
+                  <p className="text-white/80 text-[16px] leading-[130%] max-w-[200px] mx-auto">
+                    У вас пока нет подключенных устройств
+                  </p>
+                ) : (
+                  devices.map((device) => (
+                    <DeviceItem
+                      key={device.id}
+                      device={device}
+                      onRemove={handleRemoveDevice}
+                    />
+                  ))
+                )}
               </div>
             </div>
 
@@ -202,12 +204,6 @@ export function DevicesPage() {
           </>
         )}
       </main>
-      <AddSubscriptionAlert
-        isOpen={isSubscriptionAlertOpen}
-        deepLink={SUBSCRIPTION_DEEP_LINK}
-        onClose={() => setIsSubscriptionAlertOpen(false)}
-        onConfirm={confirmAddSubscription}
-      />
     </>
   )
 }

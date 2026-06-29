@@ -29,7 +29,8 @@ export function MainPage() {
   const navigate = useNavigate()
   const { setHideTabBar } = useOutletContext<MainViewOutletContext>()
   const { user } = useUser()
-  const { subscription } = useSubscription()
+  const { subscription, purchaseSuccessPlanType, clearPurchaseSuccess } =
+    useSubscription()
 
   const isBlocked = user?.isBlocked ?? false
   const daysUntilEnd = subscription ? getDaysUntilEnd(subscription.endDate) : 0
@@ -44,6 +45,13 @@ export function MainPage() {
         message: 'Вам необходимо обратиться в поддержку!',
       }
     }
+    if (purchaseSuccessPlanType && subscription) {
+      return {
+        variant: 'success' as const,
+        title: 'Подписка успешно добавлена!',
+        message: `Период: до ${formatEndDate(subscription.endDate)}`,
+      }
+    }
     if (isExpiringSoon && subscription) {
       return {
         variant: 'warning' as const,
@@ -52,7 +60,7 @@ export function MainPage() {
       }
     }
     return null
-  }, [isBlocked, isExpiringSoon, daysUntilEnd, subscription])
+  }, [isBlocked, purchaseSuccessPlanType, isExpiringSoon, daysUntilEnd, subscription])
 
   useEffect(() => {
     setHideTabBar(isBlocked)
@@ -70,7 +78,11 @@ export function MainPage() {
           variant={notification.variant}
           title={notification.title}
           message={notification.message}
-          onClose={() => {}}
+          onClose={
+            notification.variant === 'success'
+              ? clearPurchaseSuccess
+              : undefined
+          }
           onAction={() =>
             navigate(
               notification.variant === 'warning'
