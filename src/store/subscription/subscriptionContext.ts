@@ -13,10 +13,13 @@ export interface SubscriptionState {
   isLoading: boolean
   purchaseSuccessPlanType: SubscriptionPlanType | null
   fetchSubscription: () => Promise<void>
-  fetchRenewalPeriods: () => Promise<void>
+  fetchRenewalPeriods: (planType?: SubscriptionPlanType) => Promise<void>
+  getPeriodsForPlan: (planType: SubscriptionPlanType) => RenewalPeriod[]
+  getMinRenewalPrice: (planType: SubscriptionPlanType) => number
   removeDevice: (deviceId: string) => Promise<void>
   purchaseSubscription: (payload: PurchaseSubscriptionPayload) => Promise<void>
   purchaseSlots: (payload: PurchaseSlotsPayload) => Promise<void>
+  upgradeSubscription: (planType: SubscriptionPlanType) => Promise<void>
   clearPurchaseSuccess: () => void
 }
 

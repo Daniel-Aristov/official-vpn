@@ -1,7 +1,8 @@
 import { BottomSheet } from '@/components/BottomSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import { PAYMENT_METHODS, type PaymentMethodId } from '@/data/paymentMethods'
+import type { PaymentMethodId } from '@/data/paymentMethods'
+import { usePayment } from '@/store/payment/usePayment'
 
 interface PaymentMethodChangeSheetProps {
   isMounted: boolean
@@ -18,6 +19,8 @@ export function PaymentMethodChangeSheet({
   selectedPaymentMethodId,
   onSelectPaymentMethod,
 }: PaymentMethodChangeSheetProps) {
+  const { availablePaymentMethods } = usePayment()
+
   return (
     <BottomSheet
       isMounted={isMounted}
@@ -27,7 +30,7 @@ export function PaymentMethodChangeSheet({
       zIndexClass="z-70"
     >
       <div className="flex flex-col gap-3">
-        {PAYMENT_METHODS.map((method) => (
+        {availablePaymentMethods.map((method) => (
           <button
             key={method.id}
             type="button"

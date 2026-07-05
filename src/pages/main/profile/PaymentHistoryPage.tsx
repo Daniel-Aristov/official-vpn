@@ -10,6 +10,7 @@ import {
   type PaymentMethod,
   type PaymentMethodId,
 } from '@/data/paymentMethods'
+import type { PaymentTransaction } from '@/js/types/payment'
 import { useSheet } from '@/js/helpers/useSheet'
 import { usePayment } from '@/store/payment/usePayment'
 
@@ -101,7 +102,7 @@ function PaymentMethodItem({
 }
 
 interface PaymentMethodsTabContentProps {
-  hasPaymentMethods: boolean
+  availablePaymentMethods: PaymentMethod[]
   activePaymentMethodId: PaymentMethodId
   isAutoRenewalEnabled: boolean
   onDisableClick: () => void
@@ -111,7 +112,7 @@ interface PaymentMethodsTabContentProps {
 }
 
 function PaymentMethodsTabContent({
-  hasPaymentMethods,
+  availablePaymentMethods,
   activePaymentMethodId,
   isAutoRenewalEnabled,
   onDisableClick,
@@ -121,9 +122,9 @@ function PaymentMethodsTabContent({
 }: PaymentMethodsTabContentProps) {
   return (
     <>
-      {hasPaymentMethods ? (
+      {availablePaymentMethods.length > 0 ? (
         <div className="flex flex-col gap-3">
-          {PAYMENT_METHODS.map((method) => (
+          {availablePaymentMethods.map((method) => (
             <PaymentMethodItem
               key={method.id}
               method={method}
@@ -154,10 +155,83 @@ function PaymentMethodsTabContent({
   )
 }
 
+const TRANSACTION_STATUS_LABELS: Record<string, string> = {
+  completed: 'Завершена',
+  pending: 'В обработке',
+  failed: 'Ошибка',
+  cancelled: 'Отменена',
+}
+
+function formatTransactionAmount(amount: number, currency: string): string {
+  return `${amount.toLocaleString('ru-RU')} ${currency}`
+}
+
+function formatTransactionDate(isoDate: string): string {
+  return new Date(isoDate).toLocaleString('ru-RU', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })
+}
+
+function formatTransactionStatus(status: string): string {
+  return TRANSACTION_STATUS_LABELS[status] ?? status
+}
+
+function getPaymentMethodLabel(tx: PaymentTransaction): string {
+  const method = PAYMENT_METHODS.find((item) => item.id === tx.paymentMethodId)
+  return method?.checkoutLabel ?? tx.paymentMethod
+}
+
+function TransactionRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-start justify-between gap-3">
+      <span className="text-white/50 text-[14px] leading-[130%] shrink-0">
+        {label}
+      </span>
+      <span className="text-white text-[14px] leading-[130%] font-medium text-right break-all">
+        {value}
+      </span>
+    </div>
+  )
+}
+
+function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
+  return (
+    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-3">
+      <div className="flex items-start justify-between gap-3">
+        <span className="text-white font-semibold text-[16px] leading-[130%]">
+          {transaction.description}
+        </span>
+        <span className="text-white font-bold text-[18px] leading-[130%] shrink-0">
+          {formatTransactionAmount(transaction.amount, transaction.currency)}
+        </span>
+      </div>
+      <div className="h-px bg-white/10" />
+      <TransactionRow label="ID транзакции" value={transaction.id} />
+      <TransactionRow label="ID заказа" value={transaction.orderId} />
+      <TransactionRow
+        label="Статус"
+        value={formatTransactionStatus(transaction.status)}
+      />
+      <TransactionRow
+        label="Способ оплаты"
+        value={getPaymentMethodLabel(transaction)}
+      />
+      <TransactionRow
+        label="Дата"
+        value={formatTransactionDate(transaction.createdAt)}
+      />
+    </div>
+  )
+}
+
 function TransactionsTabContent({
   transactions,
 }: {
-  transactions: { id: string; description: string }[]
+  transactions: PaymentTransaction[]
 }) {
   if (transactions.length === 0) {
     return (
@@ -167,13 +241,8 @@ function TransactionsTabContent({
 
   return (
     <div className="flex flex-col gap-3">
-      {transactions.map((tx) => (
-        <div
-          key={tx.id}
-          className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 text-white text-[16px]"
-        >
-          {tx.description}
-        </div>
+      {transactions.map((transaction) => (
+        <TransactionItem key={transaction.id} transaction={transaction} />
       ))}
     </div>
   )
@@ -189,6 +258,7 @@ export function PaymentHistoryPage() {
   const {
     settings,
     transactions,
+    availablePaymentMethods,
     setAutoRenewal,
     setActivePaymentMethod,
     enablePaymentMethods,
@@ -197,7 +267,6 @@ export function PaymentHistoryPage() {
   const activeIndex = paymentTabs.findIndex((tab) => tab.id === activeTab)
 
   const isAutoRenewalEnabled = settings?.isAutoRenewalEnabled ?? true
-  const hasPaymentMethods = settings?.hasPaymentMethods ?? false
   const activePaymentMethodId = settings?.activePaymentMethodId ?? 'card'
 
   const handleDisableAutoRenewal = () => {
@@ -253,7 +322,7 @@ export function PaymentHistoryPage() {
 
         {activeTab === 'methods' ? (
           <PaymentMethodsTabContent
-            hasPaymentMethods={hasPaymentMethods}
+            availablePaymentMethods={availablePaymentMethods}
             activePaymentMethodId={activePaymentMethodId}
             isAutoRenewalEnabled={isAutoRenewalEnabled}
             onDisableClick={disableSheet.open}

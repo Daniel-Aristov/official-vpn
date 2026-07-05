@@ -33,3 +33,9 @@ export const PRICE_PER_EXTRA_DEVICE = 60
 export const PRICE_PER_SLOT_PERIOD = 60
 export const PRICE_PER_SLOT_MONTHLY = 80
 export const BASE_MONTHLY_SLOTS = 259
+
+export function getSubscriptionRenewalPath(
+  planType: 'trial' | 'basic' | 'pro' | undefined,
+): string {
+  return planType === 'pro' ? '/main/subscription?plan=pro' : '/main/subscription'
+}

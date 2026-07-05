@@ -5,7 +5,6 @@ export const INSTALL_PLATFORMS: InstallPlatform[] = [
   'Android',
   'Windows',
   'Macbook',
-  'Android TV',
 ]
 
 export const SETUP_PLATFORM_LABELS: Record<InstallPlatform, string> = {
@@ -13,7 +12,6 @@ export const SETUP_PLATFORM_LABELS: Record<InstallPlatform, string> = {
   Android: 'Android',
   Windows: 'Windows',
   Macbook: 'MacOS',
-  'Android TV': 'Android TV',
 }
 
 export function detectCurrentDevice(): InstallPlatform {
@@ -22,13 +20,12 @@ export function detectCurrentDevice(): InstallPlatform {
   if (/Android/.test(ua)) return 'Android'
   if (/Win/.test(ua)) return 'Windows'
   if (/Mac/.test(ua)) return 'Macbook'
-  return 'Windows'
+  return 'IOS'
 }
 
 export type DevicePlatformKind =
   | 'ios'
   | 'android'
-  | 'android-tv'
   | 'windows'
   | 'mac'
   | 'unknown'
@@ -37,7 +34,6 @@ export function getDevicePlatformKind(platform: string): DevicePlatformKind {
   const normalized = platform.toLowerCase()
 
   if (normalized.startsWith('ios')) return 'ios'
-  if (normalized.includes('android tv')) return 'android-tv'
   if (normalized.startsWith('android')) return 'android'
   if (normalized.startsWith('windows')) return 'windows'
   if (normalized.startsWith('mac')) return 'mac'

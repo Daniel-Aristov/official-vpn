@@ -1,3 +1,5 @@
+import type { PaymentMethodId } from '@/data/paymentMethods'
+
 export type SubscriptionPlanType = 'trial' | 'basic' | 'pro'
 
 export interface SubscriptionDevice {
@@ -24,16 +26,17 @@ export interface Subscription {
   totalSlots: number
   vpnKey: string
   devices: SubscriptionDevice[]
+  daysLeft: number | null
 }
 
 export interface PurchaseSubscriptionPayload {
   planType: SubscriptionPlanType
   periodId: string
   deviceCount: number
-  paymentMethodId: string
+  paymentMethodId: PaymentMethodId
 }
 
 export interface PurchaseSlotsPayload {
   slotCount: number
-  paymentMethodId: string
+  paymentMethodId: PaymentMethodId
 }

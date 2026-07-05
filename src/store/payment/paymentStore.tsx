@@ -1,5 +1,6 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
+import { getAvailablePaymentMethods } from '@/data/paymentMethods'
 import * as paymentService from '@/js/services/paymentService'
 import type { PaymentSettings, PaymentTransaction } from '@/js/types/payment'
 import type { PaymentMethodId } from '@/data/paymentMethods'
@@ -24,29 +25,37 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  const setAutoRenewal = useCallback(async (enabled: boolean) => {
-    const data = await paymentService.setAutoRenewal(enabled)
-    setSettings(data)
-  }, [])
-
-  const setActivePaymentMethod = useCallback(
-    async (methodId: PaymentMethodId) => {
-      const data = await paymentService.setActivePaymentMethod(methodId)
+  const setAutoRenewal = useCallback(
+    async (enabled: boolean) => {
+      if (!settings) return
+      const data = await paymentService.setAutoRenewal(enabled, settings)
       setSettings(data)
     },
-    [],
+    [settings],
   )
+
+  const setActivePaymentMethod = useCallback((methodId: PaymentMethodId) => {
+    setSettings((prev) =>
+      prev ? paymentService.applyActivePaymentMethod(methodId, prev) : prev,
+    )
+  }, [])
 
   const enablePaymentMethods = useCallback(async () => {
     const data = await paymentService.enablePaymentMethods()
     setSettings(data)
   }, [])
 
+  const availablePaymentMethods = useMemo(
+    () => getAvailablePaymentMethods(settings?.availableMethods),
+    [settings?.availableMethods],
+  )
+
   return (
     <PaymentContext.Provider
       value={{
         settings,
         transactions,
+        availablePaymentMethods,
         isLoading,
         fetchPaymentData,
         setAutoRenewal,

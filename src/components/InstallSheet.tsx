@@ -3,10 +3,8 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { CopyIcon } from '@/components/icons/CopyIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import {
-  DOWNLOAD_LINKS,
-  type InstallPlatform,
-} from '@/js/constants/urls'
+import type { InstallPlatform } from '@/js/constants/urls'
+import { resolveDownloadLink } from '@/js/services/utils/mappers'
 import { openInNewTab } from '@/js/helpers/browser'
 
 interface InstallSheetProps {
@@ -14,6 +12,7 @@ interface InstallSheetProps {
   isVisible: boolean
   platform: InstallPlatform
   currentDevice?: InstallPlatform
+  downloadLinks: Partial<Record<InstallPlatform, string>>
   onClose: () => void
 }
 
@@ -25,7 +24,6 @@ const PLATFORM_LABELS: Record<InstallPlatform, string> = {
   Android: 'Android',
   Windows: 'Windows',
   Macbook: 'MacOS',
-  'Android TV': 'Android TV',
 }
 
 const DEVICE_NAMES: Record<InstallPlatform, string> = {
@@ -33,7 +31,6 @@ const DEVICE_NAMES: Record<InstallPlatform, string> = {
   Android: 'Android-устройства',
   Windows: 'Windows',
   Macbook: 'Mac',
-  'Android TV': 'Android TV',
 }
 
 const INSTALL_TARGETS: Record<InstallPlatform, string> = {
@@ -41,12 +38,10 @@ const INSTALL_TARGETS: Record<InstallPlatform, string> = {
   Android: 'Android-устройстве',
   Windows: 'компьютере',
   Macbook: 'Mac',
-  'Android TV': 'Android TV',
 }
 
 function getSecondButton(platform: InstallPlatform): string | null {
   if (platform === 'IOS') return 'Версия для зарубежного AppStore'
-  if (platform === 'Android TV') return 'Скачать APK'
   return null
 }
 
@@ -55,18 +50,24 @@ export function InstallSheet({
   isVisible,
   platform,
   currentDevice,
+  downloadLinks,
   onClose,
 }: InstallSheetProps) {
   const [copied, setCopied] = useState(false)
   const isMismatch = !!currentDevice && currentDevice !== platform
   const secondButton = getSecondButton(platform)
-  const downloadLink = DOWNLOAD_LINKS[platform]
+  const downloadLink = resolveDownloadLink(platform, downloadLinks)
 
   const handleProceed = () => {
     const link = isMismatch
       ? downloadLink
-      : DOWNLOAD_LINKS[currentDevice ?? platform]
+      : resolveDownloadLink(currentDevice ?? platform, downloadLinks)
     openInNewTab(link)
+    onClose()
+  }
+
+  const handleForeignAppStore = () => {
+    openInNewTab(resolveDownloadLink('IOS', downloadLinks))
     onClose()
   }
 
@@ -144,7 +145,7 @@ export function InstallSheet({
           Хорошо, перейти к установке
         </PrimaryButton>
         {secondButton && (
-          <PrimaryButton size="large" variant="secondary">
+          <PrimaryButton size="large" variant="secondary" onClick={handleForeignAppStore}>
             {secondButton}
           </PrimaryButton>
         )}

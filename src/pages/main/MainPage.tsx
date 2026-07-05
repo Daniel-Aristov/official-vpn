@@ -8,10 +8,9 @@ import { ChevronRightIcon } from '@/components/icons/ChevronRightIcon'
 import { NotificationBanner } from '@/components/NotificationBanner'
 import { useUser } from '@/store/user/useUser'
 import { useSubscription } from '@/store/subscription/useSubscription'
-import {
-  formatEndDate,
-  getPlanLabel,
-} from '@/js/services/subscriptionService'
+import { formatEndDate, getPlanLabel } from '@/js/services/utils/mappers'
+import { getSubscriptionRenewalPath } from '@/js/constants/subscription'
+import { formatSubscriptionExpiresIn } from '@/js/helpers/date'
 
 const planStyles: Record<string, string> = {
   trial: 'text-white/50 bg-white/10 border-white/20',
@@ -19,23 +18,24 @@ const planStyles: Record<string, string> = {
   pro: 'text-yellow-300 bg-yellow-500/20 border-yellow-400/40 px-[18px]',
 }
 
-function getDaysUntilEnd(endDate: string): number {
-  const end = new Date(endDate)
-  const now = new Date()
-  return Math.ceil((end.getTime() - now.getTime()) / (1000 * 60 * 60 * 24))
-}
-
 export function MainPage() {
   const navigate = useNavigate()
   const { setHideTabBar } = useOutletContext<MainViewOutletContext>()
   const { user } = useUser()
-  const { subscription, purchaseSuccessPlanType, clearPurchaseSuccess } =
-    useSubscription()
+  const {
+    subscription,
+    purchaseSuccessPlanType,
+    clearPurchaseSuccess,
+    getMinRenewalPrice,
+  } = useSubscription()
 
   const isBlocked = user?.isBlocked ?? false
-  const daysUntilEnd = subscription ? getDaysUntilEnd(subscription.endDate) : 0
+  const daysLeft = subscription?.daysLeft ?? null
   const isExpiringSoon =
-    subscription?.isActive && daysUntilEnd > 0 && daysUntilEnd <= 7
+    subscription?.isActive &&
+    daysLeft !== null &&
+    daysLeft >= 1 &&
+    daysLeft <= 7
 
   const notification = useMemo(() => {
     if (isBlocked) {
@@ -52,15 +52,15 @@ export function MainPage() {
         message: `Период: до ${formatEndDate(subscription.endDate)}`,
       }
     }
-    if (isExpiringSoon && subscription) {
+    if (isExpiringSoon && subscription && daysLeft !== null) {
       return {
         variant: 'warning' as const,
-        title: `Подписка закончится через ${daysUntilEnd} ${daysUntilEnd === 1 ? 'день' : 'дней'}`,
+        title: `Подписка закончится ${formatSubscriptionExpiresIn(daysLeft)}`,
         message: 'Не забудьте продлить подписку, иначе вы потеряете доступ к VPN',
       }
     }
     return null
-  }, [isBlocked, purchaseSuccessPlanType, isExpiringSoon, daysUntilEnd, subscription])
+  }, [isBlocked, purchaseSuccessPlanType, isExpiringSoon, daysLeft, subscription])
 
   useEffect(() => {
     setHideTabBar(isBlocked)
@@ -68,6 +68,10 @@ export function MainPage() {
   }, [isBlocked, setHideTabBar])
 
   const planLabel = subscription ? getPlanLabel(subscription.planType) : ''
+  const renewalPath = getSubscriptionRenewalPath(subscription?.planType)
+  const minRenewalPrice = subscription
+    ? getMinRenewalPrice(subscription.planType)
+    : 0
   const planStyle =
     planStyles[subscription?.planType ?? 'trial'] ?? planStyles.trial
 
@@ -86,7 +90,7 @@ export function MainPage() {
           onAction={() =>
             navigate(
               notification.variant === 'warning'
-                ? '/main/subscription'
+                ? renewalPath
                 : '/main/support',
             )
           }
@@ -126,7 +130,7 @@ export function MainPage() {
 
             <button
               type="button"
-              onClick={() => navigate('/main/subscription')}
+              onClick={() => navigate(renewalPath)}
               className="flex items-center justify-between bg-primary p-4 rounded-[16px] cursor-pointer"
             >
               <div className="flex items-center gap-2 text-white">
@@ -136,7 +140,7 @@ export function MainPage() {
                 </span>
               </div>
               <span className="text-white font-semibold text-[16px]">
-                от {subscription.price} Р
+                от {minRenewalPrice} ₽
               </span>
             </button>
             <button

@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { useAuth } from '@/store/auth/useAuth'
 import { UserProvider } from '@/store/user/userStore'
@@ -9,26 +9,31 @@ import { useUser } from '@/store/user/useUser'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { usePayment } from '@/store/payment/usePayment'
 import { useReferral } from '@/store/referral/useReferral'
-import { syncUserEmail } from '@/js/services/userService'
 
 function AppDataLoader({ children }: { children: ReactNode }) {
-  const { email } = useAuth()
+  const { isAuthenticated } = useAuth()
   const { fetchUser } = useUser()
   const { fetchSubscription, fetchRenewalPeriods } = useSubscription()
   const { fetchPaymentData } = usePayment()
   const { fetchReferralData } = useReferral()
+  const isLoadedRef = useRef(false)
 
   useEffect(() => {
-    if (!email) return
+    if (!isAuthenticated) {
+      isLoadedRef.current = false
+      return
+    }
 
-    void syncUserEmail(email)
+    if (isLoadedRef.current) return
+    isLoadedRef.current = true
+
     void fetchUser()
     void fetchSubscription()
     void fetchRenewalPeriods()
     void fetchPaymentData()
     void fetchReferralData()
   }, [
-    email,
+    isAuthenticated,
     fetchUser,
     fetchSubscription,
     fetchRenewalPeriods,

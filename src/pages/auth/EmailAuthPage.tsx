@@ -4,12 +4,12 @@ import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { AtIcon } from '@/components/icons/AtIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { isValidEmail } from '@/js/helpers/validation'
-import { sendEmailCode } from '@/js/services/authService'
+import { useAuth } from '@/store/auth/useAuth'
 
 export function EmailAuthPage() {
   const navigate = useNavigate()
+  const { sendEmailCode, isLoading } = useAuth()
   const [email, setEmail] = useState('')
-  const [isSending, setIsSending] = useState(false)
 
   const trimmedEmail = email.trim()
   const isEmpty = trimmedEmail === ''
@@ -18,7 +18,7 @@ export function EmailAuthPage() {
   const canContinue = !isEmpty && isValid
 
   return (
-    <main className="flex flex-col flex-1 px-4 py-10 max-w-[768px] mx-auto w-full">
+    <main className="flex flex-col flex-1 px-4 pb-10 pt-4 max-w-[768px] mx-auto w-full">
       <div className="py-4">
         <button
           type="button"
@@ -74,17 +74,12 @@ export function EmailAuthPage() {
           </p>
           <PrimaryButton
             size="large"
-            disabled={!canContinue || isSending}
+            disabled={!canContinue || isLoading}
             onClick={async () => {
-              setIsSending(true)
-              try {
-                await sendEmailCode(trimmedEmail)
-                navigate('/auth/email/verify', {
-                  state: { email: trimmedEmail },
-                })
-              } finally {
-                setIsSending(false)
-              }
+              await sendEmailCode(trimmedEmail)
+              navigate('/auth/email/verify', {
+                state: { email: trimmedEmail },
+              })
             }}
           >
             Продолжить

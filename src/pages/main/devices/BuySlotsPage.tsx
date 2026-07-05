@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
@@ -14,7 +14,7 @@ import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
 import { SBPLogoIcon } from '@/components/icons/SBPLogoIcon'
 import { TetherLogoIcon } from '@/components/icons/TetherLogoIcon'
 import {
-  PAYMENT_METHODS,
+  resolvePaymentMethodId,
   type PaymentMethod,
   type PaymentMethodId,
 } from '@/data/paymentMethods'
@@ -26,15 +26,27 @@ import {
 import { useSheet } from '@/js/helpers/useSheet'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { usePayment } from '@/store/payment/usePayment'
-import {
-  formatEndDateShort,
-  getPlanLabel,
-} from '@/js/services/subscriptionService'
+import { formatEndDateShort, getPlanLabel } from '@/js/services/utils/mappers'
 
 interface LocationState {
   slotCount?: number
   currentSlots?: number
   usedDevices?: number
+}
+
+function formatPurchasedSlotsLabel(count: number): string {
+  const mod10 = count % 10
+  const mod100 = count % 100
+
+  if (mod10 === 1 && mod100 !== 11) {
+    return `${count} устройство`
+  }
+
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 10 || mod100 >= 20)) {
+    return `${count} устройства`
+  }
+
+  return `${count} устройств`
 }
 
 function PaymentMethodIcon({
@@ -71,17 +83,27 @@ export function BuySlotsPage() {
   const navigate = useNavigate()
   const { state } = useLocation() as { state: LocationState | null }
   const { subscription, purchaseSlots } = useSubscription()
-  const { settings, setActivePaymentMethod } = usePayment()
+  const { settings, availablePaymentMethods, setActivePaymentMethod } = usePayment()
   const explanation = useSheet()
   const payment = useSheet()
   const paymentMethodChange = useSheet()
   const [slotCount, setSlotCount] = useState(state?.slotCount ?? 1)
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] =
-    useState<PaymentMethodId>(settings?.activePaymentMethodId ?? 'sbp')
+    useState<PaymentMethodId>('sbp')
+
+  const resolvedPaymentMethodId = useMemo(
+    () =>
+      resolvePaymentMethodId(
+        selectedPaymentMethodId,
+        settings?.availableMethods,
+      ),
+    [selectedPaymentMethodId, settings?.availableMethods],
+  )
 
   const selectedPaymentMethod =
-    PAYMENT_METHODS.find((method) => method.id === selectedPaymentMethodId) ??
-    PAYMENT_METHODS[1]
+    availablePaymentMethods.find(
+      (method) => method.id === resolvedPaymentMethodId,
+    ) ?? availablePaymentMethods[0]
 
   const currentSlots = state?.currentSlots ?? subscription?.totalSlots ?? 6
   const usedDevices =
@@ -96,7 +118,7 @@ export function BuySlotsPage() {
   const handlePay = () => {
     void purchaseSlots({
       slotCount,
-      paymentMethodId: selectedPaymentMethodId,
+      paymentMethodId: resolvedPaymentMethodId,
     })
     payment.close()
   }
@@ -130,10 +152,7 @@ export function BuySlotsPage() {
             </p>
           </div>
 
-          <button
-            type="button"
-            className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] px-4 py-3 flex items-center gap-3 w-full cursor-pointer"
-          >
+          <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] px-4 py-3 flex items-center gap-3 w-full">
             <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white/10 shrink-0 text-white">
               <GlobeIcon />
             </div>
@@ -145,10 +164,15 @@ export function BuySlotsPage() {
                 Активна до {endDateShort}
               </span>
             </div>
-            <span className="bg-secondary rounded-full w-[46px] h-[46px] flex items-center justify-center shrink-0 text-white">
+            <button
+              type="button"
+              onClick={() => navigate('/main')}
+              aria-label="Перейти в личный кабинет"
+              className="bg-secondary rounded-full w-[46px] h-[46px] flex items-center justify-center shrink-0 text-white cursor-pointer"
+            >
               <UsefulLinkArrowIcon />
-            </span>
-          </button>
+            </button>
+          </div>
 
           <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-3">
             <span className="text-white text-[18px] font-medium">
@@ -222,7 +246,7 @@ export function BuySlotsPage() {
                 <span>Купить слоты</span>
                 <div className="flex items-center gap-[10px]">
                   <span className="text-white/50">
-                    {totalDevices} устройств
+                    {formatPurchasedSlotsLabel(slotCount)}
                   </span>
                   <span className="text-white">{currentPrice} ₽</span>
                 </div>
@@ -260,25 +284,27 @@ export function BuySlotsPage() {
           </p>
         </div>
 
-        <div
-          onClick={paymentMethodChange.open}
-          className="bg-white/10 border border-white/10 rounded-[16px] p-4 flex items-center gap-3 w-full cursor-pointer"
-        >
-          <PaymentMethodIcon
-            method={selectedPaymentMethod}
-            variant="checkout"
-          />
-          <span className="text-white text-[16px] font-medium flex-1 text-left">
-            {selectedPaymentMethod.checkoutLabel}
-          </span>
-          <button
-            type="button"
-            aria-label="Изменить способ оплаты"
-            className="w-[28px] h-[28px] flex items-center justify-center rounded-full border border-white/10 bg-secondary shrink-0 text-white cursor-pointer"
+        {selectedPaymentMethod && (
+          <div
+            onClick={paymentMethodChange.open}
+            className="bg-white/10 border border-white/10 rounded-[16px] p-4 flex items-center gap-3 w-full cursor-pointer"
           >
-            <ChevronDownIcon className="shrink-0" />
-          </button>
-        </div>
+            <PaymentMethodIcon
+              method={selectedPaymentMethod}
+              variant="checkout"
+            />
+            <span className="text-white text-[16px] font-medium flex-1 text-left">
+              {selectedPaymentMethod.checkoutLabel}
+            </span>
+            <button
+              type="button"
+              aria-label="Изменить способ оплаты"
+              className="w-[28px] h-[28px] flex items-center justify-center rounded-full border border-white/10 bg-secondary shrink-0 text-white cursor-pointer"
+            >
+              <ChevronDownIcon className="shrink-0" />
+            </button>
+          </div>
+        )}
 
         <PrimaryButton size="large" onClick={handlePay}>
           Оплатить {currentPrice} Р
@@ -299,7 +325,7 @@ export function BuySlotsPage() {
         zIndexClass="z-70"
       >
         <div className="flex flex-col gap-3">
-          {PAYMENT_METHODS.map((method) => (
+          {availablePaymentMethods.map((method) => (
             <button
               key={method.id}
               type="button"
@@ -314,7 +340,7 @@ export function BuySlotsPage() {
               <span className="text-white text-[16px] font-semibold leading-[130%] flex-1 text-left">
                 {method.checkoutLabel}
               </span>
-              {selectedPaymentMethodId === method.id && (
+              {resolvedPaymentMethodId === method.id && (
                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
                   <CheckmarkIcon fill="white" className="w-4 h-4" />
                 </div>

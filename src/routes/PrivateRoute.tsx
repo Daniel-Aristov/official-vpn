@@ -1,7 +1,10 @@
 import { Navigate, Outlet } from 'react-router-dom'
-import { useAuth } from '@/store/auth/useAuth'
+import { isAuthenticated } from '@/js/services/authService'
 
 export function PrivateRoute() {
-  const { email } = useAuth()
-  return email ? <Outlet /> : <Navigate to="/" replace />
+  return isAuthenticated() ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/auth/email" replace />
+  )
 }

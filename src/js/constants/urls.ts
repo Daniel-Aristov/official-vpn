@@ -22,12 +22,10 @@ export type InstallPlatform =
   | 'Android'
   | 'Windows'
   | 'Macbook'
-  | 'Android TV'
 
 export const DOWNLOAD_LINKS: Record<InstallPlatform, string> = {
   IOS: 'https://apps.apple.com/ru/app/Happ/id6476628951',
   Android: 'https://hubforhub.com/android/',
   Windows: 'https://happ.foo/#download',
   Macbook: 'https://apps.apple.com/ru/app/Happ/id6476628951',
-  'Android TV': 'https://hubforhub.com/android/',
 }

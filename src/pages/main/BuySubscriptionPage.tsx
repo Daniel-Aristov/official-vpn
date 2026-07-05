@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { DeviceLimitExceededSheet } from '@/components/DeviceLimitExceededSheet'
@@ -9,7 +9,10 @@ import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { StepSlider } from '@/components/UI/StepSlider'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { StarIcon } from '@/components/icons/StarIcon'
-import { PAYMENT_METHODS, type PaymentMethodId } from '@/data/paymentMethods'
+import {
+  resolvePaymentMethodId,
+  type PaymentMethodId,
+} from '@/data/paymentMethods'
 import {
   PERIODS,
   PERIOD_MONTHS,
@@ -28,8 +31,8 @@ import { usePayment } from '@/store/payment/usePayment'
 export function BuySubscriptionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
-  const { renewalPeriods, purchaseSubscription } = useSubscription()
-  const { settings } = usePayment()
+  const { getPeriodsForPlan, purchaseSubscription } = useSubscription()
+  const { settings, availablePaymentMethods } = usePayment()
   const isPro = searchParams.get('plan') === 'pro'
   const payment = useSheet()
   const paymentMethodChange = useSheet()
@@ -40,10 +43,20 @@ export function BuySubscriptionPage() {
   const [proDeviceIndex, setProDeviceIndex] = useState(0)
   const [periodId, setPeriodId] = useState('3m')
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] =
-    useState<PaymentMethodId>(settings?.activePaymentMethodId ?? 'sbp')
+    useState<PaymentMethodId>('sbp')
   const isAutoRenewalEnabled = settings?.isAutoRenewalEnabled ?? true
 
-  const periods = renewalPeriods.length > 0 ? renewalPeriods : PERIODS
+  const resolvedPaymentMethodId = useMemo(
+    () =>
+      resolvePaymentMethodId(
+        selectedPaymentMethodId,
+        settings?.availableMethods,
+      ),
+    [selectedPaymentMethodId, settings?.availableMethods],
+  )
+
+  const apiPeriods = getPeriodsForPlan(isPro ? 'pro' : 'basic')
+  const periods = apiPeriods.length > 0 ? apiPeriods : PERIODS
 
   const deviceOptions = isPro ? PRO_DEVICE_OPTIONS : DEVICE_OPTIONS
   const deviceIndex = isPro ? proDeviceIndex : basicDeviceIndex
@@ -58,8 +71,9 @@ export function BuySubscriptionPage() {
     BASIC_MONTHLY_PRICE + extraDeviceCount * PRICE_PER_EXTRA_DEVICE
   const selectedPeriod = periods.find((p) => p.id === periodId) ?? periods[1]
   const selectedPaymentMethod =
-    PAYMENT_METHODS.find((method) => method.id === selectedPaymentMethodId) ??
-    PAYMENT_METHODS[1]
+    availablePaymentMethods.find(
+      (method) => method.id === resolvedPaymentMethodId,
+    ) ?? availablePaymentMethods[0]
 
   const periodMonths = PERIOD_MONTHS[selectedPeriod.id] ?? 3
   const subscriptionEndDate = formatSubscriptionEndDate(periodMonths)
@@ -111,7 +125,7 @@ export function BuySubscriptionPage() {
       planType: isPro ? 'pro' : 'basic',
       periodId,
       deviceCount,
-      paymentMethodId: selectedPaymentMethodId,
+      paymentMethodId: resolvedPaymentMethodId,
     }).then(() => {
       payment.close()
       navigate('/main')
@@ -270,27 +284,29 @@ export function BuySubscriptionPage() {
         nextPeriodMonthlyPrice={nextPeriodMonthlyPrice}
       />
 
-      <PaymentConfirmationSheet
-        isMounted={payment.mounted}
-        isVisible={payment.visible}
-        onClose={payment.close}
-        onConfirm={handleConfirmPayment}
-        onChangePaymentMethod={paymentMethodChange.open}
-        subscriptionEndDate={subscriptionEndDate}
-        periodLabel={selectedPeriod.label}
-        isPro={isPro}
-        isAutoRenewalEnabled={isAutoRenewalEnabled}
-        basicMonthlyPrice={BASIC_MONTHLY_PRICE}
-        deviceCount={deviceCount}
-        selectedPaymentMethod={selectedPaymentMethod}
-        actualPrice={actualPrice}
-      />
+      {selectedPaymentMethod && (
+        <PaymentConfirmationSheet
+          isMounted={payment.mounted}
+          isVisible={payment.visible}
+          onClose={payment.close}
+          onConfirm={handleConfirmPayment}
+          onChangePaymentMethod={paymentMethodChange.open}
+          subscriptionEndDate={subscriptionEndDate}
+          periodLabel={selectedPeriod.label}
+          isPro={isPro}
+          isAutoRenewalEnabled={isAutoRenewalEnabled}
+          basicMonthlyPrice={BASIC_MONTHLY_PRICE}
+          deviceCount={deviceCount}
+          selectedPaymentMethod={selectedPaymentMethod}
+          actualPrice={actualPrice}
+        />
+      )}
 
       <PaymentMethodChangeSheet
         isMounted={paymentMethodChange.mounted}
         isVisible={paymentMethodChange.visible}
         onClose={paymentMethodChange.close}
-        selectedPaymentMethodId={selectedPaymentMethodId}
+        selectedPaymentMethodId={resolvedPaymentMethodId}
         onSelectPaymentMethod={setSelectedPaymentMethodId}
       />
     </>

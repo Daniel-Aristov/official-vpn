@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { AndroidIcon } from '@/components/icons/AndroidIcon'
-import { AndroidTvIcon } from '@/components/icons/AndroidTvIcon'
 import { IosIcon } from '@/components/icons/IosIcon'
 import { MacOsIcon } from '@/components/icons/MacOsIcon'
 import { MonitorIcon } from '@/components/icons/MonitorIcon'
@@ -17,7 +16,6 @@ function DevicePlatformIcon({ platform }: { platform: string }) {
   const kind = getDevicePlatformKind(platform)
 
   if (kind === 'ios') return <IosIcon className="w-6 h-6" />
-  if (kind === 'android-tv') return <AndroidTvIcon className="w-6 h-6" />
   if (kind === 'android') return <AndroidIcon className="w-6 h-6" />
   if (kind === 'windows') return <WindowsIcon className="w-6 h-6" />
   if (kind === 'mac') return <MacOsIcon className="w-6 h-6" />

@@ -13,7 +13,10 @@ import {
 } from '@/js/helpers/platform'
 import { useSheet } from '@/js/helpers/useSheet'
 import { useSubscription } from '@/store/subscription/useSubscription'
+import { useUser } from '@/store/user/useUser'
 import { copyToClipboard } from '@/js/helpers/clipboard'
+import { fetchDownloadLinks } from '@/js/services/downloadService'
+import { mapDownloadLinksToPlatforms } from '@/js/services/utils/mappers'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
@@ -40,12 +43,19 @@ export function SetupPage() {
       ?.openPlatformSelect,
   )
   const [step, setStep] = useState(1)
-  const [platform, setPlatform] = useState<InstallPlatform>('IOS')
+  const [platform, setPlatform] = useState<InstallPlatform>(() =>
+    detectCurrentDevice(),
+  )
   const [showPlatforms, setShowPlatforms] = useState(openPlatformSelect)
   const [started, setStarted] = useState(false)
+  const [downloadLinks, setDownloadLinks] = useState<
+    Partial<Record<InstallPlatform, string>>
+  >({})
   const installSheet = useSheet()
   const telegramSheet = useSheet()
   const { subscription } = useSubscription()
+  const { user } = useUser()
+  const isTelegramLinked = user?.isTelegramLinked ?? false
   const vpnKey = subscription?.vpnKey ?? ''
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
 
@@ -54,22 +64,53 @@ export function SetupPage() {
     navigate(location.pathname, { replace: true, state: null })
   }, [openPlatformSelect, location.pathname, navigate])
 
+  useEffect(() => {
+    let cancelled = false
+
+    fetchDownloadLinks()
+      .then((links) => {
+        if (!cancelled) {
+          setDownloadLinks(mapDownloadLinksToPlatforms(links))
+        }
+      })
+      .catch(() => {})
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
   const goToMain = () => {
     telegramSheet.close()
     navigate('/main')
   }
 
+  const handleCompleteSetup = () => {
+    if (isTelegramLinked) {
+      navigate('/main')
+      return
+    }
+    telegramSheet.open()
+  }
+
   const handleStartSetup = () => {
+    setShowPlatforms(false)
     setStep(1)
     setStarted(true)
   }
 
   const handleBack = () => {
+    setShowPlatforms(false)
     if (step > 1) {
       setStep((s) => s - 1)
       return
     }
     setStarted(false)
+  }
+
+  const handleNextStep = () => {
+    setShowPlatforms(false)
+    setStep((s) => Math.min(s + 1, TOTAL_STEPS))
   }
 
   const handlePlatformChange = (p: InstallPlatform) => {
@@ -259,7 +300,7 @@ export function SetupPage() {
           ) : step === 3 ? (
             <button
               type="button"
-              onClick={telegramSheet.open}
+              onClick={handleCompleteSetup}
               className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
             >
               Завершить настройку
@@ -275,7 +316,7 @@ export function SetupPage() {
               </a>
               <button
                 type="button"
-                onClick={() => setStep((s) => Math.min(s + 1, TOTAL_STEPS))}
+                onClick={handleNextStep}
                 className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
               >
                 Следующий шаг
@@ -294,7 +335,7 @@ export function SetupPage() {
               </button>
               <button
                 type="button"
-                onClick={() => setStep((s) => Math.min(s + 1, TOTAL_STEPS))}
+                onClick={handleNextStep}
                 className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
               >
                 Следующий шаг
@@ -330,6 +371,7 @@ export function SetupPage() {
         isVisible={installSheet.visible}
         platform={platform}
         currentDevice={currentDevice}
+        downloadLinks={downloadLinks}
         onClose={installSheet.close}
       />
       <TelegramLinkSheet

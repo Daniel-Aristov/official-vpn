@@ -3,8 +3,6 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '@/components/icons/PasswordIcon'
 import { useAuth } from '@/store/auth/useAuth'
-import { verifyEmailCode } from '@/js/services/authService'
-import { syncUserEmail } from '@/js/services/userService'
 
 const CODE_LENGTH = 6
 const RESEND_SECONDS = 42
@@ -12,14 +10,14 @@ const RESEND_SECONDS = 42
 export function EmailVerifyPage() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { setEmail } = useAuth()
+  const { verifyEmailCode, resendEmailCode, isLoading } = useAuth()
   const email =
     (location.state as { email?: string } | null)?.email ??
     'something12@gmail.com'
 
   const [code, setCode] = useState<string[]>(Array(CODE_LENGTH).fill(''))
+  const [codeError, setCodeError] = useState<string | null>(null)
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS)
-  const [isVerifying, setIsVerifying] = useState(false)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
 
   useEffect(() => {
@@ -33,6 +31,7 @@ export function EmailVerifyPage() {
   }, [secondsLeft])
 
   const handleChange = (index: number, value: string) => {
+    setCodeError(null)
     const digit = value.replace(/\D/g, '').slice(-1)
     const next = [...code]
     next[index] = digit
@@ -50,6 +49,7 @@ export function EmailVerifyPage() {
   }
 
   const handlePaste = (text: string) => {
+    setCodeError(null)
     const digits = text.replace(/\D/g, '').slice(0, CODE_LENGTH).split('')
     if (!digits.length) return
 
@@ -61,25 +61,28 @@ export function EmailVerifyPage() {
     inputRefs.current[Math.min(digits.length, CODE_LENGTH - 1)]?.focus()
   }
 
+  const enteredCode = code.join('')
+  const canSubmit = enteredCode.length === CODE_LENGTH
+
   const handleResend = async () => {
     setSecondsLeft(RESEND_SECONDS)
-    await verifyEmailCode(email, '')
+    setCode(Array(CODE_LENGTH).fill(''))
+    setCodeError(null)
+    await resendEmailCode(email)
   }
 
   const handleLogin = async () => {
-    setIsVerifying(true)
-    try {
-      const result = await verifyEmailCode(email, code.join(''))
-      await syncUserEmail(result.email)
-      setEmail(result.email)
+    setCodeError(null)
+    const success = await verifyEmailCode(email, enteredCode)
+    if (success) {
       navigate('/main')
-    } finally {
-      setIsVerifying(false)
+    } else {
+      setCodeError('Код некорректный')
     }
   }
 
   return (
-    <main className="flex flex-col flex-1 px-4 py-10 max-w-[768px] mx-auto w-full">
+    <main className="flex flex-col flex-1 px-4 pb-10 pt-4 max-w-[768px] mx-auto w-full">
       <div className="py-4">
         <button
           type="button"
@@ -106,26 +109,35 @@ export function EmailVerifyPage() {
             </p>
           </div>
 
-          <div className="flex gap-[10px]">
-            {code.map((digit, index) => (
-              <input
-                key={index}
-                ref={(el) => {
-                  inputRefs.current[index] = el
-                }}
-                type="text"
-                inputMode="numeric"
-                maxLength={1}
-                value={digit}
-                onChange={(e) => handleChange(index, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(index, e.key)}
-                onPaste={(e) => {
-                  e.preventDefault()
-                  handlePaste(e.clipboardData.getData('text'))
-                }}
-                className="w-11 h-14 px-4 py-2 rounded-2xl bg-white/20 border border-white/10 text-white text-[20px] leading-[100%] font-semibold text-center outline-none"
-              />
-            ))}
+          <div className="flex flex-col items-center gap-2">
+            <div className="flex gap-[10px]">
+              {code.map((digit, index) => (
+                <input
+                  key={index}
+                  ref={(el) => {
+                    inputRefs.current[index] = el
+                  }}
+                  type="text"
+                  inputMode="numeric"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleChange(index, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(index, e.key)}
+                  onPaste={(e) => {
+                    e.preventDefault()
+                    handlePaste(e.clipboardData.getData('text'))
+                  }}
+                  className={`w-11 h-14 px-4 py-2 rounded-2xl bg-white/20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
+                    codeError ? 'border-red-400' : 'border-white/10'
+                  }`}
+                />
+              ))}
+            </div>
+            {codeError && (
+              <p className="text-[14px] text-red-400 leading-[130%]">
+                {codeError}
+              </p>
+            )}
           </div>
 
           {secondsLeft > 0 ? (
@@ -136,7 +148,7 @@ export function EmailVerifyPage() {
           ) : (
             <button
               type="button"
-              onClick={handleResend}
+              onClick={() => void handleResend()}
               className="text-[16px] text-white text-center leading-[130%] cursor-pointer bg-transparent border-0 p-0"
             >
               Отправить код ещё раз
@@ -146,7 +158,7 @@ export function EmailVerifyPage() {
 
         <button
           type="button"
-          disabled={isVerifying}
+          disabled={isLoading || !canSubmit}
           onClick={() => void handleLogin()}
           className="w-full py-[16px] rounded-2xl bg-primary text-white font-semibold text-[16px] leading-[20px] cursor-pointer disabled:opacity-50"
         >

@@ -88,7 +88,7 @@ const faqItems: FaqItemData[] = [
   {
     title: 'Какие устройства поддерживаются?',
     content:
-      'Android, IOS, Windows 10 (и выше), MacOS (процессоры M1), Linux, Android TV, Apple TV',
+      'Android, IOS, Windows 10 (и выше), MacOS (процессоры M1), Linux, Apple TV',
   },
   {
     title: 'Как подключиться к VPN',
