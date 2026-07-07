@@ -1,0 +1,16 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Прокси API (аналог Vite dev proxy) — браузер ходит на HTTPS Netlify, Netlify → backend
+[[redirects]]
+  from = "/api/*"
+  to = "http://165.232.125.201:8000/:splat"
+  status = 200
+  force = true
+
+# SPA fallback
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
