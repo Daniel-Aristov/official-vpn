@@ -79,28 +79,30 @@ export function MainPage() {
 
   return (
     <main className="flex flex-col flex-1 min-h-0 px-4 pt-4 max-w-[768px] mx-auto w-full gap-5">
-      <AnimatePresence mode="wait">
-        {notification && (
-          <NotificationBanner
-            key={notification.variant}
-            variant={notification.variant}
-            title={notification.title}
-            message={notification.message}
-            onClose={
-              notification.variant === 'success'
-                ? clearPurchaseSuccess
-                : undefined
-            }
-            onAction={() =>
-              navigate(
-                notification.variant === 'warning'
-                  ? renewalPath
-                  : '/main/support',
-              )
-            }
-          />
-        )}
-      </AnimatePresence>
+      <div className="page-enter-counter">
+        <AnimatePresence mode="wait">
+          {notification && (
+            <NotificationBanner
+              key={notification.variant}
+              variant={notification.variant}
+              title={notification.title}
+              message={notification.message}
+              onClose={
+                notification.variant === 'success'
+                  ? clearPurchaseSuccess
+                  : undefined
+              }
+              onAction={() =>
+                navigate(
+                  notification.variant === 'warning'
+                    ? renewalPath
+                    : '/main/support',
+                )
+              }
+            />
+          )}
+        </AnimatePresence>
+      </div>
 
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex flex-1 items-center justify-center min-h-0">

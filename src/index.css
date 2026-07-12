@@ -161,6 +161,23 @@ body {
   animation: page-enter 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
 }
 
+@keyframes page-enter-counter {
+  from {
+    transform: translate3d(0, -24px, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+.page-enter-counter {
+  animation: page-enter-counter 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+}
+
+.page-enter-counter:empty {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .glow-anim-1,
   .glow-anim-2,
@@ -168,7 +185,8 @@ body {
     animation: none;
   }
 
-  .page-enter {
+  .page-enter,
+  .page-enter-counter {
     animation: none;
   }
 }
