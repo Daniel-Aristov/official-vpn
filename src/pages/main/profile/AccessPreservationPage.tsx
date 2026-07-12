@@ -1,6 +1,5 @@
-import { motion } from 'motion/react'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import { CopyIcon } from '@/components/icons/CopyIcon'
+import { CopyButton } from '@/components/UI/CopyButton'
 import { DocumentCheckIcon } from '@/components/icons/DocumentCheckIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
@@ -10,8 +9,6 @@ import {
   PERSONAL_CABINET_URL,
 } from '@/js/constants/urls'
 import { openInNewTab } from '@/js/helpers/browser'
-import { copyToClipboard } from '@/js/helpers/clipboard'
-import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { useUser } from '@/store/user/useUser'
 
 interface ActionCardProps {
@@ -64,8 +61,6 @@ function ActionCard({
 export function AccessPreservationPage() {
   const { user, linkTelegram } = useUser()
   const isTelegramLinked = user?.isTelegramLinked ?? false
-
-  const handleCopyLink = () => copyToClipboard(PERSONAL_CABINET_URL)
 
   const handleLinkTelegram = () => {
     void linkTelegram()
@@ -136,16 +131,10 @@ export function AccessPreservationPage() {
               {PERSONAL_CABINET_URL}
             </span>
           </div>
-          <motion.button
-            type="button"
-            onClick={handleCopyLink}
+          <CopyButton
+            text={PERSONAL_CABINET_URL}
             aria-label="Скопировать ссылку"
-            whileTap={{ scale: 0.82 }}
-            transition={TAB_PRESS_TRANSITION}
-            className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
-          >
-            <CopyIcon />
-          </motion.button>
+          />
         </div>
       </div>
     </main>

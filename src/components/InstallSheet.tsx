@@ -1,8 +1,6 @@
-import { useState } from 'react'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
-import { CopyIcon } from '@/components/icons/CopyIcon'
-import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
+import { CopyButton } from '@/components/UI/CopyButton'
 import type { InstallPlatform } from '@/js/constants/urls'
 import { resolveDownloadLink } from '@/js/services/utils/mappers'
 import { openInNewTab } from '@/js/helpers/browser'
@@ -51,7 +49,6 @@ export function InstallSheet({
   downloadLinks,
   onClose,
 }: InstallSheetProps) {
-  const [copied, setCopied] = useState(false)
   const isMismatch = !!currentDevice && currentDevice !== platform
   const secondButton = getSecondButton(platform)
   const downloadLink = resolveDownloadLink(platform, downloadLinks)
@@ -67,12 +64,6 @@ export function InstallSheet({
   const handleForeignAppStore = () => {
     openInNewTab(resolveDownloadLink('IOS', downloadLinks))
     onClose()
-  }
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText(downloadLink)
-    setCopied(true)
-    window.setTimeout(() => setCopied(false), 2000)
   }
 
   if (isMismatch) {
@@ -111,18 +102,11 @@ export function InstallSheet({
                 {downloadLink}
               </span>
             </div>
-            <button
-              type="button"
-              onClick={handleCopy}
+            <CopyButton
+              text={downloadLink}
+              iconClassName="w-5 h-5"
               aria-label="Скопировать ссылку"
-              className="bg-primary text-white rounded-full cursor-pointer shrink-0 w-[46px] h-[46px] flex items-center justify-center"
-            >
-              {copied ? (
-                <CheckmarkIcon className="w-5 h-5" fill="white" />
-              ) : (
-                <CopyIcon className="w-5 h-5" />
-              )}
-            </button>
+            />
           </div>
         </div>
       </BottomSheet>

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { motion } from 'motion/react'
 import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
-import { CopyIcon } from '@/components/icons/CopyIcon'
+import { CopyButton } from '@/components/UI/CopyButton'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
 import { ReferralGiftIcon } from '@/components/icons/ReferralGiftIcon'
@@ -10,7 +10,6 @@ import {
   TELEGRAM_SUPPORT_URL,
   TELEGRAM_PARTNERS_URL,
 } from '@/js/constants/urls'
-import { copyToClipboard } from '@/js/helpers/clipboard'
 import { splitLinkAtQuery } from '@/js/helpers/link'
 import { useReferral } from '@/store/referral/useReferral'
 import { formatMoney } from '@/js/services/referralService'
@@ -107,8 +106,6 @@ interface ReferralLinkCardProps {
 }
 
 function ReferralLinkCard({ link }: ReferralLinkCardProps) {
-  const handleCopyLink = () => copyToClipboard(link)
-
   return (
     <div className="flex items-start gap-3 bg-white border border-white/10 rounded-[16px] px-4 py-[6px]">
       <LinkIcon className="w-6 h-6 shrink-0 text-black/60" />
@@ -120,16 +117,7 @@ function ReferralLinkCard({ link }: ReferralLinkCardProps) {
           {formatReferralLink(link)}
         </span>
       </div>
-      <motion.button
-        type="button"
-        onClick={handleCopyLink}
-        aria-label="Скопировать ссылку"
-        whileTap={{ scale: 0.82 }}
-        transition={TAB_PRESS_TRANSITION}
-        className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
-      >
-        <CopyIcon />
-      </motion.button>
+      <CopyButton text={link} aria-label="Скопировать ссылку" />
     </div>
   )
 }

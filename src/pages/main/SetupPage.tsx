@@ -16,14 +16,13 @@ import {
 import { useSheet } from '@/js/helpers/useSheet'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { useUser } from '@/store/user/useUser'
-import { copyToClipboard } from '@/js/helpers/clipboard'
+import { CopyButton } from '@/components/UI/CopyButton'
 import { fetchDownloadLinks } from '@/js/services/downloadService'
 import { mapDownloadLinksToPlatforms } from '@/js/services/utils/mappers'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import { CopyIcon } from '@/components/icons/CopyIcon'
 import { DownloadIcon } from '@/components/icons/DownloadIcon'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
@@ -379,15 +378,12 @@ export function SetupPage() {
                   {vpnKey}
                 </span>
               </div>
-              <motion.button
-                type="button"
-                onClick={() => copyToClipboard(vpnKey)}
-                whileTap={{ scale: 0.82 }}
-                transition={TAB_PRESS_TRANSITION}
+              <CopyButton
+                text={vpnKey}
+                iconClassName="w-5 h-5"
                 className="bg-primary text-white p-2 rounded-full cursor-pointer shrink-0 w-[46px] h-[46px] flex items-center justify-center"
-              >
-                <CopyIcon className="w-5 h-5" />
-              </motion.button>
+                aria-label="Скопировать ссылку"
+              />
             </div>
           )}
         </div>

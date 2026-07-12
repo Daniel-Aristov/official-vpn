@@ -1,10 +1,8 @@
-import { motion } from 'motion/react'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
+import { CopyButton } from '@/components/UI/CopyButton'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
-import { CopyIcon } from '@/components/icons/CopyIcon'
-import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 const SITE_URL = 'https://official.vpn'
 
@@ -18,10 +16,6 @@ export function SuccessRegistrationModal({
   onReturnToApp,
 }: SuccessRegistrationModalProps) {
   if (!isOpen) return null
-
-  const handleCopyLink = async () => {
-    await navigator.clipboard.writeText(SITE_URL)
-  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4">
@@ -56,16 +50,7 @@ export function SuccessRegistrationModal({
                 {SITE_URL}
               </span>
             </div>
-            <motion.button
-              type="button"
-              onClick={handleCopyLink}
-              aria-label="Скопировать ссылку"
-              whileTap={{ scale: 0.82 }}
-              transition={TAB_PRESS_TRANSITION}
-              className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
-            >
-              <CopyIcon />
-            </motion.button>
+            <CopyButton text={SITE_URL} aria-label="Скопировать ссылку" />
           </div>
         </div>
         <PrimaryButton size="large" onClick={onReturnToApp}>

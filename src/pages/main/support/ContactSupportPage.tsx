@@ -1,13 +1,12 @@
+import { CopyButton } from '@/components/UI/CopyButton'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { MailIcon } from '@/components/icons/MailIcon'
 import { TelegramIcon } from '@/components/icons/TelegramIcon'
-import { CopyIcon } from '@/components/icons/CopyIcon'
 import {
   TELEGRAM_SUPPORT_HANDLE,
   TELEGRAM_SUPPORT_URL,
   SUPPORT_EMAIL,
 } from '@/js/constants/urls'
-import { copyToClipboard } from '@/js/helpers/clipboard'
 
 interface ContactCardProps {
   icon: React.ReactNode
@@ -38,8 +37,6 @@ function ContactCard({ icon, title, value, children }: ContactCardProps) {
 }
 
 export function ContactSupportPage() {
-  const handleCopyEmail = () => copyToClipboard(SUPPORT_EMAIL)
-
   return (
     <main className="flex flex-col flex-1 px-4 pt-4 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
@@ -81,14 +78,11 @@ export function ContactSupportPage() {
           >
             Написать обращение
           </a>
-          <button
-            type="button"
-            onClick={handleCopyEmail}
-            aria-label="Скопировать email"
+          <CopyButton
+            text={SUPPORT_EMAIL}
             className="w-[44px] h-[44px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
-          >
-            <CopyIcon />
-          </button>
+            aria-label="Скопировать email"
+          />
         </div>
       </ContactCard>
     </main>
