@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
@@ -21,6 +22,7 @@ import {
   PRICE_PER_SLOT_MONTHLY,
   BASE_MONTHLY_SLOTS,
 } from '@/js/constants/subscription'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { useSheet } from '@/js/helpers/useSheet'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { usePayment } from '@/store/payment/usePayment'
@@ -129,14 +131,16 @@ export function BuySlotsPage() {
                 Активна до {endDateShort}
               </span>
             </div>
-            <button
+            <motion.button
               type="button"
               onClick={() => navigate('/main')}
               aria-label="Перейти в личный кабинет"
+              whileTap={{ scale: 0.82 }}
+              transition={TAB_PRESS_TRANSITION}
               className="bg-secondary rounded-full w-[46px] h-[46px] flex items-center justify-center shrink-0 text-white cursor-pointer"
             >
               <UsefulLinkArrowIcon />
-            </button>
+            </motion.button>
           </div>
 
           <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-3">
@@ -145,13 +149,15 @@ export function BuySlotsPage() {
             </span>
 
             <div className="flex items-center justify-between bg-secondary rounded-full p-1">
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setSlotCount((c) => Math.max(1, c - 1))}
+                whileTap={{ scale: 0.82 }}
+                transition={TAB_PRESS_TRANSITION}
                 className="w-[72px] h-[56px] flex items-center justify-center rounded-full bg-[#24326A] border-3 border-blue-500 text-white text-[26px] leading-none cursor-pointer shrink-0 font-medium"
               >
-                −
-              </button>
+                -
+              </motion.button>
               <div className="flex flex-col items-center gap-0.5">
                 <span className="text-white font-semibold text-[24px] leading-none select-none">
                   {slotCount}
@@ -160,13 +166,15 @@ export function BuySlotsPage() {
                   Доступно {availableDevices}/{totalDevices}
                 </span>
               </div>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setSlotCount((c) => Math.min(99, c + 1))}
+                whileTap={{ scale: 0.82 }}
+                transition={TAB_PRESS_TRANSITION}
                 className="w-[72px] h-[56px] flex items-center justify-center rounded-full bg-[#24326A] border-3 border-blue-500 text-white text-[26px] leading-none cursor-pointer shrink-0 font-medium"
               >
                 +
-              </button>
+              </motion.button>
             </div>
 
             <div className="flex flex-col bg-white/10 rounded-[16px] p-4">

@@ -79,15 +79,17 @@ function UsefulLink({ title, value, href }: UsefulLinkProps) {
           {value}
         </span>
       </div>
-      <a
+      <motion.a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
         aria-label={title}
+        whileTap={{ scale: 0.82 }}
+        transition={TAB_PRESS_TRANSITION}
         className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white shrink-0"
       >
         <UsefulLinkArrowIcon />
-      </a>
+      </motion.a>
     </div>
   )
 }
