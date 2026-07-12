@@ -1,7 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { animate, motion, useMotionValue, useTransform } from 'motion/react'
+import {
+  animate,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useTransform,
+} from 'motion/react'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { HomeIcon } from '@/components/icons/HomeIcon'
@@ -49,17 +55,15 @@ export function BottomTabBar() {
 
   const leadingUnit = useMotionValue(Math.max(activeIndex, 0))
   const trailingUnit = useMotionValue(Math.max(activeIndex, 0) + 1)
+  const dragScaleY = useMotionValue(1)
   const prevIndexRef = useRef(activeIndex)
 
-  const left = useTransform(
-    leadingUnit,
-    (v) => `calc(4px + ${v} * ${TAB_UNIT})`,
-  )
-  const width = useTransform(
+  const scaleX = useTransform(
     [leadingUnit, trailingUnit],
-    ([leading, trailing]: number[]) =>
-      `calc(${trailing - leading} * ${TAB_UNIT})`,
+    ([leading, trailing]: number[]) => trailing - leading,
   )
+  const baseTransform = useMotionTemplate`translateX(calc(${leadingUnit} * 100%)) scaleX(${scaleX})`
+  const indicatorTransform = useMotionTemplate`translateX(calc(${leadingUnit} * 100%)) scaleX(${scaleX}) scaleY(${dragScaleY})`
 
   useEffect(() => {
     const prevIndex = prevIndexRef.current
@@ -74,6 +78,10 @@ export function BottomTabBar() {
       movingRight ? LEAD_SPRING : LAG_SPRING,
     )
   }, [activeIndex, isDragging, leadingUnit, trailingUnit])
+
+  useEffect(() => {
+    animate(dragScaleY, isDragging ? 1.08 : 1, SNAP_SPRING)
+  }, [isDragging, dragScaleY])
 
   const getUnitFromPointer = (clientX: number) => {
     const rect = navRef.current?.getBoundingClientRect()
@@ -131,10 +139,14 @@ export function BottomTabBar() {
       >
         {activeIndex >= 0 && (
           <motion.span
-            className="absolute top-1 bottom-1 rounded-full bg-primary pointer-events-none"
-            style={{ left, width, ...indicatorGlassStyle }}
-            animate={{ scaleY: isDragging ? 1.08 : 1 }}
-            transition={SNAP_SPRING}
+            className="absolute top-1 bottom-1 left-1 rounded-full bg-primary pointer-events-none"
+            style={{
+              width: `calc(${TAB_UNIT})`,
+              transform: indicatorTransform,
+              transformOrigin: 'left center',
+              willChange: 'transform',
+              ...indicatorGlassStyle,
+            }}
           />
         )}
         {tabs.map(({ path, label, icon: Icon, end }) => (
@@ -157,8 +169,14 @@ export function BottomTabBar() {
         ))}
         {activeIndex >= 0 && (
           <motion.div
-            className="absolute top-1 bottom-1 z-20 rounded-full cursor-grab active:cursor-grabbing"
-            style={{ left, width, touchAction: 'none' }}
+            className="absolute top-1 bottom-1 left-1 z-20 rounded-full cursor-grab active:cursor-grabbing"
+            style={{
+              width: `calc(${TAB_UNIT})`,
+              transform: baseTransform,
+              transformOrigin: 'left center',
+              willChange: 'transform',
+              touchAction: 'none',
+            }}
             onPointerDown={handlePointerDown}
             onPointerMove={handlePointerMove}
             onPointerUp={handlePointerUp}
