@@ -1,4 +1,4 @@
-import type { PaymentMethodId } from '@/data/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 
 export type SubscriptionPlanType = 'trial' | 'basic' | 'pro'
 

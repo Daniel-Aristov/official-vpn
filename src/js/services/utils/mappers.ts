@@ -10,11 +10,12 @@ import {
   REFERRAL_LINK,
   type InstallPlatform,
 } from '@/js/constants/urls'
-import type { PaymentMethodId } from '@/data/paymentMethods'
 import {
-  getAvailablePaymentMethods,
+  getAvailablePaymentMethodIds,
+  mapPaymentMethodToId,
   resolvePaymentMethodId,
-} from '@/data/paymentMethods'
+} from '@/js/constants/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 import type {
   ApiSubscriptionPlanType,
   DeviceDto,
@@ -52,20 +53,6 @@ export function mapDomainPlanToApi(
 ): ApiSubscriptionPlanType {
   if (plan === 'trial') return 'basic'
   return plan
-}
-
-export function mapPaymentMethodToId(
-  method: string | null,
-): PaymentMethodId {
-  if (method === 'card') return 'card'
-  if (method === 'sbp') return 'sbp'
-  if (method === 'crypto' || method === 'usdt') return 'usdt'
-  return 'sbp'
-}
-
-export function mapPaymentMethodIdToApi(methodId: PaymentMethodId): string {
-  if (methodId === 'usdt') return 'crypto'
-  return methodId
 }
 
 export function mapDeviceDtoToDomain(device: DeviceDto): SubscriptionDevice {
@@ -162,7 +149,7 @@ export function mapPaymentMethodsToSettings(
   subscription: SubscriptionMeResponseDto | null,
   activeMethodOverride?: PaymentMethodId,
 ): PaymentSettings {
-  const available = getAvailablePaymentMethods(methods)
+  const available = getAvailablePaymentMethodIds(methods)
   const hasPaymentMethods = available.length > 0
 
   const preferredFromSubscription = subscription?.payment_method
@@ -176,7 +163,7 @@ export function mapPaymentMethodsToSettings(
 
   if (
     activeMethodOverride &&
-    available.some((method) => method.id === activeMethodOverride)
+    available.includes(activeMethodOverride)
   ) {
     activePaymentMethodId = activeMethodOverride
   }

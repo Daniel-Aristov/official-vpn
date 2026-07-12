@@ -4,16 +4,14 @@ import { PrimaryButton } from '@/components/UI/PrimaryButton'
 const TELEGRAM_BOT_URL = 'https://t.me/official_vpnbot'
 
 interface TelegramLinkSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   onLink: () => void
   onLater: () => void
 }
 
 export function TelegramLinkSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   onLink,
   onLater,
@@ -25,8 +23,7 @@ export function TelegramLinkSheet({
 
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Привязка к Telegram"
       onClose={onClose}
     >

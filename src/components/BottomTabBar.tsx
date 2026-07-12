@@ -1,8 +1,10 @@
 import { NavLink, useLocation } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { HomeIcon } from '@/components/icons/HomeIcon'
 import { PersonIcon } from '@/components/icons/PersonIcon'
+import { TAB_INDICATOR_TRANSITION } from '@/js/constants/motion'
 
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },
@@ -37,14 +39,11 @@ export function BottomTabBar() {
         }}
       >
         {activeIndex >= 0 && (
-          <span
+          <motion.span
             className="absolute top-1 bottom-1 left-1 rounded-full bg-primary"
-            style={{
-              width: `calc((100% - 8px) / ${tabs.length})`,
-              transform: `translateX(calc(${activeIndex} * 100%))`,
-              transition:
-                'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            }}
+            style={{ width: `calc((100% - 8px) / ${tabs.length})` }}
+            animate={{ x: `${activeIndex * 100}%` }}
+            transition={TAB_INDICATOR_TRANSITION}
           />
         )}
         {tabs.map(({ path, label, icon: Icon, end }) => (

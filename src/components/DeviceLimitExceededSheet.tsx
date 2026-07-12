@@ -2,24 +2,21 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 
 interface DeviceLimitExceededSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   onIncreaseLimit: () => void
   onManageDevices: () => void
 }
 
 export function DeviceLimitExceededSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   onIncreaseLimit,
   onManageDevices,
 }: DeviceLimitExceededSheetProps) {
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Превышен лимит устройств"
       onClose={onClose}
     >

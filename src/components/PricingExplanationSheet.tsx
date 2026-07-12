@@ -2,8 +2,7 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 
 interface PricingExplanationSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   pricePerDevice?: number
   remainingDays?: number
@@ -12,8 +11,7 @@ interface PricingExplanationSheetProps {
 }
 
 export function PricingExplanationSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   pricePerDevice = 60,
   remainingDays = 60,
@@ -24,8 +22,7 @@ export function PricingExplanationSheet({
 
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Пояснение к расчёту стоимости"
       onClose={onClose}
     >

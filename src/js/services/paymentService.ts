@@ -16,7 +16,7 @@ import type {
   UserSettingsPatchResponseDto,
 } from '@/js/types/dto'
 import type { PaymentSettings, PaymentTransaction } from '@/js/types/payment'
-import type { PaymentMethodId } from '@/data/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 
 const PAYMENT_POLL_INTERVAL_MS = 10_000
 const PAYMENT_POLL_DURATION_MS = 120_000

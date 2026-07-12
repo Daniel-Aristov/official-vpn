@@ -1,4 +1,5 @@
-import { Route, Routes } from 'react-router-dom'
+import { Navigate, Route, Routes } from 'react-router-dom'
+import { NotFoundRedirect } from '@/routes/NotFoundRedirect'
 import { PrivateRoute } from '@/routes/PrivateRoute'
 import { MainView } from '@/views/MainView'
 import { EmailAuthPage } from '@/pages/auth/EmailAuthPage'
@@ -41,8 +42,10 @@ export function AppRoutes() {
           <Route path="devices" element={<DevicesPage />} />
           <Route path="devices/slots" element={<BuySlotsPage />} />
           <Route path="subscription" element={<BuySubscriptionPage />} />
+          <Route path="*" element={<Navigate to="/main" replace />} />
         </Route>
       </Route>
+      <Route path="*" element={<NotFoundRedirect />} />
     </Routes>
   )
 }

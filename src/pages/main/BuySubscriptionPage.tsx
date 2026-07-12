@@ -11,8 +11,8 @@ import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { StarIcon } from '@/components/icons/StarIcon'
 import {
   resolvePaymentMethodId,
-  type PaymentMethodId,
-} from '@/data/paymentMethods'
+} from '@/js/constants/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 import {
   PERIODS,
   PERIOD_MONTHS,
@@ -32,7 +32,7 @@ export function BuySubscriptionPage() {
   const navigate = useNavigate()
   const [searchParams] = useSearchParams()
   const { getPeriodsForPlan, purchaseSubscription } = useSubscription()
-  const { settings, availablePaymentMethods } = usePayment()
+  const { settings, availablePaymentMethodIds } = usePayment()
   const isPro = searchParams.get('plan') === 'pro'
   const payment = useSheet()
   const paymentMethodChange = useSheet()
@@ -70,10 +70,7 @@ export function BuySubscriptionPage() {
   const nextPeriodMonthlyPrice =
     BASIC_MONTHLY_PRICE + extraDeviceCount * PRICE_PER_EXTRA_DEVICE
   const selectedPeriod = periods.find((p) => p.id === periodId) ?? periods[1]
-  const selectedPaymentMethod =
-    availablePaymentMethods.find(
-      (method) => method.id === resolvedPaymentMethodId,
-    ) ?? availablePaymentMethods[0]
+  const hasPaymentMethods = availablePaymentMethodIds.length > 0
 
   const periodMonths = PERIOD_MONTHS[selectedPeriod.id] ?? 3
   const subscriptionEndDate = formatSubscriptionEndDate(periodMonths)
@@ -257,8 +254,7 @@ export function BuySubscriptionPage() {
 
       {isPro && (
         <DeviceLimitExceededSheet
-          isMounted={deviceLimit.mounted}
-          isVisible={deviceLimit.visible}
+          isOpen={deviceLimit.isOpen}
           onClose={deviceLimit.close}
           onIncreaseLimit={handleOpenBuySlots}
           onManageDevices={handleOpenBuySlots}
@@ -267,8 +263,7 @@ export function BuySubscriptionPage() {
 
       {!isPro && (
         <UpgradeToProSheet
-          isMounted={proUpgrade.mounted}
-          isVisible={proUpgrade.visible}
+          isOpen={proUpgrade.isOpen}
           onClose={proUpgrade.close}
           onUpgrade={handleUpgradeToPro}
           proPlanPrice={PERIODS[1].price}
@@ -277,17 +272,15 @@ export function BuySubscriptionPage() {
       )}
 
       <PricingExplanationSheet
-        isMounted={explanation.mounted}
-        isVisible={explanation.visible}
+        isOpen={explanation.isOpen}
         onClose={explanation.close}
         currentPeriodSurcharge={extraDevicePrice}
         nextPeriodMonthlyPrice={nextPeriodMonthlyPrice}
       />
 
-      {selectedPaymentMethod && (
+      {hasPaymentMethods && (
         <PaymentConfirmationSheet
-          isMounted={payment.mounted}
-          isVisible={payment.visible}
+          isOpen={payment.isOpen}
           onClose={payment.close}
           onConfirm={handleConfirmPayment}
           onChangePaymentMethod={paymentMethodChange.open}
@@ -297,14 +290,13 @@ export function BuySubscriptionPage() {
           isAutoRenewalEnabled={isAutoRenewalEnabled}
           basicMonthlyPrice={BASIC_MONTHLY_PRICE}
           deviceCount={deviceCount}
-          selectedPaymentMethod={selectedPaymentMethod}
+          selectedPaymentMethodId={resolvedPaymentMethodId}
           actualPrice={actualPrice}
         />
       )}
 
       <PaymentMethodChangeSheet
-        isMounted={paymentMethodChange.mounted}
-        isVisible={paymentMethodChange.visible}
+        isOpen={paymentMethodChange.isOpen}
         onClose={paymentMethodChange.close}
         selectedPaymentMethodId={resolvedPaymentMethodId}
         onSelectPaymentMethod={setSelectedPaymentMethodId}

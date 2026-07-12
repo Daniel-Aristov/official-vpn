@@ -1,6 +1,8 @@
 import { useEffect, useMemo } from 'react'
+import { AnimatePresence } from 'motion/react'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import type { MainViewOutletContext } from '@/views/MainView'
+import { LogoWithText } from '@/components/LogoWithText'
 import { DownloadIcon } from '@/components/icons/DownloadIcon'
 import { GlobeIcon } from '@/components/icons/GlobeIcon'
 import { SmartphoneIcon } from '@/components/icons/SmartphoneIcon'
@@ -77,33 +79,32 @@ export function MainPage() {
 
   return (
     <main className="flex flex-col flex-1 min-h-0 px-4 pt-4 max-w-[768px] mx-auto w-full gap-5">
-      {notification && (
-        <NotificationBanner
-          variant={notification.variant}
-          title={notification.title}
-          message={notification.message}
-          onClose={
-            notification.variant === 'success'
-              ? clearPurchaseSuccess
-              : undefined
-          }
-          onAction={() =>
-            navigate(
-              notification.variant === 'warning'
-                ? renewalPath
-                : '/main/support',
-            )
-          }
-        />
-      )}
+      <AnimatePresence mode="wait">
+        {notification && (
+          <NotificationBanner
+            key={notification.variant}
+            variant={notification.variant}
+            title={notification.title}
+            message={notification.message}
+            onClose={
+              notification.variant === 'success'
+                ? clearPurchaseSuccess
+                : undefined
+            }
+            onAction={() =>
+              navigate(
+                notification.variant === 'warning'
+                  ? renewalPath
+                  : '/main/support',
+              )
+            }
+          />
+        )}
+      </AnimatePresence>
 
       <div className="flex flex-col flex-1 min-h-0">
         <div className="flex flex-1 items-center justify-center min-h-0">
-          <img
-            src="/logoWithText.svg"
-            alt="Official VPN"
-            className="w-full h-auto max-w-[249px]"
-          />
+          <LogoWithText className="w-full h-auto max-w-[249px]" />
         </div>
 
         {!isBlocked && subscription && (

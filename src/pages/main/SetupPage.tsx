@@ -367,16 +367,14 @@ export function SetupPage() {
         </div>
       </main>
       <InstallSheet
-        isMounted={installSheet.mounted}
-        isVisible={installSheet.visible}
+        isOpen={installSheet.isOpen}
         platform={platform}
         currentDevice={currentDevice}
         downloadLinks={downloadLinks}
         onClose={installSheet.close}
       />
       <TelegramLinkSheet
-        isMounted={telegramSheet.mounted}
-        isVisible={telegramSheet.visible}
+        isOpen={telegramSheet.isOpen}
         onClose={telegramSheet.close}
         onLink={goToMain}
         onLater={goToMain}

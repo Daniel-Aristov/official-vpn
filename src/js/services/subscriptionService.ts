@@ -1,12 +1,12 @@
 import { UI_PERIOD_TO_API } from '@/js/constants/periods'
 import { apiEndpoints } from '@/js/constants/api'
+import { mapPaymentMethodIdToApi } from '@/js/constants/paymentMethods'
 import { api } from '@/js/services/utils/api'
 import { fetchUserMeDto } from '@/js/services/userService'
 import {
   getBaseSlots,
   mapDeviceDtoToDomain,
   mapDomainPlanToApi,
-  mapPaymentMethodIdToApi,
   mapPricingToPeriods,
   mapSubscriptionToDomain,
   mapTrialSubscription,

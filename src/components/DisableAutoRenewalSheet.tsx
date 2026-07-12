@@ -2,15 +2,13 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 
 interface DisableAutoRenewalSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   onConfirm: () => void
 }
 
 export function DisableAutoRenewalSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   onConfirm,
 }: DisableAutoRenewalSheetProps) {
@@ -21,8 +19,7 @@ export function DisableAutoRenewalSheet({
 
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Отключить автопродление?"
       onClose={onClose}
     >

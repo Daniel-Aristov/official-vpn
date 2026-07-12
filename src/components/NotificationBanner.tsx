@@ -1,8 +1,10 @@
 import type { ReactNode } from 'react'
+import { motion } from 'motion/react'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { BlockedCircleIcon } from '@/components/icons/BlockedCircleIcon'
 import { CloseIcon } from '@/components/icons/CloseIcon'
+import { FADE_TRANSITION } from '@/js/constants/motion'
 
 type NotificationVariant = 'warning' | 'success' | 'blocked'
 
@@ -45,7 +47,11 @@ export function NotificationBanner({
   const isWarningClickable = variant === 'warning' && onAction
 
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -8 }}
+      transition={FADE_TRANSITION}
       className={`bg-black/40 border border-white/10 rounded-[24px] p-4${isWarningClickable ? ' cursor-pointer' : ''}`}
       {...(isWarningClickable && {
         role: 'button',
@@ -90,6 +96,6 @@ export function NotificationBanner({
           {actionLabel}
         </button>
       )}
-    </div>
+    </motion.div>
   )
 }

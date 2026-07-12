@@ -1,12 +1,11 @@
 import { createContext } from 'react'
-import type { PaymentMethod } from '@/data/paymentMethods'
 import type { PaymentSettings, PaymentTransaction } from '@/js/types/payment'
-import type { PaymentMethodId } from '@/data/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 
 export interface PaymentState {
   settings: PaymentSettings | null
   transactions: PaymentTransaction[]
-  availablePaymentMethods: PaymentMethod[]
+  availablePaymentMethodIds: PaymentMethodId[]
   isLoading: boolean
   fetchPaymentData: () => Promise<void>
   setAutoRenewal: (enabled: boolean) => Promise<void>

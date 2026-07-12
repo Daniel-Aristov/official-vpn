@@ -1,15 +1,10 @@
 import { useState } from 'react'
 import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
+import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
-import { SBPLogoIcon } from '@/components/icons/SBPLogoIcon'
-import { TetherLogoIcon } from '@/components/icons/TetherLogoIcon'
-import {
-  formatMaskedCardNumber,
-  PAYMENT_METHODS,
-  type PaymentMethod,
-  type PaymentMethodId,
-} from '@/data/paymentMethods'
+import { getPaymentMethodLabel } from '@/js/constants/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 import type { PaymentTransaction } from '@/js/types/payment'
 import { useSheet } from '@/js/helpers/useSheet'
 import { usePayment } from '@/store/payment/usePayment'
@@ -51,13 +46,13 @@ function EmptyStateBlock({
 }
 
 interface PaymentMethodItemProps {
-  method: PaymentMethod
+  methodId: PaymentMethodId
   isActive: boolean
   onSelect: () => void
 }
 
 function PaymentMethodItem({
-  method,
+  methodId,
   isActive,
   onSelect,
 }: PaymentMethodItemProps) {
@@ -67,30 +62,11 @@ function PaymentMethodItem({
       onClick={onSelect}
       className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
     >
-      <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white/10 shrink-0 text-white">
-        {method.id === 'card' ? (
-          <PaymentHistoryIcon className="w-6 h-6" />
-        ) : method.id === 'sbp' ? (
-          <SBPLogoIcon className="h-[28px] w-auto" />
-        ) : (
-          <TetherLogoIcon className="h-[19px] w-auto" />
-        )}
-      </div>
+      <PaymentMethodIcon methodId={methodId} variant="picker" />
       <div className="flex flex-col flex-1 min-w-0 text-left">
-        {method.id === 'usdt' ? (
-          <span className="text-white text-[16px] font-semibold leading-[130%]">
-            {method.subtitle}
-          </span>
-        ) : (
-          <>
-            <span className="text-white text-[16px] font-semibold leading-[130%]">
-              {formatMaskedCardNumber(method.cardNumber)}
-            </span>
-            <span className="text-[#A5A6A7] text-[14px] leading-[110%]">
-              {method.subtitle}
-            </span>
-          </>
-        )}
+        <span className="text-white text-[16px] font-semibold leading-[130%]">
+          {getPaymentMethodLabel(methodId)}
+        </span>
       </div>
       {isActive && (
         <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
@@ -102,7 +78,7 @@ function PaymentMethodItem({
 }
 
 interface PaymentMethodsTabContentProps {
-  availablePaymentMethods: PaymentMethod[]
+  availablePaymentMethodIds: PaymentMethodId[]
   activePaymentMethodId: PaymentMethodId
   isAutoRenewalEnabled: boolean
   onDisableClick: () => void
@@ -112,7 +88,7 @@ interface PaymentMethodsTabContentProps {
 }
 
 function PaymentMethodsTabContent({
-  availablePaymentMethods,
+  availablePaymentMethodIds,
   activePaymentMethodId,
   isAutoRenewalEnabled,
   onDisableClick,
@@ -122,14 +98,14 @@ function PaymentMethodsTabContent({
 }: PaymentMethodsTabContentProps) {
   return (
     <>
-      {availablePaymentMethods.length > 0 ? (
+      {availablePaymentMethodIds.length > 0 ? (
         <div className="flex flex-col gap-3">
-          {availablePaymentMethods.map((method) => (
+          {availablePaymentMethodIds.map((methodId) => (
             <PaymentMethodItem
-              key={method.id}
-              method={method}
-              isActive={activePaymentMethodId === method.id}
-              onSelect={() => onSelectPaymentMethod(method.id)}
+              key={methodId}
+              methodId={methodId}
+              isActive={activePaymentMethodId === methodId}
+              onSelect={() => onSelectPaymentMethod(methodId)}
             />
           ))}
         </div>
@@ -180,9 +156,8 @@ function formatTransactionStatus(status: string): string {
   return TRANSACTION_STATUS_LABELS[status] ?? status
 }
 
-function getPaymentMethodLabel(tx: PaymentTransaction): string {
-  const method = PAYMENT_METHODS.find((item) => item.id === tx.paymentMethodId)
-  return method?.checkoutLabel ?? tx.paymentMethod
+function getTransactionPaymentMethodLabel(tx: PaymentTransaction): string {
+  return getPaymentMethodLabel(tx.paymentMethodId) || tx.paymentMethod
 }
 
 function TransactionRow({ label, value }: { label: string; value: string }) {
@@ -218,7 +193,7 @@ function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
       />
       <TransactionRow
         label="Способ оплаты"
-        value={getPaymentMethodLabel(transaction)}
+        value={getTransactionPaymentMethodLabel(transaction)}
       />
       <TransactionRow
         label="Дата"
@@ -258,7 +233,7 @@ export function PaymentHistoryPage() {
   const {
     settings,
     transactions,
-    availablePaymentMethods,
+    availablePaymentMethodIds,
     setAutoRenewal,
     setActivePaymentMethod,
     enablePaymentMethods,
@@ -322,7 +297,7 @@ export function PaymentHistoryPage() {
 
         {activeTab === 'methods' ? (
           <PaymentMethodsTabContent
-            availablePaymentMethods={availablePaymentMethods}
+            availablePaymentMethodIds={availablePaymentMethodIds}
             activePaymentMethodId={activePaymentMethodId}
             isAutoRenewalEnabled={isAutoRenewalEnabled}
             onDisableClick={disableSheet.open}
@@ -336,8 +311,7 @@ export function PaymentHistoryPage() {
       </main>
 
       <DisableAutoRenewalSheet
-        isMounted={disableSheet.mounted}
-        isVisible={disableSheet.visible}
+        isOpen={disableSheet.isOpen}
         onClose={disableSheet.close}
         onConfirm={handleDisableAutoRenewal}
       />

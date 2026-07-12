@@ -8,8 +8,7 @@ import { resolveDownloadLink } from '@/js/services/utils/mappers'
 import { openInNewTab } from '@/js/helpers/browser'
 
 interface InstallSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   platform: InstallPlatform
   currentDevice?: InstallPlatform
   downloadLinks: Partial<Record<InstallPlatform, string>>
@@ -46,8 +45,7 @@ function getSecondButton(platform: InstallPlatform): string | null {
 }
 
 export function InstallSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   platform,
   currentDevice,
   downloadLinks,
@@ -80,8 +78,7 @@ export function InstallSheet({
   if (isMismatch) {
     return (
       <BottomSheet
-        isMounted={isMounted}
-        isVisible={isVisible}
+        isOpen={isOpen}
         title="Похоже, вы на другом устройстве"
         onClose={onClose}
       >
@@ -134,8 +131,7 @@ export function InstallSheet({
 
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Важная информация"
       onClose={onClose}
     >

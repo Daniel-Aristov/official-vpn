@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
+import { AnimatePresence, motion } from 'motion/react'
 import { CloseIcon } from '@/components/icons/CloseIcon'
+import { SHEET_TRANSITION } from '@/js/constants/motion'
 
 interface BottomSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   title: string
   onClose: () => void
   children: ReactNode
@@ -11,45 +12,52 @@ interface BottomSheetProps {
 }
 
 export function BottomSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   title,
   onClose,
   children,
   zIndexClass = 'z-60',
 }: BottomSheetProps) {
-  if (!isMounted) return null
-
   return (
-    <div className={`fixed inset-0 ${zIndexClass} flex items-end justify-center`}>
-      <button
-        type="button"
-        aria-label="Закрыть"
-        onClick={onClose}
-        className={`absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default transition-opacity duration-300 ${
-          isVisible ? 'opacity-100' : 'opacity-0'
-        }`}
-      />
-      <div
-        className={`relative w-full max-w-[768px] bg-[#28282D] border border-white/10 rounded-t-[32px] p-6 flex flex-col gap-4 transition-transform duration-300 ease-[cubic-bezier(0.25,0.46,0.45,0.94)] ${
-          isVisible ? 'translate-y-0' : 'translate-y-full'
-        }`}
-      >
-        <div className="flex items-start justify-between gap-3">
-          <h2 className="text-white font-semibold text-[24px] leading-[120%]">
-            {title}
-          </h2>
-          <button
+    <AnimatePresence>
+      {isOpen && (
+        <div
+          className={`fixed inset-0 ${zIndexClass} flex items-end justify-center`}
+        >
+          <motion.button
             type="button"
-            onClick={onClose}
             aria-label="Закрыть"
-            className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+            onClick={onClose}
+            className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={SHEET_TRANSITION}
+          />
+          <motion.div
+            className="relative w-full max-w-[768px] bg-[#28282D] border border-white/10 rounded-t-[32px] p-6 flex flex-col gap-4"
+            initial={{ y: '100%' }}
+            animate={{ y: 0 }}
+            exit={{ y: '100%' }}
+            transition={SHEET_TRANSITION}
           >
-            <CloseIcon />
-          </button>
+            <div className="flex items-start justify-between gap-3">
+              <h2 className="text-white font-semibold text-[24px] leading-[120%]">
+                {title}
+              </h2>
+              <button
+                type="button"
+                onClick={onClose}
+                aria-label="Закрыть"
+                className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <CloseIcon />
+              </button>
+            </div>
+            {children}
+          </motion.div>
         </div>
-        {children}
-      </div>
-    </div>
+      )}
+    </AnimatePresence>
   )
 }

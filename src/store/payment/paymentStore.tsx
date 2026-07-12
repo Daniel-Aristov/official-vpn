@@ -1,9 +1,9 @@
 import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
-import { getAvailablePaymentMethods } from '@/data/paymentMethods'
+import { getAvailablePaymentMethodIds } from '@/js/constants/paymentMethods'
 import * as paymentService from '@/js/services/paymentService'
 import type { PaymentSettings, PaymentTransaction } from '@/js/types/payment'
-import type { PaymentMethodId } from '@/data/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 import { PaymentContext } from '@/store/payment/paymentContext'
 
 export function PaymentProvider({ children }: { children: ReactNode }) {
@@ -45,8 +45,8 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     setSettings(data)
   }, [])
 
-  const availablePaymentMethods = useMemo(
-    () => getAvailablePaymentMethods(settings?.availableMethods),
+  const availablePaymentMethodIds = useMemo(
+    () => getAvailablePaymentMethodIds(settings?.availableMethods),
     [settings?.availableMethods],
   )
 
@@ -55,7 +55,7 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
       value={{
         settings,
         transactions,
-        availablePaymentMethods,
+        availablePaymentMethodIds,
         isLoading,
         fetchPaymentData,
         setAutoRenewal,

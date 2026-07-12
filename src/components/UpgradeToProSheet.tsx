@@ -6,8 +6,7 @@ import { ShieldCheckIcon } from '@/components/icons/ShieldCheckIcon'
 import { TenLocationFlagsIcon } from '@/components/icons/TenLocationFlagsIcon'
 
 interface UpgradeToProSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   onUpgrade?: () => void
   proPlanPrice?: number
@@ -35,8 +34,7 @@ function PlanFeature({
 }
 
 export function UpgradeToProSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   onUpgrade,
   proPlanPrice = 597,
@@ -44,8 +42,7 @@ export function UpgradeToProSheet({
 }: UpgradeToProSheetProps) {
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Переход на PRO"
       onClose={onClose}
     >

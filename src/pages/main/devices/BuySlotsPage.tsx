@@ -9,15 +9,13 @@ import { UsefulLinkArrowIcon } from '@/components/icons/UsefulLinkArrowIcon'
 import { ChevronRightIcon } from '@/components/icons/ChevronRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { InfoQuestionIcon } from '@/components/icons/InfoQuestionIcon'
+import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
-import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
-import { SBPLogoIcon } from '@/components/icons/SBPLogoIcon'
-import { TetherLogoIcon } from '@/components/icons/TetherLogoIcon'
 import {
+  getPaymentMethodLabel,
   resolvePaymentMethodId,
-  type PaymentMethod,
-  type PaymentMethodId,
-} from '@/data/paymentMethods'
+} from '@/js/constants/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 import {
   PRICE_PER_SLOT_PERIOD,
   PRICE_PER_SLOT_MONTHLY,
@@ -49,41 +47,11 @@ function formatPurchasedSlotsLabel(count: number): string {
   return `${count} устройств`
 }
 
-function PaymentMethodIcon({
-  method,
-  variant,
-}: {
-  method: PaymentMethod
-  variant: 'checkout' | 'picker'
-}) {
-  if (variant === 'checkout') {
-    if (method.id === 'card') {
-      return <PaymentHistoryIcon className="w-7 h-7 shrink-0 text-white" />
-    }
-    if (method.id === 'sbp') {
-      return <SBPLogoIcon className="h-7 w-auto shrink-0" />
-    }
-    return <TetherLogoIcon className="h-[19px] w-auto shrink-0" />
-  }
-
-  return (
-    <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white/10 shrink-0 text-white">
-      {method.id === 'card' ? (
-        <PaymentHistoryIcon className="w-6 h-6" />
-      ) : method.id === 'sbp' ? (
-        <SBPLogoIcon className="h-[28px] w-auto" />
-      ) : (
-        <TetherLogoIcon className="h-[19px] w-auto" />
-      )}
-    </div>
-  )
-}
-
 export function BuySlotsPage() {
   const navigate = useNavigate()
   const { state } = useLocation() as { state: LocationState | null }
   const { subscription, purchaseSlots } = useSubscription()
-  const { settings, availablePaymentMethods, setActivePaymentMethod } = usePayment()
+  const { settings, availablePaymentMethodIds, setActivePaymentMethod } = usePayment()
   const explanation = useSheet()
   const payment = useSheet()
   const paymentMethodChange = useSheet()
@@ -100,10 +68,7 @@ export function BuySlotsPage() {
     [selectedPaymentMethodId, settings?.availableMethods],
   )
 
-  const selectedPaymentMethod =
-    availablePaymentMethods.find(
-      (method) => method.id === resolvedPaymentMethodId,
-    ) ?? availablePaymentMethods[0]
+  const hasPaymentMethods = availablePaymentMethodIds.length > 0
 
   const currentSlots = state?.currentSlots ?? subscription?.totalSlots ?? 6
   const usedDevices =
@@ -257,16 +222,14 @@ export function BuySlotsPage() {
       </main>
 
       <PricingExplanationSheet
-        isMounted={explanation.mounted}
-        isVisible={explanation.visible}
+        isOpen={explanation.isOpen}
         onClose={explanation.close}
         currentPeriodSurcharge={currentPrice}
         nextPeriodMonthlyPrice={monthlyPrice}
       />
 
       <BottomSheet
-        isMounted={payment.mounted}
-        isVisible={payment.visible}
+        isOpen={payment.isOpen}
         title="Подтверждение оплаты"
         onClose={payment.close}
       >
@@ -284,17 +247,17 @@ export function BuySlotsPage() {
           </p>
         </div>
 
-        {selectedPaymentMethod && (
+        {hasPaymentMethods && (
           <div
             onClick={paymentMethodChange.open}
             className="bg-white/10 border border-white/10 rounded-[16px] p-4 flex items-center gap-3 w-full cursor-pointer"
           >
             <PaymentMethodIcon
-              method={selectedPaymentMethod}
+              methodId={resolvedPaymentMethodId}
               variant="checkout"
             />
             <span className="text-white text-[16px] font-medium flex-1 text-left">
-              {selectedPaymentMethod.checkoutLabel}
+              {getPaymentMethodLabel(resolvedPaymentMethodId)}
             </span>
             <button
               type="button"
@@ -318,29 +281,28 @@ export function BuySlotsPage() {
       </BottomSheet>
 
       <BottomSheet
-        isMounted={paymentMethodChange.mounted}
-        isVisible={paymentMethodChange.visible}
+        isOpen={paymentMethodChange.isOpen}
         title="Изменить способ оплаты"
         onClose={paymentMethodChange.close}
         zIndexClass="z-70"
       >
         <div className="flex flex-col gap-3">
-          {availablePaymentMethods.map((method) => (
+          {availablePaymentMethodIds.map((methodId) => (
             <button
-              key={method.id}
+              key={methodId}
               type="button"
               onClick={() => {
-                setSelectedPaymentMethodId(method.id)
-                void setActivePaymentMethod(method.id)
+                setSelectedPaymentMethodId(methodId)
+                void setActivePaymentMethod(methodId)
                 paymentMethodChange.close()
               }}
               className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
             >
-              <PaymentMethodIcon method={method} variant="picker" />
+              <PaymentMethodIcon methodId={methodId} variant="picker" />
               <span className="text-white text-[16px] font-semibold leading-[130%] flex-1 text-left">
-                {method.checkoutLabel}
+                {getPaymentMethodLabel(methodId)}
               </span>
-              {resolvedPaymentMethodId === method.id && (
+              {resolvedPaymentMethodId === methodId && (
                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
                   <CheckmarkIcon fill="white" className="w-4 h-4" />
                 </div>

@@ -2,11 +2,11 @@ import { BottomSheet } from '@/components/BottomSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
-import type { PaymentMethod } from '@/data/paymentMethods'
+import { getPaymentMethodLabel } from '@/js/constants/paymentMethods'
+import type { PaymentMethodId } from '@/js/types/payment'
 
 interface PaymentConfirmationSheetProps {
-  isMounted: boolean
-  isVisible: boolean
+  isOpen: boolean
   onClose: () => void
   onConfirm?: () => void
   onChangePaymentMethod: () => void
@@ -16,13 +16,12 @@ interface PaymentConfirmationSheetProps {
   isAutoRenewalEnabled: boolean
   basicMonthlyPrice: number
   deviceCount: number
-  selectedPaymentMethod: PaymentMethod
+  selectedPaymentMethodId: PaymentMethodId
   actualPrice: number
 }
 
 export function PaymentConfirmationSheet({
-  isMounted,
-  isVisible,
+  isOpen,
   onClose,
   onConfirm,
   onChangePaymentMethod,
@@ -32,13 +31,12 @@ export function PaymentConfirmationSheet({
   isAutoRenewalEnabled,
   basicMonthlyPrice,
   deviceCount,
-  selectedPaymentMethod,
+  selectedPaymentMethodId,
   actualPrice,
 }: PaymentConfirmationSheetProps) {
   return (
     <BottomSheet
-      isMounted={isMounted}
-      isVisible={isVisible}
+      isOpen={isOpen}
       title="Подтверждение оплаты"
       onClose={onClose}
     >
@@ -61,9 +59,9 @@ export function PaymentConfirmationSheet({
         onClick={onChangePaymentMethod}
         className="bg-white/10 border border-white/10 rounded-[16px] p-4 flex items-center gap-3 w-full cursor-pointer"
       >
-        <PaymentMethodIcon method={selectedPaymentMethod} variant="checkout" />
+        <PaymentMethodIcon methodId={selectedPaymentMethodId} variant="checkout" />
         <span className="text-white text-[16px] font-medium flex-1 text-left">
-          {selectedPaymentMethod.checkoutLabel}
+          {getPaymentMethodLabel(selectedPaymentMethodId)}
         </span>
         <button
           type="button"

@@ -1,29 +1,10 @@
-import { useRef, useState } from 'react'
-import { SHEET_ANIMATION_MS } from '@/js/constants/ui'
+import { useState } from 'react'
 
 export function useSheet() {
-  const [mounted, setMounted] = useState(false)
-  const [visible, setVisible] = useState(false)
-  const timerRef = useRef<number | null>(null)
+  const [isOpen, setIsOpen] = useState(false)
 
-  const open = () => {
-    if (timerRef.current !== null) {
-      window.clearTimeout(timerRef.current)
-      timerRef.current = null
-    }
-    setMounted(true)
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => setVisible(true))
-    })
-  }
+  const open = () => setIsOpen(true)
+  const close = () => setIsOpen(false)
 
-  const close = () => {
-    setVisible(false)
-    timerRef.current = window.setTimeout(() => {
-      setMounted(false)
-      timerRef.current = null
-    }, SHEET_ANIMATION_MS)
-  }
-
-  return { mounted, visible, open, close }
+  return { isOpen, open, close }
 }

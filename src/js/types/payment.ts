@@ -1,5 +1,6 @@
-import type { PaymentMethodId } from '@/data/paymentMethods'
 import type { PaymentMethodsResponseDto } from '@/js/types/dto'
+
+export type PaymentMethodId = 'card' | 'sbp' | 'usdt' | 'wallet'
 
 export interface PaymentTransaction {
   id: string

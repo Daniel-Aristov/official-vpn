@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { openInNewTab } from '@/js/helpers/browser'
 import { pollPaymentStatus } from '@/js/services/paymentService'
@@ -18,6 +18,8 @@ import type {
 } from '@/js/types/subscription'
 import { SubscriptionContext } from '@/store/subscription/subscriptionContext'
 
+const PURCHASE_SUCCESS_AUTO_HIDE_MS = 10 * 60 * 1000
+
 export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [subscription, setSubscription] = useState<Subscription | null>(null)
   const [renewalPeriods, setRenewalPeriods] = useState<RenewalPeriod[]>([])
@@ -27,6 +29,28 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(false)
   const [purchaseSuccessPlanType, setPurchaseSuccessPlanType] =
     useState<SubscriptionPlanType | null>(null)
+  const purchaseSuccessAutoHideRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  )
+
+  const clearPurchaseSuccessAutoHide = useCallback(() => {
+    if (purchaseSuccessAutoHideRef.current) {
+      clearTimeout(purchaseSuccessAutoHideRef.current)
+      purchaseSuccessAutoHideRef.current = null
+    }
+  }, [])
+
+  const schedulePurchaseSuccessAutoHide = useCallback(() => {
+    clearPurchaseSuccessAutoHide()
+    purchaseSuccessAutoHideRef.current = setTimeout(() => {
+      purchaseSuccessAutoHideRef.current = null
+      setPurchaseSuccessPlanType(null)
+    }, PURCHASE_SUCCESS_AUTO_HIDE_MS)
+  }, [clearPurchaseSuccessAutoHide])
+
+  useEffect(() => {
+    return () => clearPurchaseSuccessAutoHide()
+  }, [clearPurchaseSuccessAutoHide])
 
   const fetchSubscription = useCallback(async () => {
     setIsLoading(true)
@@ -108,13 +132,15 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
       const order = await subscriptionService.purchaseSubscription(payload)
       openPaymentOrder(order)
       setPurchaseSuccessPlanType(payload.planType)
+      schedulePurchaseSuccessAutoHide()
     },
-    [openPaymentOrder],
+    [openPaymentOrder, schedulePurchaseSuccessAutoHide],
   )
 
   const clearPurchaseSuccess = useCallback(() => {
+    clearPurchaseSuccessAutoHide()
     setPurchaseSuccessPlanType(null)
-  }, [])
+  }, [clearPurchaseSuccessAutoHide])
 
   const purchaseSlots = useCallback(
     async (payload: PurchaseSlotsPayload) => {
