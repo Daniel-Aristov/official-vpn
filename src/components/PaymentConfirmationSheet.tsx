@@ -73,7 +73,7 @@ export function PaymentConfirmationSheet({
       </div>
 
       <PrimaryButton size="large" onClick={onConfirm}>
-        Оплатить {actualPrice} Р
+        Оплатить {actualPrice} ₽
       </PrimaryButton>
 
       <p className="text-white/40 text-[12px] leading-[130%] text-center">

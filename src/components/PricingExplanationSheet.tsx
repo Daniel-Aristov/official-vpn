@@ -31,15 +31,15 @@ export function PricingExplanationSheet({
         подключённых дополнительных опций.
       </p>
       <div className="flex flex-col text-white/80 text-[16px] leading-[130%]">
-        <p>Цена за 1 устройство: {pricePerDevice} Р в месяц.</p>
+        <p>Цена за 1 устройство: {pricePerDevice} ₽ в месяц.</p>
         <p>Остаток подписки: {remainingDays} дней.</p>
-        <p>Доплата за текущий период: {currentPeriodSurcharge} Р.</p>
+        <p>Доплата за текущий период: {currentPeriodSurcharge} ₽.</p>
       </div>
       <p className="text-white/80 text-[16px] leading-[130%]">
-        Оплата за следующие периоды: {nextPeriodMonthlyPrice} Р в месяц.
+        Оплата за следующие периоды: {nextPeriodMonthlyPrice} ₽ в месяц.
       </p>
       <p className="text-white/80 text-[16px] leading-[130%]">
-        Итого: {currentPeriodSurcharge} + {nextPeriodMonthlyPrice} = {total} Р
+        Итого: {currentPeriodSurcharge} + {nextPeriodMonthlyPrice} = {total} ₽
       </p>
       <PrimaryButton size="large" onClick={onClose}>
         Всё понять, закрыть

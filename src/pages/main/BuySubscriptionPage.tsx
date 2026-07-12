@@ -179,20 +179,24 @@ export function BuySubscriptionPage() {
                   </span>
                 </div>
               </div>
-              {hasExtraDevices && (
-                <button
-                  type="button"
-                  onClick={explanation.open}
-                  className="bg-black/40 rounded-[12px] px-3 py-2 flex flex-col items-center shrink-0 cursor-pointer"
-                >
-                  <span className="text-white font-semibold text-[16px] leading-[130%]">
-                    {extraDevicePrice} ₽
-                  </span>
-                  <span className="text-white/50 text-[12px] leading-[120%]">
-                    {extraDeviceCount} устр.
-                  </span>
-                </button>
-              )}
+              <button
+                type="button"
+                onClick={hasExtraDevices ? explanation.open : undefined}
+                tabIndex={hasExtraDevices ? 0 : -1}
+                aria-hidden={!hasExtraDevices}
+                className={`bg-black/40 rounded-[12px] px-3 py-2 flex flex-col items-center shrink-0 ${
+                  hasExtraDevices
+                    ? 'cursor-pointer'
+                    : 'invisible pointer-events-none'
+                }`}
+              >
+                <span className="text-white font-semibold text-[16px] leading-[130%]">
+                  {extraDevicePrice} ₽
+                </span>
+                <span className="text-white/50 text-[12px] leading-[120%]">
+                  {extraDeviceCount} устр.
+                </span>
+              </button>
             </div>
 
             <StepSlider
@@ -245,8 +249,8 @@ export function BuySubscriptionPage() {
           <div className="flex items-center w-full justify-between gap-2 px-4">
             <span>Продлить подписку</span>
             <div className="flex items-center gap-2">
-              <span className="text-white">{actualPrice} Р</span>
-              <span className="text-white line-through">{fullPrice} Р</span>
+              <span className="text-white">{actualPrice} ₽</span>
+              <span className="text-white line-through">{fullPrice} ₽</span>
             </div>
           </div>
         </PrimaryButton>

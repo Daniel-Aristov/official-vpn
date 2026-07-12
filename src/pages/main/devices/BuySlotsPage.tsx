@@ -173,7 +173,7 @@ export function BuySlotsPage() {
               <div className="flex items-center justify-between">
                 <span className="text-white/60 text-[14px] leading-[130%]">
                   {slotCount} {slotCount === 1 ? 'устройство' : 'устройства'}
-                  <br />* {PRICE_PER_SLOT_PERIOD} Р * 2 месяца
+                  <br />* {PRICE_PER_SLOT_PERIOD} ₽ * 2 месяца
                 </span>
                 <span className="text-white font-semibold text-[18px] leading-[130%]">
                   {currentPrice} ₽
@@ -270,7 +270,7 @@ export function BuySlotsPage() {
         )}
 
         <PrimaryButton size="large" onClick={handlePay}>
-          Оплатить {currentPrice} Р
+          Оплатить {currentPrice} ₽
         </PrimaryButton>
 
         <p className="text-white/40 text-[12px] leading-[130%] text-center">
