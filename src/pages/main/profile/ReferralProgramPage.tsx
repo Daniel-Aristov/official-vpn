@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
 import { CopyIcon } from '@/components/icons/CopyIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
@@ -222,7 +223,6 @@ const referralTabs = [
 export function ReferralProgramPage() {
   const [activeTab, setActiveTab] = useState<ReferralTab>('bonuses')
   const { data } = useReferral()
-  const activeIndex = referralTabs.findIndex((tab) => tab.id === activeTab)
 
   const bonuses = data?.bonuses
   const money = data?.money
@@ -249,28 +249,11 @@ export function ReferralProgramPage() {
         </div>
       </div>
 
-      <div className="relative flex w-full rounded-full p-1 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 overflow-hidden">
-        <span
-          className="absolute top-1 bottom-1 left-1 rounded-full bg-white/10"
-          style={{
-            width: `calc((100% - 8px) / ${referralTabs.length})`,
-            transform: `translateX(calc(${activeIndex} * 100%))`,
-            transition: 'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-          }}
-        />
-        {referralTabs.map(({ id, label }) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setActiveTab(id)}
-            className={`relative flex-1 min-w-0 py-3 rounded-full text-[16px] font-semibold cursor-pointer transition-colors duration-300 ${
-              activeTab === id ? 'text-white' : 'text-white/40'
-            }`}
-          >
-            {label}
-          </button>
-        ))}
-      </div>
+      <SegmentedTabs
+        tabs={referralTabs}
+        activeTab={activeTab}
+        onChange={(tab) => setActiveTab(tab as ReferralTab)}
+      />
 
       {activeTab === 'bonuses' ? (
         <BonusesTabContent

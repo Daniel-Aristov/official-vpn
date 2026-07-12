@@ -12,6 +12,13 @@ export const TAB_INDICATOR_TRANSITION: Transition = {
   ease: SHEET_EASE,
 }
 
+export const LIQUID_TAB_TRANSITION: Transition = {
+  type: 'spring',
+  stiffness: 160,
+  damping: 28,
+  mass: 1.4,
+}
+
 export const FADE_TRANSITION: Transition = {
   duration: 0.3,
   ease: SHEET_EASE,

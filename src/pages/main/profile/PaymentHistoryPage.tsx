@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
+import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { PaymentHistoryIcon } from '@/components/icons/PaymentHistoryIcon'
 import { getPaymentMethodLabel } from '@/js/constants/paymentMethods'
@@ -239,7 +240,6 @@ export function PaymentHistoryPage() {
     enablePaymentMethods,
   } = usePayment()
   const disableSheet = useSheet()
-  const activeIndex = paymentTabs.findIndex((tab) => tab.id === activeTab)
 
   const isAutoRenewalEnabled = settings?.isAutoRenewalEnabled ?? true
   const activePaymentMethodId = settings?.activePaymentMethodId ?? 'card'
@@ -271,29 +271,11 @@ export function PaymentHistoryPage() {
           </div>
         </div>
 
-        <div className="relative flex w-full rounded-full p-1 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 overflow-hidden">
-          <span
-            className="absolute top-1 bottom-1 left-1 rounded-full bg-white/10"
-            style={{
-              width: `calc((100% - 8px) / ${paymentTabs.length})`,
-              transform: `translateX(calc(${activeIndex} * 100%))`,
-              transition:
-                'transform 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
-            }}
-          />
-          {paymentTabs.map(({ id, label }) => (
-            <button
-              key={id}
-              type="button"
-              onClick={() => setActiveTab(id)}
-              className={`relative flex-1 min-w-0 py-3 rounded-full text-[16px] font-semibold cursor-pointer transition-colors duration-300 ${
-                activeTab === id ? 'text-white' : 'text-white/40'
-              }`}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
+        <SegmentedTabs
+          tabs={paymentTabs}
+          activeTab={activeTab}
+          onChange={(tab) => setActiveTab(tab as PaymentTab)}
+        />
 
         {activeTab === 'methods' ? (
           <PaymentMethodsTabContent

@@ -144,7 +144,7 @@ export function SetupPage() {
             <button
               type="button"
               onClick={() => setShowPlatforms((v) => !v)}
-              className="flex items-center gap-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[16px] font-semibold px-4 py-1 rounded-full cursor-pointer"
+              className="flex items-center gap-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[16px] font-semibold pl-5 pr-4 py-1 rounded-full cursor-pointer"
             >
               {label}
               <ChevronDownIcon
