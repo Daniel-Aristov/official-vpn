@@ -85,12 +85,16 @@ export function SetupPage() {
     navigate('/main')
   }
 
-  const handleCompleteSetup = () => {
+  const exitSetup = () => {
     if (isTelegramLinked) {
       navigate('/main')
       return
     }
     telegramSheet.open()
+  }
+
+  const handleCompleteSetup = () => {
+    exitSetup()
   }
 
   const handleStartSetup = () => {
@@ -120,7 +124,8 @@ export function SetupPage() {
     setStep(1)
   }
 
-  const progressRatio = started ? step / TOTAL_STEPS : 0
+  const isDoneStep = started && step === TOTAL_STEPS
+  const progressRatio = step === 1 ? 0 : step / TOTAL_STEPS
   const label = SETUP_PLATFORM_LABELS[platform]
 
   return (
@@ -182,7 +187,7 @@ export function SetupPage() {
           <h1 className="text-center text-white text-[28px] font-bold tracking-[-0.5px]">
             {!started
               ? `Настройка на ${label}`
-              : step === 3
+              : step === TOTAL_STEPS
                 ? 'Готово'
                 : step === 2
                   ? 'Подписка'
@@ -195,7 +200,7 @@ export function SetupPage() {
                 <br />
                 за пару минут и за 3 шага
               </>
-            ) : step === 3 ? (
+            ) : step === TOTAL_STEPS ? (
               'Нажмите на круглую кнопку включения VPN в приложении Happ'
             ) : step === 2 ? (
               'Добавьте подписку в приложение Happ с помощью кнопки ниже'
@@ -228,23 +233,25 @@ export function SetupPage() {
                 stroke="#3A3A3C"
                 strokeWidth={STROKE_WIDTH}
               />
-              <motion.circle
-                cx={CIRCLE_CENTER}
-                cy={CIRCLE_CENTER}
-                r={CIRCLE_R}
-                fill="none"
-                stroke="#255de0"
-                strokeWidth={STROKE_WIDTH}
-                strokeLinecap="round"
-                transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
-                initial={false}
-                animate={{ pathLength: progressRatio }}
-                transition={{ duration: 0.5, ease: SHEET_EASE }}
-              />
+              {started && (
+                <motion.circle
+                  cx={CIRCLE_CENTER}
+                  cy={CIRCLE_CENTER}
+                  r={CIRCLE_R}
+                  fill="none"
+                  stroke="#255de0"
+                  strokeWidth={STROKE_WIDTH}
+                  strokeLinecap="round"
+                  transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
+                  initial={false}
+                  animate={{ pathLength: progressRatio }}
+                  transition={{ duration: 0.5, ease: SHEET_EASE }}
+                />
+              )}
             </svg>
             <div className="flex flex-col items-center z-10">
               {started ? (
-                step === 3 ? (
+                isDoneStep ? (
                   <motion.span
                     initial={{ scale: 0, rotate: -45, opacity: 0 }}
                     animate={{ scale: 1, rotate: 0, opacity: 1 }}
@@ -319,7 +326,7 @@ export function SetupPage() {
               >
                 Начать настройку на этом устройстве
               </button>
-            ) : step === 3 ? (
+            ) : step === TOTAL_STEPS ? (
               <button
                 type="button"
                 onClick={handleCompleteSetup}
@@ -394,6 +401,7 @@ export function SetupPage() {
         currentDevice={currentDevice}
         downloadLinks={downloadLinks}
         onClose={installSheet.close}
+        onInstallProceed={handleNextStep}
       />
       <TelegramLinkSheet
         isOpen={telegramSheet.isOpen}

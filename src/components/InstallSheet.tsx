@@ -11,6 +11,7 @@ interface InstallSheetProps {
   currentDevice?: InstallPlatform
   downloadLinks: Partial<Record<InstallPlatform, string>>
   onClose: () => void
+  onInstallProceed?: () => void
 }
 
 const DESCRIPTION =
@@ -48,6 +49,7 @@ export function InstallSheet({
   currentDevice,
   downloadLinks,
   onClose,
+  onInstallProceed,
 }: InstallSheetProps) {
   const isMismatch = !!currentDevice && currentDevice !== platform
   const secondButton = getSecondButton(platform)
@@ -59,11 +61,13 @@ export function InstallSheet({
       : resolveDownloadLink(currentDevice ?? platform, downloadLinks)
     openInNewTab(link)
     onClose()
+    onInstallProceed?.()
   }
 
   const handleForeignAppStore = () => {
     openInNewTab(resolveDownloadLink('IOS', downloadLinks))
     onClose()
+    onInstallProceed?.()
   }
 
   if (isMismatch) {
