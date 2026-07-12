@@ -19,6 +19,11 @@ export const LIQUID_TAB_TRANSITION: Transition = {
   mass: 1.4,
 }
 
+export const TAB_PRESS_TRANSITION: Transition = {
+  duration: 0.15,
+  ease: SHEET_EASE,
+}
+
 export const FADE_TRANSITION: Transition = {
   duration: 0.3,
   ease: SHEET_EASE,
