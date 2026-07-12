@@ -1,11 +1,13 @@
 import { useMemo, useState, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'motion/react'
 import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
 import {
   SUBSCRIPTION_DEEP_LINK,
   type InstallPlatform,
 } from '@/js/constants/urls'
+import { SHEET_EASE, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import {
   detectCurrentDevice,
   INSTALL_PLATFORMS,
@@ -151,20 +153,31 @@ export function SetupPage() {
                 className={`transition-transform duration-200 ${showPlatforms ? 'rotate-180' : ''}`}
               />
             </button>
-            {showPlatforms && (
-              <div className="absolute right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl z-10 min-w-[140px] py-1">
-                {INSTALL_PLATFORMS.filter((p) => p !== platform).map((p) => (
-                  <button
-                    key={p}
-                    type="button"
-                    onClick={() => handlePlatformChange(p)}
-                    className="w-full px-4 py-1.5 text-left text-white text-[16px] font-semibold cursor-pointer"
-                  >
-                    {SETUP_PLATFORM_LABELS[p]}
-                  </button>
-                ))}
-              </div>
-            )}
+            <AnimatePresence>
+              {showPlatforms && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9, y: -8 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, y: -8 }}
+                  transition={{ duration: 0.18, ease: SHEET_EASE }}
+                  style={{ transformOrigin: 'top right' }}
+                  className="absolute right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl z-10 min-w-[140px] py-1"
+                >
+                  {INSTALL_PLATFORMS.filter((p) => p !== platform).map((p) => (
+                    <motion.button
+                      key={p}
+                      type="button"
+                      onClick={() => handlePlatformChange(p)}
+                      whileTap={{ scale: 0.95 }}
+                      transition={TAB_PRESS_TRANSITION}
+                      className="w-full px-4 py-1.5 text-left text-white text-[16px] font-semibold cursor-pointer"
+                    >
+                      {SETUP_PLATFORM_LABELS[p]}
+                    </motion.button>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
 
@@ -355,13 +368,15 @@ export function SetupPage() {
                   {vpnKey}
                 </span>
               </div>
-              <button
+              <motion.button
                 type="button"
                 onClick={() => copyToClipboard(vpnKey)}
+                whileTap={{ scale: 0.82 }}
+                transition={TAB_PRESS_TRANSITION}
                 className="bg-primary text-white p-2 rounded-full cursor-pointer shrink-0 w-[46px] h-[46px] flex items-center justify-center"
               >
                 <CopyIcon className="w-5 h-5" />
-              </button>
+              </motion.button>
             </div>
           )}
         </div>

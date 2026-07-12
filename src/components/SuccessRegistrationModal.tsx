@@ -1,8 +1,10 @@
+import { motion } from 'motion/react'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { LinkIcon } from '@/components/icons/LinkIcon'
 import { CopyIcon } from '@/components/icons/CopyIcon'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 const SITE_URL = 'https://official.vpn'
 
@@ -54,14 +56,16 @@ export function SuccessRegistrationModal({
                 {SITE_URL}
               </span>
             </div>
-            <button
+            <motion.button
               type="button"
               onClick={handleCopyLink}
               aria-label="Скопировать ссылку"
+              whileTap={{ scale: 0.82 }}
+              transition={TAB_PRESS_TRANSITION}
               className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
             >
               <CopyIcon />
-            </button>
+            </motion.button>
           </div>
         </div>
         <PrimaryButton size="large" onClick={onReturnToApp}>

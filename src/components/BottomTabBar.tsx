@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
-import { NavLink, useLocation } from 'react-router-dom'
+import { useEffect, useRef, useState } from 'react'
+import type { PointerEvent as ReactPointerEvent } from 'react'
+import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { animate, motion, useMotionValue, useTransform } from 'motion/react'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
@@ -30,9 +31,17 @@ const TAB_UNIT = `((100% - 8px) / ${tabs.length})`
 
 const LEAD_SPRING = { type: 'spring', stiffness: 420, damping: 34, mass: 0.7 } as const
 const LAG_SPRING = { type: 'spring', stiffness: 280, damping: 30, mass: 0.8 } as const
+const SNAP_SPRING = { type: 'spring', stiffness: 380, damping: 32, mass: 0.7 } as const
+
+function clamp(value: number, min: number, max: number) {
+  return Math.min(Math.max(value, min), max)
+}
 
 export function BottomTabBar() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const navRef = useRef<HTMLElement>(null)
+  const [isDragging, setIsDragging] = useState(false)
 
   const activeIndex = tabs.findIndex(({ path, end }) =>
     end ? location.pathname === path : location.pathname.startsWith(path),
@@ -55,7 +64,7 @@ export function BottomTabBar() {
   useEffect(() => {
     const prevIndex = prevIndexRef.current
     prevIndexRef.current = activeIndex
-    if (activeIndex < 0 || prevIndex === activeIndex) return
+    if (activeIndex < 0 || prevIndex === activeIndex || isDragging) return
 
     const movingRight = activeIndex > prevIndex
     animate(leadingUnit, activeIndex, movingRight ? LAG_SPRING : LEAD_SPRING)
@@ -64,11 +73,52 @@ export function BottomTabBar() {
       activeIndex + 1,
       movingRight ? LEAD_SPRING : LAG_SPRING,
     )
-  }, [activeIndex, leadingUnit, trailingUnit])
+  }, [activeIndex, isDragging, leadingUnit, trailingUnit])
+
+  const getUnitFromPointer = (clientX: number) => {
+    const rect = navRef.current?.getBoundingClientRect()
+    if (!rect) return activeIndex
+    const tabWidth = (rect.width - 8) / tabs.length
+    return clamp((clientX - rect.left - 4) / tabWidth, 0, tabs.length)
+  }
+
+  const handlePointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (activeIndex < 0) return
+    event.currentTarget.setPointerCapture(event.pointerId)
+    setIsDragging(true)
+  }
+
+  const handlePointerMove = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return
+    const leading = clamp(
+      getUnitFromPointer(event.clientX) - 0.5,
+      0,
+      tabs.length - 1,
+    )
+    leadingUnit.set(leading)
+    trailingUnit.set(leading + 1)
+  }
+
+  const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return
+    setIsDragging(false)
+    const nearestIndex = clamp(
+      Math.round(getUnitFromPointer(event.clientX) - 0.5),
+      0,
+      tabs.length - 1,
+    )
+    if (nearestIndex !== activeIndex) {
+      navigate(tabs[nearestIndex].path)
+      return
+    }
+    animate(leadingUnit, activeIndex, SNAP_SPRING)
+    animate(trailingUnit, activeIndex + 1, SNAP_SPRING)
+  }
 
   return (
     <div className="fixed bottom-0 left-0 right-0 w-full px-4 pb-4 z-50">
       <nav
+        ref={navRef}
         className="relative flex w-full h-[61px] items-stretch rounded-full p-1 overflow-hidden"
         style={{
           background: 'rgba(255, 255, 255, 0.08)',
@@ -83,6 +133,8 @@ export function BottomTabBar() {
           <motion.span
             className="absolute top-1 bottom-1 rounded-full bg-primary pointer-events-none"
             style={{ left, width, ...indicatorGlassStyle }}
+            animate={{ scaleY: isDragging ? 1.08 : 1 }}
+            transition={SNAP_SPRING}
           />
         )}
         {tabs.map(({ path, label, icon: Icon, end }) => (
@@ -103,6 +155,16 @@ export function BottomTabBar() {
             <Icon />
           </MotionNavLink>
         ))}
+        {activeIndex >= 0 && (
+          <motion.div
+            className="absolute top-1 bottom-1 z-20 rounded-full cursor-grab active:cursor-grabbing"
+            style={{ left, width, touchAction: 'none' }}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerUp}
+          />
+        )}
       </nav>
     </div>
   )

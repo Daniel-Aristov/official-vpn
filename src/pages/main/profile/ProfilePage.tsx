@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { CreditCardIcon } from '@/components/icons/CreditCardIcon'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
 import { GiftIcon } from '@/components/icons/GiftIcon'
@@ -12,6 +13,7 @@ import { UserIcon } from '@/components/icons/UserIcon'
 import { useUser } from '@/store/user/useUser'
 import { TELEGRAM_BOT_URL } from '@/js/constants/urls'
 import { openInNewTab } from '@/js/helpers/browser'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 interface MenuItemProps {
   icon: React.ReactNode
@@ -95,12 +97,14 @@ export function ProfilePage() {
             {isTelegramLinked ? 'Telegram привязан' : 'Не привязан telegram'}
           </span>
         </div>
-        <button
+        <motion.button
           type="button"
+          whileTap={{ scale: 0.82 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
         >
           <ShareIcon />
-        </button>
+        </motion.button>
       </div>
 
       <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-5 overflow-hidden">

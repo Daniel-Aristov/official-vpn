@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
 import { CopyIcon } from '@/components/icons/CopyIcon'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
@@ -13,6 +14,7 @@ import { copyToClipboard } from '@/js/helpers/clipboard'
 import { splitLinkAtQuery } from '@/js/helpers/link'
 import { useReferral } from '@/store/referral/useReferral'
 import { formatMoney } from '@/js/services/referralService'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 type ReferralTab = 'bonuses' | 'money'
 
@@ -116,14 +118,16 @@ function ReferralLinkCard({ link }: ReferralLinkCardProps) {
           {formatReferralLink(link)}
         </span>
       </div>
-      <button
+      <motion.button
         type="button"
         onClick={handleCopyLink}
         aria-label="Скопировать ссылку"
+        whileTap={{ scale: 0.82 }}
+        transition={TAB_PRESS_TRANSITION}
         className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"
       >
         <CopyIcon />
-      </button>
+      </motion.button>
     </div>
   )
 }
