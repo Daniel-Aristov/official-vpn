@@ -35,7 +35,6 @@ const CIRCLE_SIZE = 240
 const STROKE_WIDTH = 7
 const CIRCLE_CENTER = CIRCLE_SIZE / 2
 const CIRCLE_R = CIRCLE_CENTER - STROKE_WIDTH / 2
-const CIRCUMFERENCE = 2 * Math.PI * CIRCLE_R
 
 export function SetupPage() {
   const navigate = useNavigate()
@@ -122,8 +121,7 @@ export function SetupPage() {
     setStep(1)
   }
 
-  const progress = (step / TOTAL_STEPS) * CIRCUMFERENCE
-  const gap = CIRCUMFERENCE - progress
+  const progressRatio = started ? step / TOTAL_STEPS : 0
   const label = SETUP_PLATFORM_LABELS[platform]
 
   return (
@@ -191,7 +189,7 @@ export function SetupPage() {
                   ? 'Подписка'
                   : `Установка на ${label}`}
           </h1>
-          <p className="text-center text-white/80 text-[16px] leading-[130%]">
+          <p className="text-center text-white/80 text-[16px] leading-[130%] min-h-[42px] flex items-center justify-center">
             {!started ? (
               <>
                 Быстрая настройка VPN
@@ -211,7 +209,7 @@ export function SetupPage() {
           </p>
         </div>
 
-        <div className="flex flex-1 items-center justify-center py-4">
+        <div className="flex justify-center py-8">
           <div
             className="relative flex items-center justify-center"
             style={{ width: CIRCLE_SIZE, height: CIRCLE_SIZE }}
@@ -231,24 +229,35 @@ export function SetupPage() {
                 stroke="#3A3A3C"
                 strokeWidth={STROKE_WIDTH}
               />
-              {started && (
-                <circle
-                  cx={CIRCLE_CENTER}
-                  cy={CIRCLE_CENTER}
-                  r={CIRCLE_R}
-                  fill="none"
-                  stroke="#255de0"
-                  strokeWidth={STROKE_WIDTH}
-                  strokeDasharray={`${progress} ${gap}`}
-                  strokeLinecap="round"
-                  transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
-                />
-              )}
+              <motion.circle
+                cx={CIRCLE_CENTER}
+                cy={CIRCLE_CENTER}
+                r={CIRCLE_R}
+                fill="none"
+                stroke="#255de0"
+                strokeWidth={STROKE_WIDTH}
+                strokeLinecap="round"
+                transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
+                initial={false}
+                animate={{ pathLength: progressRatio }}
+                transition={{ duration: 0.5, ease: SHEET_EASE }}
+              />
             </svg>
             <div className="flex flex-col items-center z-10">
               {started ? (
                 step === 3 ? (
-                  <CheckmarkIcon className="w-12 h-12" fill="white" />
+                  <motion.span
+                    initial={{ scale: 0, rotate: -45, opacity: 0 }}
+                    animate={{ scale: 1, rotate: 0, opacity: 1 }}
+                    transition={{
+                      type: 'spring',
+                      stiffness: 420,
+                      damping: 22,
+                      mass: 0.7,
+                    }}
+                  >
+                    <CheckmarkIcon className="w-12 h-12" fill="white" />
+                  </motion.span>
                 ) : (
                   <>
                     <span className="text-white">
@@ -292,8 +301,8 @@ export function SetupPage() {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 mb-4">
-          {!started && platform === 'IOS' && (
+        <div className="flex flex-col gap-3 mb-4 mt-auto">
+          {!started && (
             <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-4 py-3 rounded-[24px]">
               <InfoCircleIcon className="w-6 h-6 text-white/60 shrink-0" />
               <span className="text-white/80 text-[16px] leading-[120%]">
@@ -302,60 +311,62 @@ export function SetupPage() {
             </div>
           )}
 
-          {!started ? (
-            <button
-              type="button"
-              onClick={handleStartSetup}
-              className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
-            >
-              Начать настройку на этом устройстве
-            </button>
-          ) : step === 3 ? (
-            <button
-              type="button"
-              onClick={handleCompleteSetup}
-              className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
-            >
-              Завершить настройку
-            </button>
-          ) : step === 2 ? (
-            <>
-              <a
-                href={SUBSCRIPTION_DEEP_LINK}
-                className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer no-underline"
-              >
-                <PlusCircleIcon className="w-6 h-6" />
-                Добавить подписку
-              </a>
+          <div className="flex flex-col justify-end gap-3 min-h-[124px]">
+            {!started ? (
               <button
                 type="button"
-                onClick={handleNextStep}
-                className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
+                onClick={handleStartSetup}
+                className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
               >
-                Следующий шаг
-                <ArrowRightIcon />
+                Начать настройку на этом устройстве
               </button>
-            </>
-          ) : (
-            <>
+            ) : step === 3 ? (
               <button
                 type="button"
-                onClick={installSheet.open}
-                className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
+                onClick={handleCompleteSetup}
+                className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
               >
-                <DownloadIcon />
-                Установить приложение
+                Завершить настройку
               </button>
-              <button
-                type="button"
-                onClick={handleNextStep}
-                className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
-              >
-                Следующий шаг
-                <ArrowRightIcon />
-              </button>
-            </>
-          )}
+            ) : step === 2 ? (
+              <>
+                <a
+                  href={SUBSCRIPTION_DEEP_LINK}
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer no-underline"
+                >
+                  <PlusCircleIcon className="w-6 h-6" />
+                  Добавить подписку
+                </a>
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
+                >
+                  Следующий шаг
+                  <ArrowRightIcon />
+                </button>
+              </>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={installSheet.open}
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
+                >
+                  <DownloadIcon />
+                  Установить приложение
+                </button>
+                <button
+                  type="button"
+                  onClick={handleNextStep}
+                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
+                >
+                  Следующий шаг
+                  <ArrowRightIcon />
+                </button>
+              </>
+            )}
+          </div>
 
           {!started && (
             <div className="flex items-center gap-3 bg-secondary border border-white/10 px-4 py-2 rounded-[16px]">
