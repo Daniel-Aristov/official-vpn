@@ -12,6 +12,7 @@ export function EmailAuthPage() {
   const navigate = useNavigate()
   const { sendEmailCode, isLoading } = useAuth()
   const [email, setEmail] = useState('')
+  const [isInputPressed, setIsInputPressed] = useState(false)
 
   const trimmedEmail = email.trim()
   const isEmpty = trimmedEmail === ''
@@ -53,17 +54,25 @@ export function EmailAuthPage() {
             </div>
 
             <div className="w-full flex flex-col gap-2">
-              <motion.input
-                type="email"
-                placeholder="email@mail.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+              <motion.div
+                className="w-full"
                 whileTap={{ scale: 0.95 }}
                 transition={TAB_PRESS_TRANSITION}
-                className={`w-full h-14 px-4 py-2 rounded-2xl bg-white-20 border text-white text-[16px] placeholder:text-white-50 outline-none ${
-                  showError ? 'border-red-400' : 'border-white-10'
-                }`}
-              />
+                onTapStart={() => setIsInputPressed(true)}
+                onTap={() => setIsInputPressed(false)}
+                onTapCancel={() => setIsInputPressed(false)}
+              >
+                <input
+                  type="email"
+                  placeholder="email@mail.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{ caretColor: isInputPressed ? 'transparent' : 'auto' }}
+                  className={`w-full h-14 px-4 py-2 rounded-2xl bg-white-20 border text-white text-[16px] placeholder:text-white-50 outline-none ${
+                    showError ? 'border-red-400' : 'border-white-10'
+                  }`}
+                />
+              </motion.div>
               {showError && (
                 <p className="text-[14px] text-red-400 leading-[130%]">
                   Введите корректный email

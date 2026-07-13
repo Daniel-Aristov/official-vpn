@@ -22,6 +22,7 @@ export function EmailVerifyPage() {
   const [codeError, setCodeError] = useState<string | null>(null)
   const [secondsLeft, setSecondsLeft] = useState(RESEND_SECONDS)
   const inputRefs = useRef<(HTMLInputElement | null)[]>([])
+  const [pressedIndex, setPressedIndex] = useState<number | null>(null)
 
   useEffect(() => {
     if (secondsLeft <= 0) return
@@ -120,27 +121,37 @@ export function EmailVerifyPage() {
           <div className="flex flex-col items-center gap-2">
             <div className="flex gap-[10px]">
               {code.map((digit, index) => (
-                <motion.input
+                <motion.div
                   key={index}
-                  ref={(el) => {
-                    inputRefs.current[index] = el
-                  }}
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={1}
-                  value={digit}
-                  onChange={(e) => handleChange(index, e.target.value)}
-                  onKeyDown={(e) => handleKeyDown(index, e.key)}
-                  onPaste={(e) => {
-                    e.preventDefault()
-                    handlePaste(e.clipboardData.getData('text'))
-                  }}
+                  className="w-11 h-14"
                   whileTap={{ scale: 0.95 }}
                   transition={TAB_PRESS_TRANSITION}
-                  className={`w-11 h-14 px-4 py-2 rounded-2xl bg-white-20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
-                    codeError ? 'border-red-400' : 'border-white-10'
-                  }`}
-                />
+                  onTapStart={() => setPressedIndex(index)}
+                  onTap={() => setPressedIndex(null)}
+                  onTapCancel={() => setPressedIndex(null)}
+                >
+                  <input
+                    ref={(el) => {
+                      inputRefs.current[index] = el
+                    }}
+                    type="text"
+                    inputMode="numeric"
+                    maxLength={1}
+                    value={digit}
+                    onChange={(e) => handleChange(index, e.target.value)}
+                    onKeyDown={(e) => handleKeyDown(index, e.key)}
+                    onPaste={(e) => {
+                      e.preventDefault()
+                      handlePaste(e.clipboardData.getData('text'))
+                    }}
+                    style={{
+                      caretColor: pressedIndex === index ? 'transparent' : 'auto',
+                    }}
+                    className={`w-full h-full px-4 py-2 rounded-2xl bg-white-20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
+                      codeError ? 'border-red-400' : 'border-white-10'
+                    }`}
+                  />
+                </motion.div>
               ))}
             </div>
             {codeError && (
