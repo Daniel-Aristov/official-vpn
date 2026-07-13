@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '@/components/icons/PasswordIcon'
+import { FADE_TRANSITION, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { useAuth } from '@/store/auth/useAuth'
 
 const CODE_LENGTH = 6
@@ -96,9 +98,14 @@ export function EmailVerifyPage() {
       <div className="flex flex-col flex-1 gap-6">
         <div className="flex flex-col items-center gap-4 flex-1">
           <div className="flex flex-col items-center gap-2 w-full">
-            <div className="p-4 rounded-[16px] bg-[#5389D9]">
+            <motion.div
+              initial={{ opacity: 0, scale: 0.85, y: 8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              transition={FADE_TRANSITION}
+              className="p-4 rounded-[16px] bg-[#5389D9]"
+            >
               <PasswordIcon />
-            </div>
+            </motion.div>
             <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
               Код подтверждения
             </h2>
@@ -112,7 +119,7 @@ export function EmailVerifyPage() {
           <div className="flex flex-col items-center gap-2">
             <div className="flex gap-[10px]">
               {code.map((digit, index) => (
-                <input
+                <motion.input
                   key={index}
                   ref={(el) => {
                     inputRefs.current[index] = el
@@ -127,6 +134,8 @@ export function EmailVerifyPage() {
                     e.preventDefault()
                     handlePaste(e.clipboardData.getData('text'))
                   }}
+                  whileTap={{ scale: 0.95 }}
+                  transition={TAB_PRESS_TRANSITION}
                   className={`w-11 h-14 px-4 py-2 rounded-2xl bg-white/20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
                     codeError ? 'border-red-400' : 'border-white/10'
                   }`}

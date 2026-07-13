@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
+import { FADE_TRANSITION, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { AtIcon } from '@/components/icons/AtIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { isValidEmail } from '@/js/helpers/validation'
@@ -33,12 +35,15 @@ export function EmailAuthPage() {
         <div className="flex flex-col gap-4 flex-1">
           <div className="flex flex-col items-center gap-4">
             <div className="flex flex-col items-center gap-2 w-full">
-              <div
+              <motion.div
+                initial={{ opacity: 0, scale: 0.85, y: 8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                transition={FADE_TRANSITION}
                 className="p-4 rounded-2xl text-white"
                 style={{ background: '#5389D9' }}
               >
                 <AtIcon />
-              </div>
+              </motion.div>
               <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
                 Авторизация
               </h2>
@@ -48,11 +53,13 @@ export function EmailAuthPage() {
             </div>
 
             <div className="w-full flex flex-col gap-2">
-              <input
+              <motion.input
                 type="email"
                 placeholder="email@mail.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                whileTap={{ scale: 0.95 }}
+                transition={TAB_PRESS_TRANSITION}
                 className={`w-full h-14 px-4 py-2 rounded-2xl bg-white/20 border text-white text-[16px] placeholder:text-white/50 outline-none ${
                   showError ? 'border-red-400' : 'border-white/10'
                 }`}

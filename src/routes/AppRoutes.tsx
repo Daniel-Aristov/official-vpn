@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom'
 import { NotFoundRedirect } from '@/routes/NotFoundRedirect'
 import { PrivateRoute } from '@/routes/PrivateRoute'
+import { AuthView } from '@/views/AuthView'
 import { MainView } from '@/views/MainView'
 import { EmailAuthPage } from '@/pages/auth/EmailAuthPage'
 import { EmailVerifyPage } from '@/pages/auth/EmailVerifyPage'
@@ -23,10 +24,12 @@ import { BuySlotsPage } from '@/pages/main/devices/BuySlotsPage'
 export function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
+      <Route element={<AuthView />}>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/auth/email" element={<EmailAuthPage />} />
+        <Route path="/auth/email/verify" element={<EmailVerifyPage />} />
+      </Route>
       <Route path="/privacy" element={<PrivacyPolicyPage />} />
-      <Route path="/auth/email" element={<EmailAuthPage />} />
-      <Route path="/auth/email/verify" element={<EmailVerifyPage />} />
       <Route element={<PrivateRoute />}>
         <Route path="/main" element={<MainView />}>
           <Route index element={<MainPage />} />
