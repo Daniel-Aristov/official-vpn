@@ -1,22 +1,13 @@
-import { useEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import {
-  animate,
-  motion,
-  useMotionTemplate,
-  useMotionValue,
-  useTransform,
-} from 'motion/react'
+import { motion } from 'motion/react'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { HomeIcon } from '@/components/icons/HomeIcon'
 import { PersonIcon } from '@/components/icons/PersonIcon'
-import {
-  TAB_INDICATOR_TRANSITION,
-  TAB_PRESS_TRANSITION,
-} from '@/js/constants/motion'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },
@@ -55,6 +46,9 @@ const indicatorGlassStyle = {
 
 const TAB_UNIT = `((100% - 8px) / ${tabs.length})`
 
+const TAB_INDICATOR_EASE = 'cubic-bezier(0.45, 0, 0.55, 1)'
+const TAB_INDICATOR_TRANSITION_CSS = `transform 170ms ${TAB_INDICATOR_EASE}`
+
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
@@ -63,34 +57,53 @@ export function BottomTabBar() {
   const location = useLocation()
   const navigate = useNavigate()
   const navRef = useRef<HTMLElement>(null)
+  const pillRef = useRef<HTMLSpanElement>(null)
+  const handleRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
   const activeIndex = tabs.findIndex((tab) => isTabActive(tab, location.pathname))
 
-  const leadingUnit = useMotionValue(Math.max(activeIndex, 0))
-  const trailingUnit = useMotionValue(Math.max(activeIndex, 0) + 1)
-  const dragScaleY = useMotionValue(1)
+  const leadingRef = useRef(Math.max(activeIndex, 0))
+  const trailingRef = useRef(Math.max(activeIndex, 0) + 1)
+  const dragScaleRef = useRef(1)
   const prevIndexRef = useRef(activeIndex)
 
-  const scaleX = useTransform(
-    [leadingUnit, trailingUnit],
-    ([leading, trailing]: number[]) => trailing - leading,
-  )
-  const baseTransform = useMotionTemplate`translateX(calc(${leadingUnit} * 100%)) scaleX(${scaleX})`
-  const indicatorTransform = useMotionTemplate`translateX(calc(${leadingUnit} * 100%)) scaleX(${scaleX}) scaleY(${dragScaleY})`
+  const applyTransform = (leading: number, trailing: number, dragScale: number) => {
+    const scaleX = trailing - leading
+    const baseTransform = `translateX(calc(${leading} * 100%)) scaleX(${scaleX})`
+    if (handleRef.current) handleRef.current.style.transform = baseTransform
+    if (pillRef.current) {
+      pillRef.current.style.transform = `${baseTransform} scaleY(${dragScale})`
+    }
+  }
 
-  useEffect(() => {
+  const setTransitionEnabled = (enabled: boolean) => {
+    const value = enabled ? TAB_INDICATOR_TRANSITION_CSS : 'none'
+    if (handleRef.current) handleRef.current.style.transition = value
+    if (pillRef.current) pillRef.current.style.transition = value
+  }
+
+  useLayoutEffect(() => {
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
+    setTransitionEnabled(true)
+  }, [])
+
+  useLayoutEffect(() => {
     const prevIndex = prevIndexRef.current
     prevIndexRef.current = activeIndex
     if (activeIndex < 0 || prevIndex === activeIndex || isDragging) return
 
-    animate(leadingUnit, activeIndex, TAB_INDICATOR_TRANSITION)
-    animate(trailingUnit, activeIndex + 1, TAB_INDICATOR_TRANSITION)
-  }, [activeIndex, isDragging, leadingUnit, trailingUnit])
+    leadingRef.current = activeIndex
+    trailingRef.current = activeIndex + 1
+    setTransitionEnabled(true)
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
+  }, [activeIndex, isDragging])
 
-  useEffect(() => {
-    animate(dragScaleY, isDragging ? 1.08 : 1, TAB_INDICATOR_TRANSITION)
-  }, [isDragging, dragScaleY])
+  useLayoutEffect(() => {
+    dragScaleRef.current = isDragging ? 1.08 : 1
+    setTransitionEnabled(true)
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
+  }, [isDragging])
 
   const getUnitFromPointer = (clientX: number) => {
     const rect = navRef.current?.getBoundingClientRect()
@@ -112,8 +125,10 @@ export function BottomTabBar() {
       0,
       tabs.length - 1,
     )
-    leadingUnit.set(leading)
-    trailingUnit.set(leading + 1)
+    leadingRef.current = leading
+    trailingRef.current = leading + 1
+    setTransitionEnabled(false)
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
   }
 
   const handlePointerUp = (event: ReactPointerEvent<HTMLDivElement>) => {
@@ -126,8 +141,10 @@ export function BottomTabBar() {
     )
     navigate(tabs[nearestIndex].path)
     if (nearestIndex !== activeIndex) return
-    animate(leadingUnit, activeIndex, TAB_INDICATOR_TRANSITION)
-    animate(trailingUnit, activeIndex + 1, TAB_INDICATOR_TRANSITION)
+    leadingRef.current = activeIndex
+    trailingRef.current = activeIndex + 1
+    setTransitionEnabled(true)
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
   }
 
   return createPortal(
@@ -144,13 +161,12 @@ export function BottomTabBar() {
         }}
       >
         {activeIndex >= 0 && (
-          <motion.span
-            className="absolute top-1 bottom-1 left-1 rounded-full bg-primary pointer-events-none"
+          <span
+            ref={pillRef}
+            className="absolute top-1 bottom-1 left-1 rounded-full bg-primary pointer-events-none will-change-transform"
             style={{
               width: `calc(${TAB_UNIT})`,
-              transform: indicatorTransform,
               transformOrigin: 'left center',
-              willChange: 'transform',
               ...indicatorGlassStyle,
             }}
           />
@@ -175,13 +191,12 @@ export function BottomTabBar() {
           </motion.button>
         ))}
         {activeIndex >= 0 && (
-          <motion.div
-            className="absolute top-1 bottom-1 left-1 z-20 rounded-full cursor-grab active:cursor-grabbing"
+          <div
+            ref={handleRef}
+            className="absolute top-1 bottom-1 left-1 z-20 rounded-full cursor-grab active:cursor-grabbing will-change-transform"
             style={{
               width: `calc(${TAB_UNIT})`,
-              transform: baseTransform,
               transformOrigin: 'left center',
-              willChange: 'transform',
               touchAction: 'none',
             }}
             onPointerDown={handlePointerDown}
