@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import {
@@ -123,11 +124,11 @@ export function BottomTabBar() {
     animate(trailingUnit, activeIndex + 1, SNAP_SPRING)
   }
 
-  return (
-    <div className="fixed bottom-0 left-0 right-0 w-full px-4 pb-4 z-50">
+  return createPortal(
+    <div className="fixed inset-x-0 bottom-0 z-50 px-4 pb-[max(16px,env(safe-area-inset-bottom))] pointer-events-none">
       <nav
         ref={navRef}
-        className="relative flex w-full h-[61px] items-stretch rounded-full p-1 overflow-hidden"
+        className="relative mx-auto flex h-[61px] w-full max-w-[768px] items-stretch overflow-hidden rounded-full p-1 pointer-events-auto"
         style={{
           background: 'rgba(255, 255, 255, 0.08)',
           backdropFilter: 'blur(7px)',
@@ -184,6 +185,7 @@ export function BottomTabBar() {
           />
         )}
       </nav>
-    </div>
+    </div>,
+    document.body,
   )
 }
