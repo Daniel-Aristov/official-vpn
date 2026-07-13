@@ -4,11 +4,11 @@
     opacity: 0.75;
   }
   33% {
-    transform: translate3d(-18%, 12%, 0) scale(1.35);
+    transform: translate3d(-18%, 12%, 0) scale(1.14);
     opacity: 1;
   }
   66% {
-    transform: translate3d(8%, -10%, 0) scale(0.85);
+    transform: translate3d(8%, -10%, 0) scale(0.9);
     opacity: 0.65;
   }
   100% {
@@ -23,7 +23,7 @@
     opacity: 0.55;
   }
   50% {
-    transform: rotate(75deg) translate3d(20%, -14%, 0) scale(1.4);
+    transform: rotate(75deg) translate3d(20%, -14%, 0) scale(1.16);
     opacity: 1;
   }
   100% {
@@ -38,7 +38,7 @@
     opacity: 0.5;
   }
   50% {
-    transform: translate3d(16%, 16%, 0) scale(0.75);
+    transform: translate3d(16%, 16%, 0) scale(0.9);
     opacity: 1;
   }
   100% {
@@ -106,7 +106,7 @@
 @keyframes page-enter {
   from {
     opacity: 0;
-    transform: translate3d(0, 24px, 0);
+    transform: translate3d(0, 14px, 0);
   }
   to {
     opacity: 1;
@@ -115,12 +115,13 @@
 }
 
 .page-enter {
-  animation: page-enter 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  animation: page-enter 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  will-change: transform, opacity;
 }
 
 @keyframes page-enter-counter {
   from {
-    transform: translate3d(0, -24px, 0);
+    transform: translate3d(0, -14px, 0);
   }
   to {
     transform: translate3d(0, 0, 0);
@@ -128,7 +129,8 @@
 }
 
 .page-enter-counter {
-  animation: page-enter-counter 0.32s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  animation: page-enter-counter 0.24s cubic-bezier(0.25, 0.46, 0.45, 0.94) backwards;
+  will-change: transform;
 }
 
 .page-enter-counter:empty {

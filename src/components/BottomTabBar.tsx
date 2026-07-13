@@ -105,6 +105,13 @@ export function BottomTabBar() {
     applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
   }, [isDragging])
 
+  const moveIndicatorTo = (index: number) => {
+    leadingRef.current = index
+    trailingRef.current = index + 1
+    setTransitionEnabled(true)
+    applyTransform(leadingRef.current, trailingRef.current, dragScaleRef.current)
+  }
+
   const getUnitFromPointer = (clientX: number) => {
     const rect = navRef.current?.getBoundingClientRect()
     if (!rect) return activeIndex
@@ -171,17 +178,20 @@ export function BottomTabBar() {
             }}
           />
         )}
-        {tabs.map((tab) => (
+        {tabs.map((tab, index) => (
           <motion.button
             key={tab.path}
             type="button"
-            onClick={() => navigate(tab.path)}
+            onClick={() => {
+              if (index !== activeIndex && !isDragging) moveIndicatorTo(index)
+              navigate(tab.path)
+            }}
             aria-label={tab.label}
             aria-current={isTabActive(tab, location.pathname) ? 'page' : undefined}
             whileTap={{ scale: 0.82 }}
             transition={TAB_PRESS_TRANSITION}
             className={[
-              'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-300',
+              'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-200',
               isTabActive(tab, location.pathname)
                 ? 'text-white'
                 : 'text-white-40',
