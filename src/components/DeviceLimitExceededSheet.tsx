@@ -20,7 +20,7 @@ export function DeviceLimitExceededSheet({
       title="Превышен лимит устройств"
       onClose={onClose}
     >
-      <p className="text-white/80 text-[16px] leading-[120%] -mt-2">
+      <p className="text-white-80 text-[16px] leading-[120%] -mt-2">
         К вашей подписке подключено максимальное количество устройств. Чтобы
         добавить новое устройство, удалите неиспользуемые устройства или
         увеличьте лимит в настройках тарифа.

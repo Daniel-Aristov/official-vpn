@@ -47,8 +47,7 @@ function isTabActive(tab: TabConfig, pathname: string) {
 }
 
 const indicatorGlassStyle = {
-  boxShadow:
-    'inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 4px 16px rgba(0, 0, 0, 0.18)',
+  boxShadow: 'var(--shadow-glass-indicator)',
 } as const
 
 const TAB_UNIT = `((100% - 8px) / ${tabs.length})`
@@ -143,12 +142,11 @@ export function BottomTabBar() {
         ref={navRef}
         className="relative mx-auto flex h-[61px] w-full max-w-[768px] items-stretch overflow-hidden rounded-full p-1 pointer-events-auto"
         style={{
-          background: 'rgba(255, 255, 255, 0.08)',
+          background: 'var(--color-white-8)',
           backdropFilter: 'blur(7px)',
           WebkitBackdropFilter: 'blur(7px)',
-          boxShadow:
-            '0 8px 40px 0 rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.18), inset -1px 0 0 rgba(255, 255, 255, 0.06)',
-          border: '1px solid rgba(255, 255, 255, 0.10)',
+          boxShadow: 'var(--shadow-tabbar)',
+          border: '1px solid var(--color-white-10)',
         }}
       >
         {activeIndex >= 0 && (
@@ -176,7 +174,7 @@ export function BottomTabBar() {
               'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-300',
               isTabActive(tab, location.pathname)
                 ? 'text-white'
-                : 'text-white/40',
+                : 'text-white-40',
             ].join(' ')}
           >
             <tab.icon />

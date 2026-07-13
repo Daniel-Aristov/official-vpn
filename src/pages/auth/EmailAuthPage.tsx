@@ -40,14 +40,14 @@ export function EmailAuthPage() {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 transition={FADE_TRANSITION}
                 className="p-4 rounded-2xl text-white"
-                style={{ background: '#5389D9' }}
+                style={{ background: 'var(--color-accent-blue)' }}
               >
                 <AtIcon />
               </motion.div>
               <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
                 Авторизация
               </h2>
-              <p className="text-[16px] text-white/50 text-center leading-[130%] max-w-[295px]">
+              <p className="text-[16px] text-white-50 text-center leading-[130%] max-w-[295px]">
                 Используйте вашу электронную почту для авторизации
               </p>
             </div>
@@ -60,8 +60,8 @@ export function EmailAuthPage() {
                 onChange={(e) => setEmail(e.target.value)}
                 whileTap={{ scale: 0.95 }}
                 transition={TAB_PRESS_TRANSITION}
-                className={`w-full h-14 px-4 py-2 rounded-2xl bg-white/20 border text-white text-[16px] placeholder:text-white/50 outline-none ${
-                  showError ? 'border-red-400' : 'border-white/10'
+                className={`w-full h-14 px-4 py-2 rounded-2xl bg-white-20 border text-white text-[16px] placeholder:text-white-50 outline-none ${
+                  showError ? 'border-red-400' : 'border-white-10'
                 }`}
               />
               {showError && (
@@ -74,7 +74,7 @@ export function EmailAuthPage() {
         </div>
 
         <div className="flex flex-col gap-4">
-          <p className="text-[14px] text-white/50 text-center leading-[130%]">
+          <p className="text-[14px] text-white-50 text-center leading-[130%]">
             Мы отправим вам для код для подтверждения
             <br />
             вашего электронной почты

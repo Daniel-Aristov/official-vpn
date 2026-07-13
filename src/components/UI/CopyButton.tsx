@@ -39,7 +39,7 @@ export function CopyButton({
       className={className}
     >
       {copied ? (
-        <CheckmarkIcon className={iconClassName} fill="white" />
+        <CheckmarkIcon className={iconClassName} fill="var(--color-white)" />
       ) : (
         <CopyIcon className={iconClassName} />
       )}

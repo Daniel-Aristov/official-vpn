@@ -158,24 +158,24 @@ export function BuySubscriptionPage() {
             <h1 className="text-white text-[28px] font-semibold leading-[130%]">
               {isPro ? 'Покупка подписки PRO' : 'Покупка подписки'}
             </h1>
-            <p className="text-white/80 text-[16px] leading-[120%]">
+            <p className="text-white-80 text-[16px] leading-[120%]">
               {isPro
                 ? 'Больше 10 локаций, 6 устройств, обход белых списков на LTE и Youtube без рекламы'
                 : 'Подключайте больше устройств и пользуйтесь сервисом вместе с друзьями и близкими'}
             </p>
           </div>
 
-          <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-6">
+          <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-6">
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2">
-                <div className="text-white bg-white/10 font-bold text-[18px] leading-none w-[42px] h-[42px] flex items-center justify-center rounded-full text-center shrink-0">
+                <div className="text-white bg-white-10 font-bold text-[18px] leading-none w-[42px] h-[42px] flex items-center justify-center rounded-full text-center shrink-0">
                   {deviceCount}
                 </div>
                 <div className="flex flex-col">
                   <span className="text-white font-semibold text-[18px] leading-[130%]">
                     Устройства
                   </span>
-                  <span className="text-white/50 text-[14px] leading-[120%]">
+                  <span className="text-white-50 text-[14px] leading-[120%]">
                     Одновременно в подписке
                   </span>
                 </div>
@@ -185,7 +185,7 @@ export function BuySubscriptionPage() {
                 onClick={hasExtraDevices ? explanation.open : undefined}
                 tabIndex={hasExtraDevices ? 0 : -1}
                 aria-hidden={!hasExtraDevices}
-                className={`bg-black/40 rounded-[12px] px-3 py-2 flex flex-col items-center shrink-0 ${
+                className={`bg-black-40 rounded-[12px] px-3 py-2 flex flex-col items-center shrink-0 ${
                   hasExtraDevices
                     ? 'cursor-pointer'
                     : 'invisible pointer-events-none'
@@ -194,7 +194,7 @@ export function BuySubscriptionPage() {
                 <span className="text-white font-semibold text-[16px] leading-[130%]">
                   {extraDevicePrice} ₽
                 </span>
-                <span className="text-white/50 text-[12px] leading-[120%]">
+                <span className="text-white-50 text-[12px] leading-[120%]">
                   {extraDeviceCount} устр.
                 </span>
               </button>
@@ -218,8 +218,8 @@ export function BuySubscriptionPage() {
                   onClick={() => setPeriodId(period.id)}
                   className={`relative rounded-[20px] p-4 flex flex-col gap-1 text-left cursor-pointer transition-all duration-150 ${
                     isSelected
-                      ? 'border-primary border-2 bg-primary/30'
-                      : 'bg-[#FFFFFF]/10 border-2 border-[#FFFFFF]/10'
+                      ? 'border-primary border-2 bg-primary-30'
+                      : 'bg-white-10 border-2 border-white-10'
                   }`}
                 >
                   {period.id === '3m' && (
@@ -233,7 +233,7 @@ export function BuySubscriptionPage() {
                   <span className="text-white font-bold text-[24px] leading-[110%]">
                     {period.price} ₽
                   </span>
-                  <span className="text-white/50 text-[14px] leading-[120%]">
+                  <span className="text-white-50 text-[14px] leading-[120%]">
                     {period.description}
                   </span>
                 </button>

@@ -72,15 +72,15 @@ export function PaymentMethodChangeSheet({
             onClick={() => handleSelect(methodId)}
             whileTap={{ scale: 0.95 }}
             transition={TAB_PRESS_TRANSITION}
-            className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
+            className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
           >
             <PaymentMethodIcon methodId={methodId} variant="picker" />
             <span className="text-white text-[16px] font-semibold leading-[130%] flex-1 text-left">
               {getPaymentMethodLabel(methodId)}
             </span>
             {activeId === methodId && (
-              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
-                <CheckmarkIcon fill="white" className="w-4 h-4" />
+              <div className="w-8 h-8 flex items-center justify-center rounded-full bg-success shrink-0">
+                <CheckmarkIcon fill="var(--color-white)" className="w-4 h-4" />
               </div>
             )}
           </motion.button>

@@ -149,7 +149,7 @@ export function SetupPage() {
             <button
               type="button"
               onClick={() => setShowPlatforms((v) => !v)}
-              className="flex items-center gap-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[16px] font-semibold pl-5 pr-4 py-1 rounded-full cursor-pointer"
+              className="flex items-center gap-1 bg-white-10 backdrop-blur-md border border-white-20 text-white text-[16px] font-semibold pl-5 pr-4 py-1 rounded-full cursor-pointer"
             >
               {label}
               <ChevronDownIcon
@@ -164,7 +164,7 @@ export function SetupPage() {
                   exit={{ opacity: 0, scale: 0.9, y: -8 }}
                   transition={{ duration: 0.18, ease: SHEET_EASE }}
                   style={{ transformOrigin: 'top right' }}
-                  className="absolute right-0 top-full mt-2 bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl z-10 min-w-[140px] py-1"
+                  className="absolute right-0 top-full mt-2 bg-white-10 backdrop-blur-md border border-white-20 rounded-2xl z-10 min-w-[140px] py-1"
                 >
                   {INSTALL_PLATFORMS.filter((p) => p !== platform).map((p) => (
                     <motion.button
@@ -194,7 +194,7 @@ export function SetupPage() {
                   ? 'Подписка'
                   : `Установка на ${label}`}
           </h1>
-          <p className="text-center text-white/80 text-[16px] leading-[130%] min-h-[42px] flex items-center justify-center">
+          <p className="text-center text-white-80 text-[16px] leading-[130%] min-h-[42px] flex items-center justify-center">
             {!started ? (
               <>
                 Быстрая настройка VPN
@@ -231,7 +231,7 @@ export function SetupPage() {
                 cy={CIRCLE_CENTER}
                 r={CIRCLE_R}
                 fill="none"
-                stroke="#3A3A3C"
+                stroke="var(--color-stroke-muted)"
                 strokeWidth={STROKE_WIDTH}
               />
               <motion.circle
@@ -239,7 +239,7 @@ export function SetupPage() {
                 cy={CIRCLE_CENTER}
                 r={CIRCLE_R}
                 fill="none"
-                stroke="#255de0"
+                stroke="var(--color-primary)"
                 strokeWidth={STROKE_WIDTH}
                 strokeLinecap="round"
                 transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
@@ -261,7 +261,7 @@ export function SetupPage() {
                       mass: 0.7,
                     }}
                   >
-                    <CheckmarkIcon className="w-12 h-12" fill="white" />
+                    <CheckmarkIcon className="w-12 h-12" fill="var(--color-white)" />
                   </motion.span>
                 ) : (
                   <>
@@ -275,7 +275,7 @@ export function SetupPage() {
                     <span className="text-white text-[24px] font-semibold leading-none mt-2">
                       {step} шаг
                     </span>
-                    <span className="text-white/50 text-[14px] mt-1 font-medium">
+                    <span className="text-white-50 text-[14px] mt-1 font-medium">
                       из {TOTAL_STEPS}
                     </span>
                   </>
@@ -311,9 +311,9 @@ export function SetupPage() {
             className={`flex flex-col gap-3 ${started ? 'min-h-[124px] justify-end' : ''}`}
           >
             {!started && (
-              <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-4 py-3 rounded-[24px]">
-                <InfoCircleIcon className="w-6 h-6 text-white/60 shrink-0" />
-                <span className="text-white/80 text-[16px] leading-[120%]">
+              <div className="flex items-center gap-3 bg-white-10 border border-white-10 px-4 py-3 rounded-[24px]">
+                <InfoCircleIcon className="w-6 h-6 text-white-60 shrink-0" />
+                <span className="text-white-80 text-[16px] leading-[120%]">
                   Выберите устройство перед началом
                 </span>
               </div>
@@ -342,7 +342,7 @@ export function SetupPage() {
                   onClick={handleNextStep}
                   whileTap={{ scale: 0.97 }}
                   transition={TAB_PRESS_TRANSITION}
-                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
+                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-surface-elevated cursor-pointer"
                 >
                   Следующий шаг
                   <ArrowRightIcon />
@@ -359,7 +359,7 @@ export function SetupPage() {
                   onClick={handleNextStep}
                   whileTap={{ scale: 0.97 }}
                   transition={TAB_PRESS_TRANSITION}
-                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
+                  className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-surface-elevated cursor-pointer"
                 >
                   Следующий шаг
                   <ArrowRightIcon />
@@ -369,10 +369,10 @@ export function SetupPage() {
           </div>
 
           {!started && (
-            <div className="flex items-center gap-3 bg-secondary border border-white/10 px-4 py-2 rounded-[16px]">
+            <div className="flex items-center gap-3 bg-secondary border border-white-10 px-4 py-2 rounded-[16px]">
               <LinkIcon className="w-6 h-6 text-white shrink-0" />
               <div className="flex flex-col flex-1 min-w-0">
-                <span className="text-white/80 text-[16px] font-semibold leading-[120%]">
+                <span className="text-white-80 text-[16px] font-semibold leading-[120%]">
                   Ссылка на VPN
                 </span>
                 <span className="text-white text-[16px] leading-[120%] truncate">

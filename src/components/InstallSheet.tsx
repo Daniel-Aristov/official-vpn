@@ -77,7 +77,7 @@ export function InstallSheet({
         title="Похоже, вы на другом устройстве"
         onClose={onClose}
       >
-        <p className="text-white/80 text-[16px] leading-[130%]">
+        <p className="text-white-80 text-[16px] leading-[130%]">
           Вы открыли страницу с{' '}
           <span className="font-semibold text-white">
             {DEVICE_NAMES[currentDevice]}
@@ -97,9 +97,9 @@ export function InstallSheet({
           <PrimaryButton size="large" onClick={handleProceed}>
             Хорошо, перейти к установке
           </PrimaryButton>
-          <div className="flex items-start gap-3 bg-secondary border border-white/10 px-4 py-3 rounded-[16px]">
+          <div className="flex items-start gap-3 bg-secondary border border-white-10 px-4 py-3 rounded-[16px]">
             <div className="flex flex-col flex-1 min-w-0">
-              <span className="text-white/80 text-[14px] font-regular">
+              <span className="text-white-80 text-[14px] font-regular">
                 Ссылка для скачивания
               </span>
               <span className="text-white text-[16px] leading-[120%] break-all">
@@ -123,7 +123,7 @@ export function InstallSheet({
       title="Важная информация"
       onClose={onClose}
     >
-      <p className="text-white/80 text-[16px] leading-[130%]">{DESCRIPTION}</p>
+      <p className="text-white-80 text-[16px] leading-[130%]">{DESCRIPTION}</p>
       <div className="flex flex-col gap-2">
         <PrimaryButton size="large" onClick={handleProceed}>
           Хорошо, перейти к установке

@@ -16,9 +16,9 @@ import { getSubscriptionRenewalPath } from '@/js/constants/subscription'
 import { formatSubscriptionExpiresIn } from '@/js/helpers/date'
 
 const planStyles: Record<string, string> = {
-  trial: 'text-white/50 bg-white/10 border-white/20',
-  basic: 'text-primary bg-primary/20 border-primary/40 px-[14px]',
-  pro: 'text-yellow-300 bg-yellow-500/20 border-yellow-400/40 px-[18px]',
+  trial: 'text-white-50 bg-white-10 border-white-20',
+  basic: 'text-primary bg-primary-20 border-primary-40 px-[14px]',
+  pro: 'text-pro-text bg-pro-bg border-pro-border px-[18px]',
 }
 
 export function MainPage() {
@@ -111,7 +111,7 @@ export function MainPage() {
         </div>
 
         {!isBlocked && subscription && (
-          <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col overflow-hidden">
+          <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col overflow-hidden">
             <div className="flex items-start justify-between mb-[16px]">
               <div className="flex flex-col">
                 <p className="text-white font-bold text-[16px] leading-[130%]">
@@ -119,7 +119,7 @@ export function MainPage() {
                 </p>
                 <p
                   className={`text-[16px] font-medium leading-[130%] ${
-                    subscription.isActive ? 'text-[#139D76]' : 'text-white/50'
+                    subscription.isActive ? 'text-success' : 'text-white-50'
                   }`}
                 >
                   {subscription.isActive ? 'online' : 'offline'}
@@ -154,15 +154,15 @@ export function MainPage() {
               onClick={() => navigate('/main/setup')}
               whileTap={{ scale: 0.97 }}
               transition={TAB_PRESS_TRANSITION}
-              className="flex items-center justify-between bg-[#B4CBFF] p-4 rounded-[16px] cursor-pointer mt-[8px]"
+              className="flex items-center justify-between bg-accent-light p-4 rounded-[16px] cursor-pointer mt-[8px]"
             >
-              <div className="flex items-center gap-2 text-[#1D4297]">
-                <DownloadIcon fill="#1D4297" />
+              <div className="flex items-center gap-2 text-accent-dark">
+                <DownloadIcon fill="var(--color-accent-dark)" />
                 <span className="font-semibold text-[16px]">
                   Установка и настройка
                 </span>
               </div>
-              <span className="text-white/50">
+              <span className="text-white-50">
                 <SmartphoneIcon />
               </span>
             </motion.button>
@@ -171,13 +171,13 @@ export function MainPage() {
               onClick={() => navigate('/main/devices')}
               whileTap={{ scale: 0.95 }}
               transition={TAB_PRESS_TRANSITION}
-              className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px] cursor-pointer"
+              className="flex items-center justify-between px-4 py-[6px] bg-white-10 rounded-full mt-[24px] cursor-pointer"
             >
               <div className="flex items-center gap-1">
                 <span className="text-white text-[14px] leading-[110%]">
                   Ваши устройства:
                 </span>
-                <span className="bg-white/10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
+                <span className="bg-white-10 text-white text-[16px] font-bold w-6 h-6 flex items-center justify-center rounded-full">
                   {subscription.devices.length}
                 </span>
               </div>

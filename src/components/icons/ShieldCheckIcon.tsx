@@ -5,7 +5,7 @@ interface ShieldCheckIconProps {
 
 export function ShieldCheckIcon({
   className,
-  fill = '#B4CBFF',
+  fill = 'var(--color-accent-light)',
 }: ShieldCheckIconProps) {
   return (
     <svg
@@ -28,7 +28,7 @@ export function ShieldCheckIcon({
       </g>
       <defs>
         <clipPath id="clip0_shield_check">
-          <rect width="16" height="16" fill="white" />
+          <rect width="16" height="16" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

@@ -22,15 +22,15 @@ const variantConfig: Record<
   { color: string; icon: ReactNode }
 > = {
   warning: {
-    color: '#FF6B6B',
-    icon: <InfoCircleIcon className="text-[#FF6B6B]" />,
+    color: 'var(--color-error)',
+    icon: <InfoCircleIcon className="text-error" />,
   },
   success: {
-    color: '#139D76',
+    color: 'var(--color-success)',
     icon: <CheckmarkIcon />,
   },
   blocked: {
-    color: '#FF6B6B',
+    color: 'var(--color-error)',
     icon: <BlockedCircleIcon />,
   },
 }
@@ -52,7 +52,7 @@ export function NotificationBanner({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -8 }}
       transition={FADE_TRANSITION}
-      className={`bg-black/40 border border-white/10 rounded-[24px] p-4${isWarningClickable ? ' cursor-pointer' : ''}`}
+      className={`bg-black-40 border border-white-10 rounded-[24px] p-4${isWarningClickable ? ' cursor-pointer' : ''}`}
       {...(isWarningClickable && {
         role: 'button',
         tabIndex: 0,
@@ -72,7 +72,7 @@ export function NotificationBanner({
             <p className="font-bold text-[18px] leading-snug" style={{ color }}>
               {title}
             </p>
-            <p className="text-white/80 text-[16px] leading-snug mt-[4px]">
+            <p className="text-white-80 text-[16px] leading-snug mt-[4px]">
               {message}
             </p>
           </div>
@@ -83,7 +83,7 @@ export function NotificationBanner({
             onClick={onClose}
             whileTap={{ scale: 0.82 }}
             transition={TAB_PRESS_TRANSITION}
-            className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+            className="shrink-0 text-white bg-white-10 border border-white-20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
           >
             <CloseIcon />
           </motion.button>

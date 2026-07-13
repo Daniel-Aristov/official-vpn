@@ -26,19 +26,19 @@ export function PricingExplanationSheet({
       title="Пояснение к расчёту стоимости"
       onClose={onClose}
     >
-      <p className="text-white/80 text-[16px] leading-[130%]">
+      <p className="text-white-80 text-[16px] leading-[130%]">
         Итоговая стоимость подписки формируется из базового тарифа и
         подключённых дополнительных опций.
       </p>
-      <div className="flex flex-col text-white/80 text-[16px] leading-[130%]">
+      <div className="flex flex-col text-white-80 text-[16px] leading-[130%]">
         <p>Цена за 1 устройство: {pricePerDevice} ₽ в месяц.</p>
         <p>Остаток подписки: {remainingDays} дней.</p>
         <p>Доплата за текущий период: {currentPeriodSurcharge} ₽.</p>
       </div>
-      <p className="text-white/80 text-[16px] leading-[130%]">
+      <p className="text-white-80 text-[16px] leading-[130%]">
         Оплата за следующие периоды: {nextPeriodMonthlyPrice} ₽ в месяц.
       </p>
-      <p className="text-white/80 text-[16px] leading-[130%]">
+      <p className="text-white-80 text-[16px] leading-[130%]">
         Итого: {currentPeriodSurcharge} + {nextPeriodMonthlyPrice} = {total} ₽
       </p>
       <PrimaryButton size="large" onClick={onClose}>

@@ -5,9 +5,8 @@ interface SegmentedTabsProps<T extends string> {
 }
 
 const indicatorGlassStyle = {
-  background: 'rgba(255, 255, 255, 0.14)',
-  boxShadow:
-    'inset 0 1px 0 rgba(255, 255, 255, 0.28), inset 0 -1px 0 rgba(255, 255, 255, 0.06), 0 4px 16px rgba(0, 0, 0, 0.18)',
+  background: 'var(--color-white-14)',
+  boxShadow: 'var(--shadow-glass-indicator)',
 } as const
 
 export function SegmentedTabs<T extends string>({
@@ -18,7 +17,7 @@ export function SegmentedTabs<T extends string>({
   const activeIndex = tabs.findIndex((tab) => tab.id === activeTab)
 
   return (
-    <div className="relative flex w-full rounded-full p-1 bg-[#FFFFFF]/10 overflow-hidden">
+    <div className="relative flex w-full rounded-full p-1 bg-white-10 overflow-hidden">
       {activeIndex >= 0 && (
         <div
           className="absolute top-1 bottom-1 left-1 rounded-full pointer-events-none will-change-transform transition-transform duration-200 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]"

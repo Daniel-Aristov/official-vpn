@@ -19,14 +19,14 @@ export function ErrorNotificationModal({
         type="button"
         aria-label="Закрыть"
         onClick={onClose}
-        className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default"
+        className="absolute inset-0 bg-black-50 backdrop-blur-sm cursor-default"
       />
-      <div className="relative w-full max-w-[386px] bg-[#28282D] border border-white/10 rounded-[32px] p-6 flex flex-col gap-4">
+      <div className="relative w-full max-w-[386px] bg-surface border border-white-10 rounded-[32px] p-6 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <h2 className="text-white font-semibold text-[24px] leading-[130%]">
             Произошла ошибка
           </h2>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Попробуйте ещё раз через некоторое время, либо напишите в поддержку
           </p>
         </div>

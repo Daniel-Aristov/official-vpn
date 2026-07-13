@@ -37,11 +37,11 @@ interface StatCardProps {
 
 function StatCard({ value, label }: StatCardProps) {
   return (
-    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-4 min-w-0">
+    <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-4 min-w-0">
       <span className="text-white text-[28px] font-semibold leading-[120%]">
         {value}
       </span>
-      <span className="text-white/80 text-[16px] leading-[130%]">{label}</span>
+      <span className="text-white-80 text-[16px] leading-[130%]">{label}</span>
     </div>
   )
 }
@@ -52,9 +52,9 @@ interface InfoBlockProps {
 
 function InfoBlock({ children }: InfoBlockProps) {
   return (
-    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex gap-4">
-      <InfoCircleIcon className="w-6 h-6 shrink-0 text-white/80" />
-      <div className="flex flex-col gap-3 text-white/80 text-[16px] leading-[130%]">
+    <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex gap-4">
+      <InfoCircleIcon className="w-6 h-6 shrink-0 text-white-80" />
+      <div className="flex flex-col gap-3 text-white-80 text-[16px] leading-[130%]">
         {children}
       </div>
     </div>
@@ -74,7 +74,7 @@ function UsefulLink({ title, value, href }: UsefulLinkProps) {
         <span className="text-white text-[18px] font-semibold leading-[120%]">
           {title}
         </span>
-        <span className="text-white/80 text-[16px] leading-[120%] truncate">
+        <span className="text-white-80 text-[16px] leading-[120%] truncate">
           {value}
         </span>
       </div>
@@ -95,7 +95,7 @@ function UsefulLink({ title, value, href }: UsefulLinkProps) {
 
 function EmptyRecordsBlock() {
   return (
-    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 min-h-[120px] flex items-center justify-center text-white/80 text-[16px] leading-[130%]">
+    <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 min-h-[120px] flex items-center justify-center text-white-80 text-[16px] leading-[130%]">
       Ещё нет записей
     </div>
   )
@@ -107,10 +107,10 @@ interface ReferralLinkCardProps {
 
 function ReferralLinkCard({ link }: ReferralLinkCardProps) {
   return (
-    <div className="flex items-start gap-3 bg-white border border-white/10 rounded-[16px] px-4 py-[6px]">
-      <LinkIcon className="w-6 h-6 shrink-0 text-black/60" />
+    <div className="flex items-start gap-3 bg-white border border-white-10 rounded-[16px] px-4 py-[6px]">
+      <LinkIcon className="w-6 h-6 shrink-0 text-black-60" />
       <div className="flex flex-col min-w-0 flex-1">
-        <span className="text-black/60 text-[16px] font-semibold leading-[130%] truncate">
+        <span className="text-black-60 text-[16px] font-semibold leading-[130%] truncate">
           Ваша уникальная ссылка
         </span>
         <span className="text-black text-[16px] font-semibold leading-[130%]">
@@ -186,8 +186,8 @@ function MoneyTabContent({
           Все выводы производятся исключительно на криптокошелёк от 3000 рублей
         </p>
       </InfoBlock>
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-5">
-        <span className="text-white/50 text-[16px] font-semibold leading-[130%]">
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-5">
+        <span className="text-white-50 text-[16px] font-semibold leading-[130%]">
           Полезные ссылки
         </span>
         <UsefulLink
@@ -228,15 +228,15 @@ export function ReferralProgramPage() {
 
   return (
     <main className="flex flex-col flex-1 pt-4 px-4 pb-4 gap-4 max-w-[768px] mx-auto w-full">
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white/10 border border-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white-10 border border-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <ReferralGiftIcon className="w-6 h-6" />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold">
             Реферальная программа
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Реф. программы которые позволяют получать бонусные дни, а также
             зарабатывать деньги
           </p>

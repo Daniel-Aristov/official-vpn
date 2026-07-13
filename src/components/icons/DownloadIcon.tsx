@@ -5,7 +5,7 @@ export function DownloadIcon({
   className?: string
   fill?: string
 }) {
-  const defaultFill = fill || 'white'
+  const defaultFill = fill || 'var(--color-white)'
   return (
     <svg
       width="24"
@@ -27,7 +27,7 @@ export function DownloadIcon({
       </g>
       <defs>
         <clipPath id="clip0_40000081_206">
-          <rect width="24" height="24" fill="white" />
+          <rect width="24" height="24" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

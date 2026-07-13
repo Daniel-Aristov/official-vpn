@@ -65,7 +65,7 @@ const faqItems: FaqItemData[] = [
           На всех подписках при подключении к &laquo;Умной маршрутизации&raquo;
           Youtube без рекламы
         </p>
-        <p className="italic text-white/60">
+        <p className="italic text-white-60">
           Локации постоянно изменяются и добавляются по мере появления новых
           ограничений и блокировок
         </p>
@@ -175,7 +175,7 @@ const faqItems: FaqItemData[] = [
           по банковской карте или через{' '}
           <strong className="text-white">СБП</strong>
         </p>
-        <p className="italic text-white/60">
+        <p className="italic text-white-60">
           Позже появится возможность оплаты криптой и TG Stars
         </p>
       </div>
@@ -256,14 +256,14 @@ const faqItems: FaqItemData[] = [
 function FaqItem({ number, title, content }: FaqItemData & { number: number }) {
   return (
     <article className="flex gap-3">
-      <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white/10 text-white text-[16px] font-semibold shrink-0">
+      <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white-10 text-white text-[16px] font-semibold shrink-0">
         {number}
       </div>
       <div className="flex flex-col gap-2 flex-1 min-w-0">
         <h2 className="text-white text-[16px] font-semibold leading-[130%]">
           {title}
         </h2>
-        <div className="text-white/80 text-[14px] leading-[130%]">
+        <div className="text-white-80 text-[14px] leading-[130%]">
           {content}
         </div>
       </div>
@@ -274,21 +274,21 @@ function FaqItem({ number, title, content }: FaqItemData & { number: number }) {
 export function FaqPage() {
   return (
     <main className="flex flex-col flex-1 px-4 pt-4 gap-4 max-w-[768px] mx-auto w-full">
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white-10 border border-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <QuestionIcon className="w-6 h-6" solid />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold">
             Часто задаваемые вопросы
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Ответы на часто задаваемые вопросы
           </p>
         </div>
       </div>
 
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-6 overflow-hidden">
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-6 overflow-hidden">
         {faqItems.map((item, index) => (
           <FaqItem key={item.title} number={index + 1} {...item} />
         ))}

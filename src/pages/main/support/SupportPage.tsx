@@ -10,15 +10,15 @@ export function SupportPage() {
 
   return (
     <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[12px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white-10 border border-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[12px] bg-white-10 text-white">
           <HeadphonesIcon className="w-6 h-6" />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold">
             Связаться с поддержкой
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Получите ответы на популярные вопросы
             <br />
             или обратитесь к нам за помощью
@@ -26,7 +26,7 @@ export function SupportPage() {
         </div>
       </div>
 
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-6 overflow-hidden">
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-6 overflow-hidden">
         <MenuItem
           icon={<QuestionIcon />}
           title="Часто задаваемые вопросы"

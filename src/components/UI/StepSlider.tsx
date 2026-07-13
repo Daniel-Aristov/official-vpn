@@ -90,7 +90,7 @@ export function StepSlider({
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}
     >
-      <div className="absolute inset-0 bg-white/10 rounded-full" />
+      <div className="absolute inset-0 bg-white-10 rounded-full" />
       <div
         className="absolute left-0 top-0 bottom-0 bg-primary rounded-full transition-all duration-200"
         style={{
@@ -115,8 +115,8 @@ export function StepSlider({
             <div
               className={`transition-all duration-200 rounded-full pointer-events-none ${
                 isSelected
-                  ? 'w-[28px] h-[28px] bg-[#24326A] border-3 border-primary'
-                  : 'w-3 h-3 bg-white/30'
+                  ? 'w-[28px] h-[28px] bg-navy border-3 border-primary'
+                  : 'w-3 h-3 bg-white-30'
               }`}
             />
           </div>

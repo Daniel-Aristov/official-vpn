@@ -24,7 +24,7 @@ export function InfoCircleIcon({ className }: { className?: string }) {
       </g>
       <defs>
         <clipPath id="clip0_info">
-          <rect width="24" height="24" fill="white" />
+          <rect width="24" height="24" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

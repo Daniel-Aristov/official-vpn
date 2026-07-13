@@ -23,7 +23,7 @@ export function DisableAutoRenewalSheet({
       title="Отключить автопродление?"
       onClose={onClose}
     >
-      <p className="text-white/80 text-[16px] leading-[130%]">
+      <p className="text-white-80 text-[16px] leading-[130%]">
         Чтобы не потерять доступ к VPN, мы рекомендуем оставить автопродление
         включённым. Вы уверены, что хотите его отключить?
       </p>

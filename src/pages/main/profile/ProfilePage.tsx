@@ -31,12 +31,12 @@ export function ProfilePage() {
   return (
     <main className="flex flex-col flex-1 px-4 pt-6 gap-4 max-w-[768px] mx-auto w-full">
       {!isTelegramLinked && (
-        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-white-10 bg-white-10">
           <div className="flex flex-col gap-2">
             <h2 className="text-white text-[18px] font-semibold leading-[120%]">
               Вам необходимо привязать Telegram
             </h2>
-            <p className="text-white/80 text-[16px] leading-[120%]">
+            <p className="text-white-80 text-[16px] leading-[120%]">
               Это позволит привязать ваш аккаунт и даёт возможность не потерять
               доступ
             </p>
@@ -46,14 +46,14 @@ export function ProfilePage() {
             onClick={handleLinkTelegram}
             className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[14px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"
           >
-            <TelegramIcon fill="white" fillOpacity={1} />
+            <TelegramIcon fill="var(--color-white)" fillOpacity={1} />
             Привязать telegram
           </button>
         </div>
       )}
 
-      <div className="flex items-center gap-3 bg-[#000000]/40 border border-[#FFFFFF]/10 rounded-full p-4">
-        <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white/20 text-white shrink-0">
+      <div className="flex items-center gap-3 bg-black-40 border border-white-10 rounded-full p-4">
+        <div className="w-[52px] h-[52px] flex items-center justify-center rounded-full bg-white-20 text-white shrink-0">
           <UserIcon />
         </div>
         <div className="flex flex-col gap-0.5 flex-1">
@@ -62,7 +62,7 @@ export function ProfilePage() {
           </span>
           <span
             className={`text-[16px] leading-[130%] ${
-              isTelegramLinked ? 'text-[#139D76]' : 'text-[#FF9696]/80'
+              isTelegramLinked ? 'text-success' : 'text-error-soft-80'
             }`}
           >
             {isTelegramLinked ? 'Telegram привязан' : 'Не привязан telegram'}
@@ -78,8 +78,8 @@ export function ProfilePage() {
         </motion.button>
       </div>
 
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-5 overflow-hidden">
-        <span className="text-white/50 text-[16px] font-medium">
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-5 overflow-hidden">
+        <span className="text-white-50 text-[16px] font-medium">
           Настройки профиля
         </span>
         <div className="flex flex-col gap-6">
@@ -111,8 +111,8 @@ export function ProfilePage() {
         </div>
       </div>
 
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-5 overflow-hidden">
-        <span className="text-white/50 text-[16px] font-medium">Поддержка</span>
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-5 overflow-hidden">
+        <span className="text-white-50 text-[16px] font-medium">Поддержка</span>
         <div className="flex flex-col gap-6">
           <MenuItem
             icon={<GearIcon fillOpacity={0.5} />}

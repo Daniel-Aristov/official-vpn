@@ -39,9 +39,9 @@ function DeviceItem({
   onRemove: (id: string) => void
 }) {
   return (
-    <div className="flex flex-col gap-3 items-start bg-white/10 border border-white/10 rounded-[16px] p-4">
+    <div className="flex flex-col gap-3 items-start bg-white-10 border border-white-10 rounded-[16px] p-4">
       <div className="flex items-center justify-between gap-2 w-full">
-        <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white/10 shrink-0">
+        <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white-10 shrink-0">
           <DevicePlatformIcon platform={device.platform} />
         </div>
         <motion.button
@@ -49,7 +49,7 @@ function DeviceItem({
           onClick={() => onRemove(device.id)}
           whileTap={{ scale: 0.82 }}
           transition={TAB_PRESS_TRANSITION}
-          className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-[#B4CBFF] shrink-0 cursor-pointer"
+          className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-accent-light shrink-0 cursor-pointer"
           aria-label="Отключить устройство"
         >
           <TrashIcon />
@@ -57,7 +57,7 @@ function DeviceItem({
       </div>
       <div className="flex flex-col flex-1 gap-1 min-w-0">
         <div className="flex items-center gap-2">
-          <span className="text-white/50 text-[14px] leading-[130%]">
+          <span className="text-white-50 text-[14px] leading-[130%]">
             Модель:
           </span>
           <span className="text-white text-[14px] leading-[130%] font-medium">
@@ -65,7 +65,7 @@ function DeviceItem({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-white/50 text-[14px] leading-[130%]">
+          <span className="text-white-50 text-[14px] leading-[130%]">
             Платформа:
           </span>
           <span className="text-white text-[14px] leading-[130%] font-medium">
@@ -73,7 +73,7 @@ function DeviceItem({
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="text-white/50 text-[14px] leading-[130%]">
+          <span className="text-white-50 text-[14px] leading-[130%]">
             Обновлено:
           </span>
           <span className="text-white text-[14px] leading-[130%] font-medium">
@@ -111,22 +111,22 @@ export function DevicesPage() {
   return (
     <>
       <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
-        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
-          <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10">
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-white-10 bg-white-10">
+          <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10">
             <MonitorIcon className="w-6 h-6" fillOpacity={1} />
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="text-white text-[24px] font-semibold">Устройства</h1>
-            <p className="text-white/80 text-[16px] leading-[130%]">
+            <p className="text-white-80 text-[16px] leading-[130%]">
               Покупка слотов, удаление и добавление новых устройств
             </p>
           </div>
         </div>
 
         {hasSubscription && (
-          <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-start gap-3">
-            <InfoCircleIcon className="w-6 h-6 text-white/80 shrink-0 mt-0.5" />
-            <p className="text-white/80 text-[16px] leading-[120%]">
+          <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex items-start gap-3">
+            <InfoCircleIcon className="w-6 h-6 text-white-80 shrink-0 mt-0.5" />
+            <p className="text-white-80 text-[16px] leading-[120%]">
               Дополнительное устройство стоит 60 рублей в месяц. Для этого
               необходимо выбрать кол-во слотов и перейти к оплате.
             </p>
@@ -137,7 +137,7 @@ export function DevicesPage() {
           <>
             <div
               style={{ minHeight: 140 }}
-              className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 w-full flex items-center justify-center text-white/80 text-[16px] leading-[130%] text-center"
+              className="bg-white-10 border border-white-10 rounded-[24px] p-4 w-full flex items-center justify-center text-white-80 text-[16px] leading-[130%] text-center"
             >
               <span className="min-h-[270px] flex items-center justify-center mx-auto">
                 У вас ещё нет активных подписок для добавления устройств
@@ -152,12 +152,12 @@ export function DevicesPage() {
           </>
         ) : (
           <>
-            <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] overflow-hidden p-4">
+            <div className="bg-white-10 border border-white-10 rounded-[24px] overflow-hidden p-4">
               <div className="flex items-center justify-between pb-4">
-                <span className="text-white/50 text-[14px] font-medium">
+                <span className="text-white-50 text-[14px] font-medium">
                   Подключённые устройства
                 </span>
-                <span className="text-white/50 text-[13px] bg-white/10 px-2 py-0.5 rounded-full">
+                <span className="text-white-50 text-[13px] bg-white-10 px-2 py-0.5 rounded-full">
                   {devices.length}/{totalSlots}
                 </span>
               </div>
@@ -169,7 +169,7 @@ export function DevicesPage() {
                 }`}
               >
                 {devices.length === 0 ? (
-                  <p className="text-white/80 text-[16px] leading-[130%] max-w-[200px] mx-auto">
+                  <p className="text-white-80 text-[16px] leading-[130%] max-w-[200px] mx-auto">
                     У вас пока нет подключенных устройств
                   </p>
                 ) : (
@@ -185,7 +185,7 @@ export function DevicesPage() {
             </div>
 
             <div className="mt-auto flex items-center gap-3">
-              <div className="flex items-center justify-between w-[130px] bg-secondary border border-white/10 rounded-[16px] shrink-0 py-3 px-4">
+              <div className="flex items-center justify-between w-[130px] bg-secondary border border-white-10 rounded-[16px] shrink-0 py-3 px-4">
                 <motion.button
                   type="button"
                   onClick={() => setSlotCount((c) => Math.max(MIN_SLOT_COUNT, c - 1))}

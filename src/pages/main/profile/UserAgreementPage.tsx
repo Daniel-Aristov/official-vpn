@@ -1,27 +1,27 @@
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
 
-const textClass = 'text-white/80 text-[14px] leading-[150%]'
+const textClass = 'text-white-80 text-[14px] leading-[150%]'
 const headingClass = 'text-white text-[18px] font-semibold leading-[130%]'
 const subheadingClass = 'text-white text-[15px] font-medium leading-[130%]'
 
 export function UserAgreementPage() {
   return (
     <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-white-10 bg-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <DocumentIcon className="w-6 h-6" fillOpacity={1} />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold leading-[120%]">
             Пользовательское соглашение
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Оферта и пользовательское соглашение
           </p>
         </div>
       </div>
 
-      <div className="rounded-[24px] p-4 flex flex-col gap-6 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
+      <div className="rounded-[24px] p-4 flex flex-col gap-6 border border-white-10 bg-white-10">
         <section className="flex flex-col gap-3">
           <h2 className={headingClass}>1. Общие положения</h2>
           <p className={textClass}>

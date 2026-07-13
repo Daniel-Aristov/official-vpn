@@ -20,7 +20,7 @@ export function DocumentCheckIcon({ className }: IconProps) {
       </g>
       <defs>
         <clipPath id="clip0_document_check">
-          <rect width="24" height="24" fill="white" />
+          <rect width="24" height="24" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

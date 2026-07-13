@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { DocumentIcon } from '@/components/icons/DocumentIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 
-const textClass = 'text-white/80 text-[14px] leading-[150%]'
+const textClass = 'text-white-80 text-[14px] leading-[150%]'
 const headingClass = 'text-white text-[18px] font-semibold leading-[130%]'
 
 export function PrivacyPolicyPage() {
@@ -18,21 +18,21 @@ export function PrivacyPolicyPage() {
         <ChevronLeftIcon />
       </button>
 
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-white-10 bg-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <DocumentIcon className="w-6 h-6" fillOpacity={1} />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold leading-[120%]">
             Политика конфиденциальности
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Порядок обработки и защиты персональных данных
           </p>
         </div>
       </div>
 
-      <div className="rounded-[24px] p-4 flex flex-col gap-6 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
+      <div className="rounded-[24px] p-4 flex flex-col gap-6 border border-white-10 bg-white-10">
         <p className={textClass}>
           Настоящая Политика конфиденциальности (далее — Политика) определяет
           порядок обработки и защиты персональных данных Пользователей при

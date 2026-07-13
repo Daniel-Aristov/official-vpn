@@ -31,11 +31,11 @@ function ActionCard({
   children,
 }: ActionCardProps) {
   return (
-    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-4">
+    <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-4">
       <div className="flex items-start gap-3">
         <div
           className={`w-[46px] h-[46px] flex items-center justify-center rounded-[16px] shrink-0 ${
-            completed ? 'bg-[#139D76]' : 'bg-white/10 text-white'
+            completed ? 'bg-success' : 'bg-white-10 text-white'
           }`}
         >
           {completed ? completedIcon : icon}
@@ -48,7 +48,7 @@ function ActionCard({
           >
             {title}
           </span>
-          <span className="text-white/80 text-[16px] leading-[120%] mt-[2px]">
+          <span className="text-white-80 text-[16px] leading-[120%] mt-[2px]">
             {subtitle}
           </span>
           {!completed && children && (
@@ -71,15 +71,15 @@ export function AccessPreservationPage() {
 
   return (
     <main className="flex flex-col flex-1 px-4 pt-4 gap-4 max-w-[768px] mx-auto w-full">
-      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-[#FFFFFF]/10 border border-[#FFFFFF]/10">
-        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+      <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white-10 border border-white-10">
+        <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <DocumentCheckIcon className="w-6 h-6" />
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-white text-[24px] font-semibold">
             Сохранение доступа
           </h1>
-          <p className="text-white/80 text-[16px] leading-[130%]">
+          <p className="text-white-80 text-[16px] leading-[130%]">
             Для сохранения доступа к сервису рекомендуем выполнить несколько
             простых шагов
           </p>
@@ -88,7 +88,7 @@ export function AccessPreservationPage() {
 
       <ActionCard
         icon={<TelegramIcon />}
-        completedIcon={<CheckmarkIcon fill="white" className="w-5 h-5" />}
+        completedIcon={<CheckmarkIcon fill="var(--color-white)" className="w-5 h-5" />}
         completed={isTelegramLinked}
         title="Привязать к Telegram-аккаунту"
         subtitle="Будем всегда на связи"
@@ -105,7 +105,7 @@ export function AccessPreservationPage() {
       </ActionCard>
 
       <ActionCard
-        icon={<InfoCircleIcon className="w-5 h-5 text-white/50" />}
+        icon={<InfoCircleIcon className="w-5 h-5 text-white-50" />}
         title="Подпишитесь на Telegram-канал"
         subtitle="Для получения важной информации"
       >
@@ -121,17 +121,17 @@ export function AccessPreservationPage() {
         </motion.a>
       </ActionCard>
 
-      <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-4">
+      <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <span className="text-white text-[16px] font-semibold leading-[130%]">
             Сохраните ссылку на личный кабинет
           </span>
-          <span className="text-white/80 text-[14px] leading-[130%]">
+          <span className="text-white-80 text-[14px] leading-[130%]">
             С помощью этой ссылки вы можете получить доступ к личному кабинету
             через браузер
           </span>
         </div>
-        <div className="flex items-center gap-3 bg-white border border-white/10 rounded-[16px] px-4 py-[6px]">
+        <div className="flex items-center gap-3 bg-white border border-white-10 rounded-[16px] px-4 py-[6px]">
           <div className="flex flex-col min-w-0 flex-1">
             <span className="text-black text-[16px] font-semibold leading-[130%] truncate">
               {PERSONAL_CABINET_URL}

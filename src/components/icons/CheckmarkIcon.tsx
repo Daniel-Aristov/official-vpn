@@ -5,7 +5,7 @@ interface CheckmarkIconProps {
 
 export function CheckmarkIcon({
   className,
-  fill = '#139D76',
+  fill = 'var(--color-success)',
 }: CheckmarkIconProps) {
   return (
     <svg
@@ -24,7 +24,7 @@ export function CheckmarkIcon({
       </g>
       <defs>
         <clipPath id="clip0_checkmark">
-          <rect width="24" height="24" fill="white" />
+          <rect width="24" height="24" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

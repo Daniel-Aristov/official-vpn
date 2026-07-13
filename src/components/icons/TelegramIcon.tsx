@@ -6,7 +6,7 @@ interface TelegramIconProps {
 
 export function TelegramIcon({
   className,
-  fill = 'white',
+  fill = 'var(--color-white)',
   fillOpacity = 0.5,
 }: TelegramIconProps) {
   return (
@@ -27,7 +27,7 @@ export function TelegramIcon({
       </g>
       <defs>
         <clipPath id="clip0_610_20502">
-          <rect width="20" height="20" fill="white" />
+          <rect width="20" height="20" fill="var(--color-white)" />
         </clipPath>
       </defs>
     </svg>

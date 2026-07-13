@@ -103,14 +103,14 @@ export function EmailVerifyPage() {
               initial={{ opacity: 0, scale: 0.85, y: 8 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={FADE_TRANSITION}
-              className="p-4 rounded-[16px] bg-[#5389D9]"
+              className="p-4 rounded-[16px] bg-accent-blue"
             >
               <PasswordIcon />
             </motion.div>
             <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
               Код подтверждения
             </h2>
-            <p className="text-[16px] text-white/50 text-center leading-[130%] max-w-[295px]">
+            <p className="text-[16px] text-white-50 text-center leading-[130%] max-w-[295px]">
               Мы вам отправили код
               <br />
               на почту <span className="text-white font-semibold">{email}</span>
@@ -137,8 +137,8 @@ export function EmailVerifyPage() {
                   }}
                   whileTap={{ scale: 0.95 }}
                   transition={TAB_PRESS_TRANSITION}
-                  className={`w-11 h-14 px-4 py-2 rounded-2xl bg-white/20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
-                    codeError ? 'border-red-400' : 'border-white/10'
+                  className={`w-11 h-14 px-4 py-2 rounded-2xl bg-white-20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
+                    codeError ? 'border-red-400' : 'border-white-10'
                   }`}
                 />
               ))}
@@ -151,7 +151,7 @@ export function EmailVerifyPage() {
           </div>
 
           {secondsLeft > 0 ? (
-            <p className="text-[16px] text-white/50 text-center leading-[130%]">
+            <p className="text-[16px] text-white-50 text-center leading-[130%]">
               Отправить код ещё раз через{' '}
               <span className="text-white">{secondsLeft}с</span>
             </p>

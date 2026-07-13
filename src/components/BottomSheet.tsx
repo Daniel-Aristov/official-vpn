@@ -29,14 +29,14 @@ export function BottomSheet({
             type="button"
             aria-label="Закрыть"
             onClick={onClose}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm cursor-default"
+            className="absolute inset-0 bg-black-50 backdrop-blur-sm cursor-default"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={SHEET_TRANSITION}
           />
           <motion.div
-            className="relative w-full max-w-[768px] bg-[#28282D] border border-white/10 rounded-t-[32px] p-6 flex flex-col gap-4"
+            className="relative w-full max-w-[768px] bg-surface border border-white-10 rounded-t-[32px] p-6 flex flex-col gap-4"
             initial={{ y: '100%' }}
             animate={{ y: 0 }}
             exit={{ y: '100%' }}
@@ -52,7 +52,7 @@ export function BottomSheet({
                 aria-label="Закрыть"
                 whileTap={{ scale: 0.82 }}
                 transition={TAB_PRESS_TRANSITION}
-                className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
+                className="shrink-0 text-white bg-white-10 border border-white-20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <CloseIcon />
               </motion.button>

@@ -24,7 +24,7 @@ export function PaymentMethodIcon({ methodId, variant }: PaymentMethodIconProps)
   }
 
   return (
-    <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white/10 shrink-0 text-white">
+    <div className="w-[72px] h-[50px] flex items-center justify-center rounded-[8px] bg-white-10 shrink-0 text-white">
       {methodId === 'card' ? (
         <PaymentHistoryIcon className="w-6 h-6" />
       ) : methodId === 'sbp' ? (

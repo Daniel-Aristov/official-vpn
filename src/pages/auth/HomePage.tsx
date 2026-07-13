@@ -35,7 +35,7 @@ export function HomePage() {
             </PrimaryButton>
           </div>
 
-          <p className="text-[14px] text-white/50 text-center leading-[130%] tracking-[-0.3px]">
+          <p className="text-[14px] text-white-50 text-center leading-[130%] tracking-[-0.3px]">
             Нажимая на кнопку Авторизоваться,
             <br />
             Вы соглашаетесь с{' '}

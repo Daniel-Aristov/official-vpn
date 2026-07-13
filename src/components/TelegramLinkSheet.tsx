@@ -27,7 +27,7 @@ export function TelegramLinkSheet({
       title="Привязка к Telegram"
       onClose={onClose}
     >
-      <p className="text-white/80 text-[16px] leading-[130%]">
+      <p className="text-white-80 text-[16px] leading-[130%]">
         Чтобы не потерять доступ, пожалуйста привяжите ваш телеграм-аккаунт
       </p>
       <div className="flex flex-col gap-2">

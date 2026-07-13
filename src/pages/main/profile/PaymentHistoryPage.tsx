@@ -26,7 +26,7 @@ function EmptyStateBlock({
   onClick,
 }: EmptyStateBlockProps) {
   const className =
-    'bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 w-full flex items-center justify-center text-white/80 text-[16px] leading-[130%] text-center'
+    'bg-white-10 border border-white-10 rounded-[24px] p-4 w-full flex items-center justify-center text-white-80 text-[16px] leading-[130%] text-center'
 
   if (onClick) {
     return (
@@ -65,7 +65,7 @@ function PaymentMethodItem({
       onClick={onSelect}
       whileTap={{ scale: 0.95 }}
       transition={TAB_PRESS_TRANSITION}
-      className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
+      className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
     >
       <PaymentMethodIcon methodId={methodId} variant="picker" />
       <div className="flex flex-col flex-1 min-w-0 text-left">
@@ -74,8 +74,8 @@ function PaymentMethodItem({
         </span>
       </div>
       {isActive && (
-        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
-          <CheckmarkIcon fill="white" className="w-4 h-4" />
+        <div className="w-8 h-8 flex items-center justify-center rounded-full bg-success shrink-0">
+          <CheckmarkIcon fill="var(--color-white)" className="w-4 h-4" />
         </div>
       )}
     </motion.button>
@@ -170,7 +170,7 @@ function getTransactionPaymentMethodLabel(tx: PaymentTransaction): string {
 function TransactionRow({ label, value }: { label: string; value: string }) {
   return (
     <div className="flex items-start justify-between gap-3">
-      <span className="text-white/50 text-[14px] leading-[130%] shrink-0">
+      <span className="text-white-50 text-[14px] leading-[130%] shrink-0">
         {label}
       </span>
       <span className="text-white text-[14px] leading-[130%] font-medium text-right break-all">
@@ -182,7 +182,7 @@ function TransactionRow({ label, value }: { label: string; value: string }) {
 
 function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
   return (
-    <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-3">
+    <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
         <span className="text-white font-semibold text-[16px] leading-[130%]">
           {transaction.description}
@@ -191,7 +191,7 @@ function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
           {formatTransactionAmount(transaction.amount, transaction.currency)}
         </span>
       </div>
-      <div className="h-px bg-white/10" />
+      <div className="h-px bg-white-10" />
       <TransactionRow label="ID транзакции" value={transaction.id} />
       <TransactionRow label="ID заказа" value={transaction.orderId} />
       <TransactionRow
@@ -262,15 +262,15 @@ export function PaymentHistoryPage() {
   return (
     <>
       <main className="flex flex-col flex-1 p-4 gap-4 max-w-[768px] mx-auto w-full">
-        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-[#FFFFFF]/10 bg-[#FFFFFF]/10">
-          <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white/10 text-white">
+        <div className="rounded-[24px] p-4 flex flex-col gap-4 border border-white-10 bg-white-10">
+          <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
             <PaymentHistoryIcon className="w-6 h-6" />
           </div>
           <div className="flex flex-col gap-2">
             <h1 className="text-white text-[24px] font-semibold">
               Способы оплаты и история
             </h1>
-            <p className="text-white/80 text-[16px] leading-[130%]">
+            <p className="text-white-80 text-[16px] leading-[130%]">
               Настройка способов оплаты для продления подписки и отслеживания
               всех транзакций
             </p>
