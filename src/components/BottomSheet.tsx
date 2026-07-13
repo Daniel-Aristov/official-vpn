@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { CloseIcon } from '@/components/icons/CloseIcon'
 import { SHEET_TRANSITION } from '@/js/constants/motion'
@@ -18,7 +19,7 @@ export function BottomSheet({
   children,
   zIndexClass = 'z-60',
 }: BottomSheetProps) {
-  return (
+  return createPortal(
     <AnimatePresence>
       {isOpen && (
         <div
@@ -58,6 +59,7 @@ export function BottomSheet({
           </motion.div>
         </div>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   )
 }

@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { PricingExplanationSheet } from '@/components/PricingExplanationSheet'
 import { DeviceLimitExceededSheet } from '@/components/DeviceLimitExceededSheet'
@@ -244,17 +245,20 @@ export function BuySubscriptionPage() {
         </div>
       </main>
 
-      <div className="fixed bottom-[90px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
-        <PrimaryButton size="large" onClick={handleSubscribe}>
-          <div className="flex items-center w-full justify-between gap-2 px-4">
-            <span>Продлить подписку</span>
-            <div className="flex items-center gap-2">
-              <span className="text-white">{actualPrice} ₽</span>
-              <span className="text-white line-through">{fullPrice} ₽</span>
+      {createPortal(
+        <div className="fixed bottom-[90px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
+          <PrimaryButton size="large" onClick={handleSubscribe}>
+            <div className="flex items-center w-full justify-between gap-2 px-4">
+              <span>Продлить подписку</span>
+              <div className="flex items-center gap-2">
+                <span className="text-white">{actualPrice} ₽</span>
+                <span className="text-white line-through">{fullPrice} ₽</span>
+              </div>
             </div>
-          </div>
-        </PrimaryButton>
-      </div>
+          </PrimaryButton>
+        </div>,
+        document.body,
+      )}
 
       {isPro && (
         <DeviceLimitExceededSheet

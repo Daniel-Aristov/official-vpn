@@ -8,6 +8,8 @@
   --color-glow-blue: #2543f2;
   --color-glow-cyan: #00e1ff;
   --color-glow-soft: rgba(68, 148, 252, 0.4);
+  --z-60: 60;
+  --z-70: 70;
 }
 
 *,

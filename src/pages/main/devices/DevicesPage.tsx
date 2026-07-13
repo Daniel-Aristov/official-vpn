@@ -1,5 +1,7 @@
-import { useState } from 'react'
+import { useState, type ChangeEvent } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { AndroidIcon } from '@/components/icons/AndroidIcon'
 import { IosIcon } from '@/components/icons/IosIcon'
@@ -11,6 +13,13 @@ import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { getDevicePlatformKind } from '@/js/helpers/platform'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import type { SubscriptionDevice } from '@/js/types/subscription'
+
+const MIN_SLOT_COUNT = 1
+const MAX_SLOT_COUNT = 99
+
+function clampSlotCount(value: number) {
+  return Math.min(MAX_SLOT_COUNT, Math.max(MIN_SLOT_COUNT, value))
+}
 
 function DevicePlatformIcon({ platform }: { platform: string }) {
   const kind = getDevicePlatformKind(platform)
@@ -35,14 +44,16 @@ function DeviceItem({
         <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white/10 shrink-0">
           <DevicePlatformIcon platform={device.platform} />
         </div>
-        <button
+        <motion.button
           type="button"
           onClick={() => onRemove(device.id)}
+          whileTap={{ scale: 0.82 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-[46px] h-[46px] flex items-center justify-center rounded-full bg-[#B4CBFF] shrink-0 cursor-pointer"
           aria-label="Отключить устройство"
         >
           <TrashIcon />
-        </button>
+        </motion.button>
       </div>
       <div className="flex flex-col flex-1 gap-1 min-w-0">
         <div className="flex items-center gap-2">
@@ -85,6 +96,16 @@ export function DevicesPage() {
 
   const handleRemoveDevice = (deviceId: string) => {
     void removeDevice(deviceId)
+  }
+
+  const handleSlotCountInput = (event: ChangeEvent<HTMLInputElement>) => {
+    const digits = event.target.value.replace(/\D/g, '').slice(0, 2)
+    if (digits === '') return
+    setSlotCount(clampSlotCount(Number(digits)))
+  }
+
+  const handleSlotCountBlur = () => {
+    setSlotCount((count) => clampSlotCount(count))
   }
 
   return (
@@ -164,24 +185,38 @@ export function DevicesPage() {
             </div>
 
             <div className="mt-auto flex items-center gap-3">
-              <div className="flex items-center gap-4 bg-secondary border border-white/10 rounded-[16px] overflow-hidden shrink-0 py-3 px-4">
-                <button
+              <div className="flex items-center justify-between w-[130px] bg-secondary border border-white/10 rounded-[16px] shrink-0 py-3 px-4">
+                <motion.button
                   type="button"
-                  onClick={() => setSlotCount((c) => Math.max(1, c - 1))}
-                  className="flex items-center font-semibold justify-center text-white text-[24px] cursor-pointer leading-[115%] mb-[3px]"
+                  onClick={() => setSlotCount((c) => Math.max(MIN_SLOT_COUNT, c - 1))}
+                  disabled={slotCount <= MIN_SLOT_COUNT}
+                  whileTap={{ scale: 0.82 }}
+                  transition={TAB_PRESS_TRANSITION}
+                  className="w-6 flex items-center font-semibold justify-center text-white text-[24px] cursor-pointer leading-[115%] mb-[3px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   −
-                </button>
-                <span className="text-white font-semibold text-[24px] text-center select-none leading-[115%]">
-                  {slotCount}
-                </span>
-                <button
+                </motion.button>
+                <input
+                  type="text"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  maxLength={2}
+                  value={slotCount}
+                  onChange={handleSlotCountInput}
+                  onBlur={handleSlotCountBlur}
+                  aria-label="Количество слотов"
+                  className="w-10 text-white font-semibold text-[24px] text-center leading-[115%] bg-transparent border-none outline-none appearance-none"
+                />
+                <motion.button
                   type="button"
-                  onClick={() => setSlotCount((c) => Math.min(99, c + 1))}
-                  className="flex items-center font-semibold justify-center text-white text-[24px] cursor-pointer leading-[115%] mb-[3px]"
+                  onClick={() => setSlotCount((c) => Math.min(MAX_SLOT_COUNT, c + 1))}
+                  disabled={slotCount >= MAX_SLOT_COUNT}
+                  whileTap={{ scale: 0.82 }}
+                  transition={TAB_PRESS_TRANSITION}
+                  className="w-6 flex items-center font-semibold justify-center text-white text-[24px] cursor-pointer leading-[115%] mb-[3px] disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   +
-                </button>
+                </motion.button>
               </div>
               <PrimaryButton
                 size="large"

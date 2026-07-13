@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { PointerEvent as ReactPointerEvent } from 'react'
-import { NavLink, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import {
   animate,
   motion,
@@ -18,7 +18,13 @@ import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },
   { path: '/main/setup', label: 'Настройка', icon: GearIcon, end: false },
-  { path: '/main/profile', label: 'Профиль', icon: PersonIcon, end: false },
+  {
+    path: '/main/profile',
+    label: 'Профиль',
+    icon: PersonIcon,
+    end: false,
+    matchPrefixes: ['/main/devices'],
+  },
   {
     path: '/main/support',
     label: 'Поддержка',
@@ -27,7 +33,18 @@ const tabs = [
   },
 ] as const
 
-const MotionNavLink = motion.create(NavLink)
+type TabConfig = (typeof tabs)[number]
+
+function isTabActive(tab: TabConfig, pathname: string) {
+  if (
+    'matchPrefixes' in tab &&
+    tab.matchPrefixes?.some((prefix) => pathname.startsWith(prefix))
+  ) {
+    return true
+  }
+
+  return tab.end ? pathname === tab.path : pathname.startsWith(tab.path)
+}
 
 const indicatorGlassStyle = {
   boxShadow:
@@ -50,9 +67,7 @@ export function BottomTabBar() {
   const navRef = useRef<HTMLElement>(null)
   const [isDragging, setIsDragging] = useState(false)
 
-  const activeIndex = tabs.findIndex(({ path, end }) =>
-    end ? location.pathname === path : location.pathname.startsWith(path),
-  )
+  const activeIndex = tabs.findIndex((tab) => isTabActive(tab, location.pathname))
 
   const leadingUnit = useMotionValue(Math.max(activeIndex, 0))
   const trailingUnit = useMotionValue(Math.max(activeIndex, 0) + 1)
@@ -116,10 +131,8 @@ export function BottomTabBar() {
       0,
       tabs.length - 1,
     )
-    if (nearestIndex !== activeIndex) {
-      navigate(tabs[nearestIndex].path)
-      return
-    }
+    navigate(tabs[nearestIndex].path)
+    if (nearestIndex !== activeIndex) return
     animate(leadingUnit, activeIndex, SNAP_SPRING)
     animate(trailingUnit, activeIndex + 1, SNAP_SPRING)
   }
@@ -150,23 +163,24 @@ export function BottomTabBar() {
             }}
           />
         )}
-        {tabs.map(({ path, label, icon: Icon, end }) => (
-          <MotionNavLink
-            key={path}
-            to={path}
-            end={end}
-            aria-label={label}
+        {tabs.map((tab) => (
+          <motion.button
+            key={tab.path}
+            type="button"
+            onClick={() => navigate(tab.path)}
+            aria-label={tab.label}
+            aria-current={isTabActive(tab, location.pathname) ? 'page' : undefined}
             whileTap={{ scale: 0.82 }}
             transition={TAB_PRESS_TRANSITION}
-            className={({ isActive }: { isActive: boolean }) =>
-              [
-                'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-300',
-                isActive ? 'text-white' : 'text-white/40',
-              ].join(' ')
-            }
+            className={[
+              'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-300',
+              isTabActive(tab, location.pathname)
+                ? 'text-white'
+                : 'text-white/40',
+            ].join(' ')}
           >
-            <Icon />
-          </MotionNavLink>
+            <tab.icon />
+          </motion.button>
         ))}
         {activeIndex >= 0 && (
           <motion.div
