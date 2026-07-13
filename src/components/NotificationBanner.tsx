@@ -4,7 +4,7 @@ import { InfoCircleIcon } from '@/components/icons/InfoCircleIcon'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { BlockedCircleIcon } from '@/components/icons/BlockedCircleIcon'
 import { CloseIcon } from '@/components/icons/CloseIcon'
-import { FADE_TRANSITION } from '@/js/constants/motion'
+import { FADE_TRANSITION, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 type NotificationVariant = 'warning' | 'success' | 'blocked'
 
@@ -78,13 +78,15 @@ export function NotificationBanner({
           </div>
         </div>
         {variant === 'success' && onClose && (
-          <button
+          <motion.button
             type="button"
             onClick={onClose}
+            whileTap={{ scale: 0.82 }}
+            transition={TAB_PRESS_TRANSITION}
             className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
           >
             <CloseIcon />
-          </button>
+          </motion.button>
         )}
       </div>
       {variant === 'blocked' && onAction && (

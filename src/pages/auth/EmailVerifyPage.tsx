@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
 import { PasswordIcon } from '@/components/icons/PasswordIcon'
+import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { FADE_TRANSITION, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { useAuth } from '@/store/auth/useAuth'
 
@@ -165,14 +166,13 @@ export function EmailVerifyPage() {
           )}
         </div>
 
-        <button
-          type="button"
+        <PrimaryButton
+          size="large"
           disabled={isLoading || !canSubmit}
           onClick={() => void handleLogin()}
-          className="w-full py-[16px] rounded-2xl bg-primary text-white font-semibold text-[16px] leading-[20px] cursor-pointer disabled:opacity-50"
         >
           Авторизоваться
-        </button>
+        </PrimaryButton>
       </div>
     </main>
   )

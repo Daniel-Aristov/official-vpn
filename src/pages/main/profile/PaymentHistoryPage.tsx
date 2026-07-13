@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { motion } from 'motion/react'
 import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
@@ -8,6 +9,7 @@ import { getPaymentMethodLabel } from '@/js/constants/paymentMethods'
 import type { PaymentMethodId } from '@/js/types/payment'
 import type { PaymentTransaction } from '@/js/types/payment'
 import { useSheet } from '@/js/helpers/useSheet'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { usePayment } from '@/store/payment/usePayment'
 
 type PaymentTab = 'methods' | 'transactions'
@@ -58,9 +60,11 @@ function PaymentMethodItem({
   onSelect,
 }: PaymentMethodItemProps) {
   return (
-    <button
+    <motion.button
       type="button"
       onClick={onSelect}
+      whileTap={{ scale: 0.95 }}
+      transition={TAB_PRESS_TRANSITION}
       className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
     >
       <PaymentMethodIcon methodId={methodId} variant="picker" />
@@ -74,7 +78,7 @@ function PaymentMethodItem({
           <CheckmarkIcon fill="white" className="w-4 h-4" />
         </div>
       )}
-    </button>
+    </motion.button>
   )
 }
 
@@ -117,9 +121,11 @@ function PaymentMethodsTabContent({
           onClick={onEnablePaymentMethods}
         />
       )}
-      <button
+      <motion.button
         type="button"
         onClick={isAutoRenewalEnabled ? onDisableClick : onEnableClick}
+        whileTap={{ scale: 0.97 }}
+        transition={TAB_PRESS_TRANSITION}
         className={`rounded-[16px] p-4 flex items-center justify-center text-white text-[16px] font-semibold leading-[130%] cursor-pointer w-full mt-4 ${
           isAutoRenewalEnabled ? 'bg-secondary' : 'bg-primary'
         }`}
@@ -127,7 +133,7 @@ function PaymentMethodsTabContent({
         {isAutoRenewalEnabled
           ? 'Отключить автопродление'
           : 'Включить автопродление'}
-      </button>
+      </motion.button>
     </>
   )
 }

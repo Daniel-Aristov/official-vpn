@@ -1,9 +1,11 @@
+import { motion } from 'motion/react'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { getPaymentMethodLabel } from '@/js/constants/paymentMethods'
 import type { PaymentMethodId } from '@/js/types/payment'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 interface PaymentConfirmationSheetProps {
   isOpen: boolean
@@ -63,13 +65,15 @@ export function PaymentConfirmationSheet({
         <span className="text-white text-[16px] font-medium flex-1 text-left">
           {getPaymentMethodLabel(selectedPaymentMethodId)}
         </span>
-        <button
+        <motion.button
           type="button"
           aria-label="Изменить способ оплаты"
+          whileTap={{ scale: 0.82 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-[28px] h-[28px] flex items-center justify-center rounded-full border border-white/10 bg-secondary shrink-0 text-white cursor-pointer"
         >
           <ChevronDownIcon className="shrink-0" />
-        </button>
+        </motion.button>
       </div>
 
       <PrimaryButton size="large" onClick={onConfirm}>

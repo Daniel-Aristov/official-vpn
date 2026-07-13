@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { BottomSheet } from '@/components/BottomSheet'
@@ -49,17 +49,42 @@ function formatPurchasedSlotsLabel(count: number): string {
   return `${count} устройств`
 }
 
+const PAYMENT_METHOD_CLOSE_DELAY_MS = 250
+
 export function BuySlotsPage() {
   const navigate = useNavigate()
   const { state } = useLocation() as { state: LocationState | null }
   const { subscription, purchaseSlots } = useSubscription()
-  const { settings, availablePaymentMethodIds, setActivePaymentMethod } = usePayment()
+  const { settings, availablePaymentMethodIds, setActivePaymentMethod } =
+    usePayment()
   const explanation = useSheet()
   const payment = useSheet()
   const paymentMethodChange = useSheet()
   const [slotCount, setSlotCount] = useState(state?.slotCount ?? 1)
   const [selectedPaymentMethodId, setSelectedPaymentMethodId] =
     useState<PaymentMethodId>('sbp')
+  const [displayedMethodId, setDisplayedMethodId] =
+    useState<PaymentMethodId | null>(null)
+  const [prevPaymentMethodChangeOpen, setPrevPaymentMethodChangeOpen] =
+    useState(paymentMethodChange.isOpen)
+  const paymentMethodCloseTimerRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null,
+  )
+
+  if (paymentMethodChange.isOpen !== prevPaymentMethodChangeOpen) {
+    setPrevPaymentMethodChangeOpen(paymentMethodChange.isOpen)
+    if (paymentMethodChange.isOpen) {
+      setDisplayedMethodId(null)
+    }
+  }
+
+  useEffect(() => {
+    return () => {
+      if (paymentMethodCloseTimerRef.current) {
+        clearTimeout(paymentMethodCloseTimerRef.current)
+      }
+    }
+  }, [])
 
   const resolvedPaymentMethodId = useMemo(
     () =>
@@ -73,8 +98,7 @@ export function BuySlotsPage() {
   const hasPaymentMethods = availablePaymentMethodIds.length > 0
 
   const currentSlots = state?.currentSlots ?? subscription?.totalSlots ?? 6
-  const usedDevices =
-    state?.usedDevices ?? subscription?.devices.length ?? 0
+  const usedDevices = state?.usedDevices ?? subscription?.devices.length ?? 0
   const planLabel = subscription
     ? getPlanLabel(subscription.planType).toUpperCase()
     : 'PRO'
@@ -88,6 +112,21 @@ export function BuySlotsPage() {
       paymentMethodId: resolvedPaymentMethodId,
     })
     payment.close()
+  }
+
+  const handleSelectPaymentMethod = (methodId: PaymentMethodId) => {
+    setDisplayedMethodId(methodId)
+
+    if (paymentMethodCloseTimerRef.current) {
+      clearTimeout(paymentMethodCloseTimerRef.current)
+    }
+
+    paymentMethodCloseTimerRef.current = setTimeout(() => {
+      setSelectedPaymentMethodId(methodId)
+      void setActivePaymentMethod(methodId)
+      paymentMethodChange.close()
+      paymentMethodCloseTimerRef.current = null
+    }, PAYMENT_METHOD_CLOSE_DELAY_MS)
   }
 
   const currentPrice = slotCount * PRICE_PER_SLOT_PERIOD
@@ -201,9 +240,11 @@ export function BuySlotsPage() {
             </div>
           </div>
 
-          <button
+          <motion.button
             type="button"
             onClick={explanation.open}
+            whileTap={{ scale: 0.95 }}
+            transition={TAB_PRESS_TRANSITION}
             className="flex items-center justify-between gap-[6px] text-[#A5A6A7] rounded-full px-4 py-3 bg-white/10 text-[14px] cursor-pointer"
           >
             <div className="flex items-center gap-[6px]">
@@ -211,7 +252,7 @@ export function BuySlotsPage() {
               <span>Пояснение к расчёту стоимости</span>
             </div>
             <ChevronRightIcon className="shrink-0" />
-          </button>
+          </motion.button>
 
           <div className="mt-auto">
             <PrimaryButton size="large" onClick={payment.open}>
@@ -267,13 +308,15 @@ export function BuySlotsPage() {
             <span className="text-white text-[16px] font-medium flex-1 text-left">
               {getPaymentMethodLabel(resolvedPaymentMethodId)}
             </span>
-            <button
+            <motion.button
               type="button"
               aria-label="Изменить способ оплаты"
+              whileTap={{ scale: 0.82 }}
+              transition={TAB_PRESS_TRANSITION}
               className="w-[28px] h-[28px] flex items-center justify-center rounded-full border border-white/10 bg-secondary shrink-0 text-white cursor-pointer"
             >
               <ChevronDownIcon className="shrink-0" />
-            </button>
+            </motion.button>
           </div>
         )}
 
@@ -296,26 +339,24 @@ export function BuySlotsPage() {
       >
         <div className="flex flex-col gap-3">
           {availablePaymentMethodIds.map((methodId) => (
-            <button
+            <motion.button
               key={methodId}
               type="button"
-              onClick={() => {
-                setSelectedPaymentMethodId(methodId)
-                void setActivePaymentMethod(methodId)
-                paymentMethodChange.close()
-              }}
+              onClick={() => handleSelectPaymentMethod(methodId)}
+              whileTap={{ scale: 0.95 }}
+              transition={TAB_PRESS_TRANSITION}
               className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex items-center gap-3 w-full cursor-pointer"
             >
               <PaymentMethodIcon methodId={methodId} variant="picker" />
               <span className="text-white text-[16px] font-semibold leading-[130%] flex-1 text-left">
                 {getPaymentMethodLabel(methodId)}
               </span>
-              {resolvedPaymentMethodId === methodId && (
+              {(displayedMethodId ?? resolvedPaymentMethodId) === methodId && (
                 <div className="w-8 h-8 flex items-center justify-center rounded-full bg-[#139D76] shrink-0">
                   <CheckmarkIcon fill="white" className="w-4 h-4" />
                 </div>
               )}
-            </button>
+            </motion.button>
           ))}
         </div>
       </BottomSheet>

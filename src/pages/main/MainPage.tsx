@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
-import { AnimatePresence } from 'motion/react'
+import { AnimatePresence, motion } from 'motion/react'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { useNavigate, useOutletContext } from 'react-router-dom'
 import type { MainViewOutletContext } from '@/views/MainView'
 import { LogoWithText } from '@/components/LogoWithText'
@@ -131,9 +132,11 @@ export function MainPage() {
               </span>
             </div>
 
-            <button
+            <motion.button
               type="button"
               onClick={() => navigate(renewalPath)}
+              whileTap={{ scale: 0.97 }}
+              transition={TAB_PRESS_TRANSITION}
               className="flex items-center justify-between bg-primary p-4 rounded-[16px] cursor-pointer"
             >
               <div className="flex items-center gap-2 text-white">
@@ -145,10 +148,12 @@ export function MainPage() {
               <span className="text-white font-semibold text-[16px]">
                 от {minRenewalPrice} ₽
               </span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
               onClick={() => navigate('/main/setup')}
+              whileTap={{ scale: 0.97 }}
+              transition={TAB_PRESS_TRANSITION}
               className="flex items-center justify-between bg-[#B4CBFF] p-4 rounded-[16px] cursor-pointer mt-[8px]"
             >
               <div className="flex items-center gap-2 text-[#1D4297]">
@@ -160,10 +165,12 @@ export function MainPage() {
               <span className="text-white/50">
                 <SmartphoneIcon />
               </span>
-            </button>
-            <button
+            </motion.button>
+            <motion.button
               type="button"
               onClick={() => navigate('/main/devices')}
+              whileTap={{ scale: 0.95 }}
+              transition={TAB_PRESS_TRANSITION}
               className="flex items-center justify-between px-4 py-[6px] bg-white/10 rounded-full mt-[24px] cursor-pointer"
             >
               <div className="flex items-center gap-1">
@@ -174,11 +181,13 @@ export function MainPage() {
                   {subscription.devices.length}
                 </span>
               </div>
-              <div className="flex items-center gap-1 text-white text-[14px] font-medium">
-                Посмотреть
-                <ChevronRightIcon />
+              <div className="flex items-center gap-1.5 text-white">
+                <span className="text-[14px] font-medium leading-none mb-0.5">
+                  Посмотреть
+                </span>
+                <ChevronRightIcon className="shrink-0" />
               </div>
-            </button>
+            </motion.button>
           </div>
         )}
       </div>

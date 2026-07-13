@@ -2,7 +2,7 @@ import type { ReactNode } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { CloseIcon } from '@/components/icons/CloseIcon'
-import { SHEET_TRANSITION } from '@/js/constants/motion'
+import { SHEET_TRANSITION, TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 interface BottomSheetProps {
   isOpen: boolean
@@ -46,14 +46,16 @@ export function BottomSheet({
               <h2 className="text-white font-semibold text-[24px] leading-[120%]">
                 {title}
               </h2>
-              <button
+              <motion.button
                 type="button"
                 onClick={onClose}
                 aria-label="Закрыть"
+                whileTap={{ scale: 0.82 }}
+                transition={TAB_PRESS_TRANSITION}
                 className="shrink-0 text-white bg-white/10 border border-white/20 rounded-full w-8 h-8 flex items-center justify-center transition-colors cursor-pointer"
               >
                 <CloseIcon />
-              </button>
+              </motion.button>
             </div>
             {children}
           </motion.div>

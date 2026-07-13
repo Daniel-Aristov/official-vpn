@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { CopyButton } from '@/components/UI/CopyButton'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { MailIcon } from '@/components/icons/MailIcon'
@@ -7,6 +8,7 @@ import {
   TELEGRAM_SUPPORT_URL,
   SUPPORT_EMAIL,
 } from '@/js/constants/urls'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 interface ContactCardProps {
   icon: React.ReactNode
@@ -56,14 +58,16 @@ export function ContactSupportPage() {
         title="Чат поддержки в Telegram"
         value={TELEGRAM_SUPPORT_HANDLE}
       >
-        <a
+        <motion.a
           href={TELEGRAM_SUPPORT_URL}
           target="_blank"
           rel="noopener noreferrer"
+          whileTap={{ scale: 0.97 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-fit flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[10px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"
         >
           Перейти в телеграм
-        </a>
+        </motion.a>
       </ContactCard>
 
       <ContactCard
@@ -72,12 +76,14 @@ export function ContactSupportPage() {
         value={SUPPORT_EMAIL}
       >
         <div className="flex items-center gap-2">
-          <a
+          <motion.a
             href={`mailto:${SUPPORT_EMAIL}`}
+            whileTap={{ scale: 0.97 }}
+            transition={TAB_PRESS_TRANSITION}
             className="flex-1 flex items-center justify-center bg-primary text-white font-semibold text-[16px] leading-[20px] py-[10px] px-[12px] rounded-[16px] cursor-pointer"
           >
             Написать обращение
-          </a>
+          </motion.a>
           <CopyButton
             text={SUPPORT_EMAIL}
             className="w-[44px] h-[44px] flex items-center justify-center rounded-full bg-primary text-white cursor-pointer shrink-0"

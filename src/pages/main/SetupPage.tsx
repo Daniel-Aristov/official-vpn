@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { TelegramLinkSheet } from '@/components/TelegramLinkSheet'
 import { InstallSheet } from '@/components/InstallSheet'
+import { PrimaryButton } from '@/components/UI/PrimaryButton'
 import {
   SUBSCRIPTION_DEEP_LINK,
   type InstallPlatform,
@@ -318,57 +319,51 @@ export function SetupPage() {
               </div>
             )}
             {!started ? (
-              <button
-                type="button"
-                onClick={handleStartSetup}
-                className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
-              >
+              <PrimaryButton size="large" onClick={handleStartSetup}>
                 Начать настройку на этом устройстве
-              </button>
+              </PrimaryButton>
             ) : step === TOTAL_STEPS ? (
-              <button
-                type="button"
-                onClick={handleCompleteSetup}
-                className="w-full flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
-              >
+              <PrimaryButton size="large" onClick={handleCompleteSetup}>
                 Завершить настройку
-              </button>
+              </PrimaryButton>
             ) : step === 2 ? (
               <>
-                <a
+                <motion.a
                   href={SUBSCRIPTION_DEEP_LINK}
+                  whileTap={{ scale: 0.97 }}
+                  transition={TAB_PRESS_TRANSITION}
                   className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer no-underline"
                 >
                   <PlusCircleIcon className="w-6 h-6" />
                   Добавить подписку
-                </a>
-                <button
+                </motion.a>
+                <motion.button
                   type="button"
                   onClick={handleNextStep}
+                  whileTap={{ scale: 0.97 }}
+                  transition={TAB_PRESS_TRANSITION}
                   className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
                 >
                   Следующий шаг
                   <ArrowRightIcon />
-                </button>
+                </motion.button>
               </>
             ) : (
               <>
-                <button
-                  type="button"
-                  onClick={installSheet.open}
-                  className="w-full flex items-center justify-center gap-2 bg-primary text-white font-semibold text-[16px] py-[16px] rounded-2xl cursor-pointer"
-                >
+                <PrimaryButton size="large" onClick={installSheet.open}>
                   <DownloadIcon />
                   Установить приложение
-                </button>
-                <button
+                </PrimaryButton>
+                <motion.button
                   type="button"
                   onClick={handleNextStep}
+                  whileTap={{ scale: 0.97 }}
+                  transition={TAB_PRESS_TRANSITION}
                   className="w-full flex items-center justify-center gap-3 text-white font-semibold text-[16px] py-[16px] rounded-2xl bg-[#2C2C2E] cursor-pointer"
                 >
                   Следующий шаг
                   <ArrowRightIcon />
-                </button>
+                </motion.button>
               </>
             )}
           </div>

@@ -1,3 +1,4 @@
+import { motion } from 'motion/react'
 import { CheckmarkIcon } from '@/components/icons/CheckmarkIcon'
 import { CopyButton } from '@/components/UI/CopyButton'
 import { DocumentCheckIcon } from '@/components/icons/DocumentCheckIcon'
@@ -8,6 +9,7 @@ import {
   TELEGRAM_CHANNEL_URL,
   PERSONAL_CABINET_URL,
 } from '@/js/constants/urls'
+import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 import { openInNewTab } from '@/js/helpers/browser'
 import { useUser } from '@/store/user/useUser'
 
@@ -91,13 +93,15 @@ export function AccessPreservationPage() {
         title="Привязать к Telegram-аккаунту"
         subtitle="Будем всегда на связи"
       >
-        <button
+        <motion.button
           type="button"
           onClick={handleLinkTelegram}
+          whileTap={{ scale: 0.97 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-fit flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[10px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"
         >
           Привязать telegram
-        </button>
+        </motion.button>
       </ActionCard>
 
       <ActionCard
@@ -105,14 +109,16 @@ export function AccessPreservationPage() {
         title="Подпишитесь на Telegram-канал"
         subtitle="Для получения важной информации"
       >
-        <a
+        <motion.a
           href={TELEGRAM_CHANNEL_URL}
           target="_blank"
           rel="noopener noreferrer"
+          whileTap={{ scale: 0.97 }}
+          transition={TAB_PRESS_TRANSITION}
           className="w-fit flex items-center justify-center bg-primary text-white font-semibold text-[16px] py-[10px] leading-[20px] px-[12px] rounded-[16px] cursor-pointer"
         >
           Подписаться на канал
-        </a>
+        </motion.a>
       </ActionCard>
 
       <div className="bg-[#FFFFFF]/10 border border-[#FFFFFF]/10 rounded-[24px] p-4 flex flex-col gap-4">
