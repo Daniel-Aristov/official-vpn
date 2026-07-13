@@ -125,7 +125,7 @@ export function SetupPage() {
   }
 
   const isDoneStep = started && step === TOTAL_STEPS
-  const progressRatio = step === 1 ? 0 : step / TOTAL_STEPS
+  const progressRatio = started ? step / TOTAL_STEPS : 0
   const label = SETUP_PLATFORM_LABELS[platform]
 
   return (
@@ -233,21 +233,19 @@ export function SetupPage() {
                 stroke="#3A3A3C"
                 strokeWidth={STROKE_WIDTH}
               />
-              {started && (
-                <motion.circle
-                  cx={CIRCLE_CENTER}
-                  cy={CIRCLE_CENTER}
-                  r={CIRCLE_R}
-                  fill="none"
-                  stroke="#255de0"
-                  strokeWidth={STROKE_WIDTH}
-                  strokeLinecap="round"
-                  transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
-                  initial={false}
-                  animate={{ pathLength: progressRatio }}
-                  transition={{ duration: 0.5, ease: SHEET_EASE }}
-                />
-              )}
+              <motion.circle
+                cx={CIRCLE_CENTER}
+                cy={CIRCLE_CENTER}
+                r={CIRCLE_R}
+                fill="none"
+                stroke="#255de0"
+                strokeWidth={STROKE_WIDTH}
+                strokeLinecap="round"
+                transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
+                initial={{ pathLength: 0 }}
+                animate={{ pathLength: progressRatio }}
+                transition={{ duration: 0.5, ease: SHEET_EASE }}
+              />
             </svg>
             <div className="flex flex-col items-center z-10">
               {started ? (
@@ -308,16 +306,17 @@ export function SetupPage() {
         </div>
 
         <div className="flex flex-col gap-3 mb-4 mt-auto">
-          {!started && (
-            <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-4 py-3 rounded-[24px]">
-              <InfoCircleIcon className="w-6 h-6 text-white/60 shrink-0" />
-              <span className="text-white/80 text-[16px] leading-[120%]">
-                Выберите устройство перед началом
-              </span>
-            </div>
-          )}
-
-          <div className="flex flex-col justify-end gap-3 min-h-[124px]">
+          <div
+            className={`flex flex-col gap-3 ${started ? 'min-h-[124px] justify-end' : ''}`}
+          >
+            {!started && (
+              <div className="flex items-center gap-3 bg-white/10 border border-white/10 px-4 py-3 rounded-[24px]">
+                <InfoCircleIcon className="w-6 h-6 text-white/60 shrink-0" />
+                <span className="text-white/80 text-[16px] leading-[120%]">
+                  Выберите устройство перед началом
+                </span>
+              </div>
+            )}
             {!started ? (
               <button
                 type="button"
