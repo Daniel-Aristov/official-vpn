@@ -13,7 +13,10 @@ import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { HomeIcon } from '@/components/icons/HomeIcon'
 import { PersonIcon } from '@/components/icons/PersonIcon'
-import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
+import {
+  TAB_INDICATOR_TRANSITION,
+  TAB_PRESS_TRANSITION,
+} from '@/js/constants/motion'
 
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },
@@ -52,10 +55,6 @@ const indicatorGlassStyle = {
 
 const TAB_UNIT = `((100% - 8px) / ${tabs.length})`
 
-const LEAD_SPRING = { type: 'spring', stiffness: 420, damping: 34, mass: 0.7 } as const
-const LAG_SPRING = { type: 'spring', stiffness: 280, damping: 30, mass: 0.8 } as const
-const SNAP_SPRING = { type: 'spring', stiffness: 380, damping: 32, mass: 0.7 } as const
-
 function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
@@ -85,17 +84,12 @@ export function BottomTabBar() {
     prevIndexRef.current = activeIndex
     if (activeIndex < 0 || prevIndex === activeIndex || isDragging) return
 
-    const movingRight = activeIndex > prevIndex
-    animate(leadingUnit, activeIndex, movingRight ? LAG_SPRING : LEAD_SPRING)
-    animate(
-      trailingUnit,
-      activeIndex + 1,
-      movingRight ? LEAD_SPRING : LAG_SPRING,
-    )
+    animate(leadingUnit, activeIndex, TAB_INDICATOR_TRANSITION)
+    animate(trailingUnit, activeIndex + 1, TAB_INDICATOR_TRANSITION)
   }, [activeIndex, isDragging, leadingUnit, trailingUnit])
 
   useEffect(() => {
-    animate(dragScaleY, isDragging ? 1.08 : 1, SNAP_SPRING)
+    animate(dragScaleY, isDragging ? 1.08 : 1, TAB_INDICATOR_TRANSITION)
   }, [isDragging, dragScaleY])
 
   const getUnitFromPointer = (clientX: number) => {
@@ -132,8 +126,8 @@ export function BottomTabBar() {
     )
     navigate(tabs[nearestIndex].path)
     if (nearestIndex !== activeIndex) return
-    animate(leadingUnit, activeIndex, SNAP_SPRING)
-    animate(trailingUnit, activeIndex + 1, SNAP_SPRING)
+    animate(leadingUnit, activeIndex, TAB_INDICATOR_TRANSITION)
+    animate(trailingUnit, activeIndex + 1, TAB_INDICATOR_TRANSITION)
   }
 
   return createPortal(

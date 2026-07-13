@@ -8,7 +8,7 @@ export const SHEET_TRANSITION: Transition = {
 }
 
 export const TAB_INDICATOR_TRANSITION: Transition = {
-  duration: 0.35,
+  duration: 0.28,
   ease: SHEET_EASE,
 }
 
