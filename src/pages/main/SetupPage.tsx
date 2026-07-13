@@ -17,9 +17,8 @@ import {
 import { useSheet } from '@/js/helpers/useSheet'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { useUser } from '@/store/user/useUser'
+import { useDownload } from '@/store/download/useDownload'
 import { CopyButton } from '@/components/UI/CopyButton'
-import { fetchDownloadLinks } from '@/js/services/downloadService'
-import { mapDownloadLinksToPlatforms } from '@/js/services/utils/mappers'
 import { ArrowRightIcon } from '@/components/icons/ArrowRightIcon'
 import { ChevronDownIcon } from '@/components/icons/ChevronDownIcon'
 import { ChevronLeftIcon } from '@/components/icons/ChevronLeftIcon'
@@ -49,13 +48,11 @@ export function SetupPage() {
   )
   const [showPlatforms, setShowPlatforms] = useState(openPlatformSelect)
   const [started, setStarted] = useState(false)
-  const [downloadLinks, setDownloadLinks] = useState<
-    Partial<Record<InstallPlatform, string>>
-  >({})
   const installSheet = useSheet()
   const telegramSheet = useSheet()
   const { subscription } = useSubscription()
   const { user } = useUser()
+  const { downloadLinks } = useDownload()
   const isTelegramLinked = user?.isTelegramLinked ?? false
   const vpnKey = subscription?.vpnKey ?? ''
   const currentDevice = useMemo(() => detectCurrentDevice(), [])
@@ -64,22 +61,6 @@ export function SetupPage() {
     if (!openPlatformSelect) return
     navigate(location.pathname, { replace: true, state: null })
   }, [openPlatformSelect, location.pathname, navigate])
-
-  useEffect(() => {
-    let cancelled = false
-
-    fetchDownloadLinks()
-      .then((links) => {
-        if (!cancelled) {
-          setDownloadLinks(mapDownloadLinksToPlatforms(links))
-        }
-      })
-      .catch(() => {})
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
 
   const goToMain = () => {
     telegramSheet.close()

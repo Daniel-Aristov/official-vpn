@@ -9,6 +9,8 @@ import { useUser } from '@/store/user/useUser'
 import { useSubscription } from '@/store/subscription/useSubscription'
 import { usePayment } from '@/store/payment/usePayment'
 import { useReferral } from '@/store/referral/useReferral'
+import { DownloadProvider } from '@/store/download/downloadStore'
+import { useDownload } from '@/store/download/useDownload'
 
 function AppDataLoader({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth()
@@ -16,6 +18,7 @@ function AppDataLoader({ children }: { children: ReactNode }) {
   const { fetchSubscription, fetchRenewalPeriods } = useSubscription()
   const { fetchPaymentData } = usePayment()
   const { fetchReferralData } = useReferral()
+  const { fetchDownloadLinks } = useDownload()
   const isLoadedRef = useRef(false)
 
   useEffect(() => {
@@ -32,6 +35,7 @@ function AppDataLoader({ children }: { children: ReactNode }) {
     void fetchRenewalPeriods()
     void fetchPaymentData()
     void fetchReferralData()
+    void fetchDownloadLinks()
   }, [
     isAuthenticated,
     fetchUser,
@@ -39,6 +43,7 @@ function AppDataLoader({ children }: { children: ReactNode }) {
     fetchRenewalPeriods,
     fetchPaymentData,
     fetchReferralData,
+    fetchDownloadLinks,
   ])
 
   return children
@@ -50,7 +55,9 @@ export function AppStoreProvider({ children }: { children: ReactNode }) {
       <SubscriptionProvider>
         <PaymentProvider>
           <ReferralProvider>
-            <AppDataLoader>{children}</AppDataLoader>
+            <DownloadProvider>
+              <AppDataLoader>{children}</AppDataLoader>
+            </DownloadProvider>
           </ReferralProvider>
         </PaymentProvider>
       </SubscriptionProvider>

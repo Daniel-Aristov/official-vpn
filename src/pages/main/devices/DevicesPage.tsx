@@ -1,4 +1,4 @@
-import { useState, type ChangeEvent } from 'react'
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
@@ -16,10 +16,6 @@ import type { SubscriptionDevice } from '@/js/types/subscription'
 
 const MIN_SLOT_COUNT = 1
 const MAX_SLOT_COUNT = 99
-
-function clampSlotCount(value: number) {
-  return Math.min(MAX_SLOT_COUNT, Math.max(MIN_SLOT_COUNT, value))
-}
 
 function DevicePlatformIcon({ platform }: { platform: string }) {
   const kind = getDevicePlatformKind(platform)
@@ -96,16 +92,6 @@ export function DevicesPage() {
 
   const handleRemoveDevice = (deviceId: string) => {
     void removeDevice(deviceId)
-  }
-
-  const handleSlotCountInput = (event: ChangeEvent<HTMLInputElement>) => {
-    const digits = event.target.value.replace(/\D/g, '').slice(0, 2)
-    if (digits === '') return
-    setSlotCount(clampSlotCount(Number(digits)))
-  }
-
-  const handleSlotCountBlur = () => {
-    setSlotCount((count) => clampSlotCount(count))
   }
 
   return (
@@ -196,17 +182,12 @@ export function DevicesPage() {
                 >
                   −
                 </motion.button>
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  pattern="[0-9]*"
-                  maxLength={2}
-                  value={slotCount}
-                  onChange={handleSlotCountInput}
-                  onBlur={handleSlotCountBlur}
+                <span
                   aria-label="Количество слотов"
-                  className="w-10 text-white font-semibold text-[24px] text-center leading-[115%] bg-transparent border-none outline-none appearance-none"
-                />
+                  className="w-10 text-white font-semibold text-[24px] text-center leading-[115%]"
+                >
+                  {slotCount}
+                </span>
                 <motion.button
                   type="button"
                   onClick={() => setSlotCount((c) => Math.min(MAX_SLOT_COUNT, c + 1))}

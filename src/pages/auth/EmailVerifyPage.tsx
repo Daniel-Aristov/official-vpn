@@ -147,7 +147,7 @@ export function EmailVerifyPage() {
                     style={{
                       caretColor: pressedIndex === index ? 'transparent' : 'auto',
                     }}
-                    className={`w-full h-full px-4 py-2 rounded-2xl bg-white-20 border text-white text-[20px] leading-[100%] font-semibold text-center outline-none ${
+                    className={`w-full h-full p-0 rounded-2xl bg-white-20 border text-white text-[20px] leading-14 font-semibold text-center outline-none tabular-nums appearance-none ${
                       codeError ? 'border-red-400' : 'border-white-10'
                     }`}
                   />
