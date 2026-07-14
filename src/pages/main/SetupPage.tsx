@@ -222,9 +222,9 @@ export function SetupPage() {
                 fill="none"
                 stroke="var(--color-primary)"
                 strokeWidth={STROKE_WIDTH}
-                strokeLinecap="round"
+                strokeLinecap={progressRatio > 0 ? 'round' : 'butt'}
                 transform={`rotate(-90 ${CIRCLE_CENTER} ${CIRCLE_CENTER})`}
-                initial={{ pathLength: 0 }}
+                initial={false}
                 animate={{ pathLength: progressRatio }}
                 transition={{ duration: 0.5, ease: SHEET_EASE }}
               />
