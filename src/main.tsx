@@ -6,31 +6,34 @@ import App from '@/App.tsx'
 import { AuthProvider } from '@/store/auth/authStore'
 import { AppStoreProvider } from '@/store/AppStoreProvider'
 
-function markAppReady() {
-  requestAnimationFrame(() =>
-    document.documentElement.classList.add('app-ready'),
+function renderApp() {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppStoreProvider>
+            <App />
+          </AppStoreProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </StrictMode>,
   )
 }
 
+// Монтируем приложение только когда кадр реально виден пользователю,
+// чтобы анимации входа стартовали в момент показа (одинаково при
+// перезагрузке и при навигации), а не проигрывались вхолостую.
+function start() {
+  requestAnimationFrame(renderApp)
+}
+
 if (document.visibilityState === 'visible') {
-  markAppReady()
+  start()
 } else {
   const onVisible = () => {
     if (document.visibilityState !== 'visible') return
     document.removeEventListener('visibilitychange', onVisible)
-    markAppReady()
+    start()
   }
   document.addEventListener('visibilitychange', onVisible)
 }
-
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <AuthProvider>
-        <AppStoreProvider>
-          <App />
-        </AppStoreProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </StrictMode>,
-)

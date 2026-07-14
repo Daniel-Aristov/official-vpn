@@ -1,5 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
+import { motion } from 'motion/react'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
+import { FADE_TRANSITION } from '@/js/constants/motion'
 
 export function HomePage() {
   const navigate = useNavigate()
@@ -8,12 +10,20 @@ export function HomePage() {
     <main className="flex flex-col flex-1 px-4 py-[100px] max-w-[768px] mx-auto w-full">
       <div className="flex flex-col justify-end flex-1 gap-6 pt-4">
         <section className="flex flex-col justify-end items-center flex-1 gap-3">
-          <img
+          <motion.img
             src="/logo.png"
             alt="Official VPN"
             className="w-[82px] h-[82px] rounded-[27px]"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...FADE_TRANSITION, delay: 0.1 }}
           />
-          <div className="flex flex-col items-center gap-2 w-full">
+          <motion.div
+            className="flex flex-col items-center gap-2 w-full"
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ ...FADE_TRANSITION, delay: 0.18 }}
+          >
             <h1 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px] max-w-[295px]">
               Добро пожаловать
               <br />в Official VPN!
@@ -22,10 +32,15 @@ export function HomePage() {
               Анонимность, скорость и уверенность
               <br />в каждом подключении.
             </p>
-          </div>
+          </motion.div>
         </section>
 
-        <section className="flex flex-col gap-4">
+        <motion.section
+          className="flex flex-col gap-4"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ ...FADE_TRANSITION, delay: 0.26 }}
+        >
           <div className="flex flex-col gap-2">
             <PrimaryButton size="large" onClick={() => navigate('/auth/email')}>
               Войти через почту
@@ -43,7 +58,7 @@ export function HomePage() {
               политикой конфиденциальности
             </Link>
           </p>
-        </section>
+        </motion.section>
       </div>
     </main>
   )

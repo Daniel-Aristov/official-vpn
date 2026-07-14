@@ -101,21 +101,28 @@ export function EmailVerifyPage() {
         <div className="flex flex-col items-center gap-4 flex-1">
           <div className="flex flex-col items-center gap-2 w-full">
             <motion.div
-              initial={{ opacity: 0, scale: 0.85, y: 8 }}
+              initial={{ opacity: 0, scale: 0.85, y: 28 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
-              transition={FADE_TRANSITION}
+              transition={{ ...FADE_TRANSITION, delay: 0.1 }}
               className="p-4 rounded-[16px] bg-accent-blue"
             >
               <PasswordIcon />
             </motion.div>
-            <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
-              Код подтверждения
-            </h2>
-            <p className="text-[16px] text-white-50 text-center leading-[130%] max-w-[295px]">
-              Мы вам отправили код
-              <br />
-              на почту <span className="text-white font-semibold">{email}</span>
-            </p>
+            <motion.div
+              className="flex flex-col items-center gap-2"
+              initial={{ opacity: 0, y: 28 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ ...FADE_TRANSITION, delay: 0.18 }}
+            >
+              <h2 className="text-[24px] font-bold text-white text-center leading-[130%] tracking-[-0.3px]">
+                Код подтверждения
+              </h2>
+              <p className="text-[16px] text-white-50 text-center leading-[130%] max-w-[295px]">
+                Мы вам отправили код
+                <br />
+                на почту <span className="text-white font-semibold">{email}</span>
+              </p>
+            </motion.div>
           </div>
 
           <div className="flex flex-col items-center gap-2">
