@@ -1,9 +1,19 @@
+import { lazy, Suspense } from 'react'
 import type { ReactNode } from 'react'
 import { BottomSheet } from '@/components/BottomSheet'
 import { PrimaryButton } from '@/components/UI/PrimaryButton'
-import { TenLocationFlagsIcon as FourLocationFlagsIcon } from '@/components/icons/FourLocationFlagsIcon'
 import { ShieldCheckIcon } from '@/components/icons/ShieldCheckIcon'
-import { TenLocationFlagsIcon } from '@/components/icons/TenLocationFlagsIcon'
+
+const TenLocationFlagsIcon = lazy(() =>
+  import('@/components/icons/TenLocationFlagsIcon').then((m) => ({
+    default: m.TenLocationFlagsIcon,
+  })),
+)
+const FourLocationFlagsIcon = lazy(() =>
+  import('@/components/icons/FourLocationFlagsIcon').then((m) => ({
+    default: m.TenLocationFlagsIcon,
+  })),
+)
 
 interface UpgradeToProSheetProps {
   isOpen: boolean
@@ -66,7 +76,11 @@ export function UpgradeToProSheet({
               text="Больше 10 локаций"
               iconFill="var(--color-accent-light)"
               textClassName="text-accent-light"
-              trailing={<TenLocationFlagsIcon className="shrink-0" />}
+              trailing={
+                <Suspense fallback={null}>
+                  <TenLocationFlagsIcon className="shrink-0" />
+                </Suspense>
+              }
             />
             <PlanFeature
               text="6 устройств"
@@ -100,7 +114,11 @@ export function UpgradeToProSheet({
               text="Всего 4 локации"
               iconFill="var(--color-white-50)"
               textClassName="text-white-50"
-              trailing={<FourLocationFlagsIcon className="shrink-0" />}
+              trailing={
+                <Suspense fallback={null}>
+                  <FourLocationFlagsIcon className="shrink-0" />
+                </Suspense>
+              }
             />
             <PlanFeature
               text="До 3 устройств"

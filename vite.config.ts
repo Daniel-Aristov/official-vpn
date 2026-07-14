@@ -4,6 +4,7 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { defineConfig, loadEnv } from 'vite'
 import checker from 'vite-plugin-checker'
+import { visualizer } from 'rollup-plugin-visualizer'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const currentDate = new Date().toISOString()
@@ -30,6 +31,16 @@ export default defineConfig(({ mode }) => {
       overlay: true,
       terminal: true,
     }),
+    ...(mode === 'analyze'
+      ? [
+          visualizer({
+            open: true,
+            filename: 'dist/stats.html',
+            gzipSize: true,
+            brotliSize: true,
+          }),
+        ]
+      : []),
   ],
   define: {
     _BUILD_DATE_: JSON.stringify(currentDate)
