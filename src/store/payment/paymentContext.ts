@@ -7,7 +7,10 @@ export interface PaymentState {
   transactions: PaymentTransaction[]
   availablePaymentMethodIds: PaymentMethodId[]
   isLoading: boolean
+  hasMoreTransactions: boolean
+  isLoadingMoreTransactions: boolean
   fetchPaymentData: () => Promise<void>
+  fetchMoreTransactions: () => Promise<void>
   setAutoRenewal: (enabled: boolean) => Promise<void>
   setActivePaymentMethod: (methodId: PaymentMethodId) => void
   enablePaymentMethods: () => Promise<void>

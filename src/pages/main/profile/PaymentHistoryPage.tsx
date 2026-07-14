@@ -212,8 +212,14 @@ function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
 
 function TransactionsTabContent({
   transactions,
+  hasMore,
+  isLoadingMore,
+  onLoadMore,
 }: {
   transactions: PaymentTransaction[]
+  hasMore: boolean
+  isLoadingMore: boolean
+  onLoadMore: () => void
 }) {
   if (transactions.length === 0) {
     return (
@@ -226,6 +232,16 @@ function TransactionsTabContent({
       {transactions.map((transaction) => (
         <TransactionItem key={transaction.id} transaction={transaction} />
       ))}
+      {hasMore && (
+        <button
+          type="button"
+          onClick={onLoadMore}
+          disabled={isLoadingMore}
+          className="bg-white-10 border border-white-10 rounded-[16px] p-4 flex items-center justify-center text-white text-[16px] font-semibold leading-[130%] cursor-pointer w-full disabled:opacity-50"
+        >
+          {isLoadingMore ? 'Загрузка…' : 'Загрузить ещё'}
+        </button>
+      )}
     </div>
   )
 }
@@ -241,6 +257,9 @@ export function PaymentHistoryPage() {
     settings,
     transactions,
     availablePaymentMethodIds,
+    hasMoreTransactions,
+    isLoadingMoreTransactions,
+    fetchMoreTransactions,
     setAutoRenewal,
     setActivePaymentMethod,
     enablePaymentMethods,
@@ -294,7 +313,12 @@ export function PaymentHistoryPage() {
             onSelectPaymentMethod={(id) => void setActivePaymentMethod(id)}
           />
         ) : (
-          <TransactionsTabContent transactions={transactions} />
+          <TransactionsTabContent
+            transactions={transactions}
+            hasMore={hasMoreTransactions}
+            isLoadingMore={isLoadingMoreTransactions}
+            onLoadMore={() => void fetchMoreTransactions()}
+          />
         )}
       </main>
 

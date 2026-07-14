@@ -47,9 +47,15 @@ export async function fetchPaymentSettings(): Promise<PaymentSettings> {
   )
 }
 
-export async function fetchTransactions(
+export interface PaymentTransactionsPage {
+  transactions: PaymentTransaction[]
+  page: number
+  isLast: boolean
+}
+
+export async function fetchTransactionsPage(
   query: PaymentsListQueryDto = {},
-): Promise<PaymentTransaction[]> {
+): Promise<PaymentTransactionsPage> {
   const params = new URLSearchParams()
 
   if (query.page !== undefined) params.set('page', String(query.page))
@@ -71,7 +77,18 @@ export async function fetchTransactions(
     : apiEndpoints.payments.me
 
   const data = await api.get<PaymentsListResponseDto>(path)
-  return data.transactions.map(mapPaymentTransactionDtoToDomain)
+  return {
+    transactions: data.transactions.map(mapPaymentTransactionDtoToDomain),
+    page: data.page,
+    isLast: data.last,
+  }
+}
+
+export async function fetchTransactions(
+  query: PaymentsListQueryDto = {},
+): Promise<PaymentTransaction[]> {
+  const { transactions } = await fetchTransactionsPage(query)
+  return transactions
 }
 
 export async function fetchTransactionById(
