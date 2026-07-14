@@ -1,6 +1,4 @@
 import type { ReactNode } from 'react'
-import { motion } from 'motion/react'
-import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 interface MenuItemProps {
   icon: ReactNode
@@ -12,12 +10,10 @@ interface MenuItemProps {
 
 export function MenuItem({ icon, title, subtitle, onClick }: MenuItemProps) {
   return (
-    <motion.button
+    <button
       type="button"
       onClick={onClick}
-      whileTap={{ scale: 0.97 }}
-      transition={TAB_PRESS_TRANSITION}
-      className="flex items-center gap-3 w-full text-left cursor-pointer"
+      className="tap-scale flex items-center gap-3 w-full text-left cursor-pointer"
     >
       <div className="w-[46px] h-[46px] flex items-center justify-center rounded-[16px] bg-white-10 text-white-50! shrink-0">
         {icon}
@@ -30,6 +26,6 @@ export function MenuItem({ icon, title, subtitle, onClick }: MenuItemProps) {
           {subtitle}
         </span>
       </div>
-    </motion.button>
+    </button>
   )
 }

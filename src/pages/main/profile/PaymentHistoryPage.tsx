@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { motion } from 'motion/react'
 import { DisableAutoRenewalSheet } from '@/components/DisableAutoRenewalSheet'
 import { PaymentMethodIcon } from '@/components/PaymentMethodIcon'
@@ -180,7 +180,11 @@ function TransactionRow({ label, value }: { label: string; value: string }) {
   )
 }
 
-function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
+const TransactionItem = memo(function TransactionItem({
+  transaction,
+}: {
+  transaction: PaymentTransaction
+}) {
   return (
     <div className="bg-white-10 border border-white-10 rounded-[24px] p-4 flex flex-col gap-3">
       <div className="flex items-start justify-between gap-3">
@@ -208,7 +212,7 @@ function TransactionItem({ transaction }: { transaction: PaymentTransaction }) {
       />
     </div>
   )
-}
+})
 
 function TransactionsTabContent({
   transactions,

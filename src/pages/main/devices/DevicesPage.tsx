@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useCallback, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'motion/react'
 import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
@@ -27,7 +27,7 @@ function DevicePlatformIcon({ platform }: { platform: string }) {
   return <MonitorIcon className="w-6 h-6" />
 }
 
-function DeviceItem({
+const DeviceItem = memo(function DeviceItem({
   device,
   onRemove,
 }: {
@@ -79,7 +79,7 @@ function DeviceItem({
       </div>
     </div>
   )
-}
+})
 
 export function DevicesPage() {
   const navigate = useNavigate()
@@ -90,9 +90,12 @@ export function DevicesPage() {
   const devices = subscription?.devices ?? []
   const totalSlots = subscription?.totalSlots ?? 0
 
-  const handleRemoveDevice = (deviceId: string) => {
-    void removeDevice(deviceId)
-  }
+  const handleRemoveDevice = useCallback(
+    (deviceId: string) => {
+      void removeDevice(deviceId)
+    },
+    [removeDevice],
+  )
 
   return (
     <>

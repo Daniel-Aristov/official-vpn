@@ -138,6 +138,20 @@
   display: none;
 }
 
+/* Нажатие: CSS-замена motion whileTap (без runtime-оверхеда) */
+.tap-scale,
+.tap-scale-strong {
+  transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tap-scale:active:not(:disabled) {
+  transform: scale(0.97);
+}
+
+.tap-scale-strong:active:not(:disabled) {
+  transform: scale(0.82);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .glow-anim-1,
   .glow-anim-2,
@@ -148,5 +162,15 @@
   .page-enter,
   .page-enter-counter {
     animation: none;
+  }
+
+  .tap-scale,
+  .tap-scale-strong {
+    transition: none;
+  }
+
+  .tap-scale:active:not(:disabled),
+  .tap-scale-strong:active:not(:disabled) {
+    transform: none;
   }
 }

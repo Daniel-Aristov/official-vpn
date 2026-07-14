@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import * as referralService from '@/js/services/referralService'
 import type { ReferralData } from '@/js/types/referral'
@@ -18,8 +18,13 @@ export function ReferralProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const value = useMemo(
+    () => ({ data, isLoading, fetchReferralData }),
+    [data, isLoading, fetchReferralData],
+  )
+
   return (
-    <ReferralContext.Provider value={{ data, isLoading, fetchReferralData }}>
+    <ReferralContext.Provider value={value}>
       {children}
     </ReferralContext.Provider>
   )

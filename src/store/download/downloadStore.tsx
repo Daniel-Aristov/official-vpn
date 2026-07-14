@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import type { InstallPlatform } from '@/js/constants/urls'
 import { fetchDownloadLinks } from '@/js/services/downloadService'
@@ -23,14 +23,17 @@ export function DownloadProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
+  const value = useMemo(
+    () => ({
+      downloadLinks,
+      isLoading,
+      fetchDownloadLinks: fetchDownloadLinksAction,
+    }),
+    [downloadLinks, isLoading, fetchDownloadLinksAction],
+  )
+
   return (
-    <DownloadContext.Provider
-      value={{
-        downloadLinks,
-        isLoading,
-        fetchDownloadLinks: fetchDownloadLinksAction,
-      }}
-    >
+    <DownloadContext.Provider value={value}>
       {children}
     </DownloadContext.Provider>
   )

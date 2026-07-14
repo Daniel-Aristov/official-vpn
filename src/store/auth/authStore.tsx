@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router-dom'
 import * as authService from '@/js/services/authService'
@@ -65,20 +65,28 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     })
   }, [navigate])
 
-  return (
-    <AuthContext.Provider
-      value={{
-        email,
-        isAuthenticated,
-        isLoading,
-        sendEmailCode,
-        verifyEmailCode,
-        resendEmailCode,
-        logout,
-        setEmail,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const value = useMemo(
+    () => ({
+      email,
+      isAuthenticated,
+      isLoading,
+      sendEmailCode,
+      verifyEmailCode,
+      resendEmailCode,
+      logout,
+      setEmail,
+    }),
+    [
+      email,
+      isAuthenticated,
+      isLoading,
+      sendEmailCode,
+      verifyEmailCode,
+      resendEmailCode,
+      logout,
+      setEmail,
+    ],
   )
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }

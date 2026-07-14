@@ -78,22 +78,37 @@ export function PaymentProvider({ children }: { children: ReactNode }) {
     [settings?.availableMethods],
   )
 
+  const value = useMemo(
+    () => ({
+      settings,
+      transactions,
+      availablePaymentMethodIds,
+      isLoading,
+      hasMoreTransactions,
+      isLoadingMoreTransactions,
+      fetchPaymentData,
+      fetchMoreTransactions,
+      setAutoRenewal,
+      setActivePaymentMethod,
+      enablePaymentMethods,
+    }),
+    [
+      settings,
+      transactions,
+      availablePaymentMethodIds,
+      isLoading,
+      hasMoreTransactions,
+      isLoadingMoreTransactions,
+      fetchPaymentData,
+      fetchMoreTransactions,
+      setAutoRenewal,
+      setActivePaymentMethod,
+      enablePaymentMethods,
+    ],
+  )
+
   return (
-    <PaymentContext.Provider
-      value={{
-        settings,
-        transactions,
-        availablePaymentMethodIds,
-        isLoading,
-        hasMoreTransactions,
-        isLoadingMoreTransactions,
-        fetchPaymentData,
-        fetchMoreTransactions,
-        setAutoRenewal,
-        setActivePaymentMethod,
-        enablePaymentMethods,
-      }}
-    >
+    <PaymentContext.Provider value={value}>
       {children}
     </PaymentContext.Provider>
   )

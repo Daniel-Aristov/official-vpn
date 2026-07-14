@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import type { ReactNode } from 'react'
 import * as userService from '@/js/services/userService'
 import type { User } from '@/js/types/user'
@@ -23,9 +23,10 @@ export function UserProvider({ children }: { children: ReactNode }) {
     setUser(data)
   }, [])
 
-  return (
-    <UserContext.Provider value={{ user, isLoading, fetchUser, linkTelegram }}>
-      {children}
-    </UserContext.Provider>
+  const value = useMemo(
+    () => ({ user, isLoading, fetchUser, linkTelegram }),
+    [user, isLoading, fetchUser, linkTelegram],
   )
+
+  return <UserContext.Provider value={value}>{children}</UserContext.Provider>
 }

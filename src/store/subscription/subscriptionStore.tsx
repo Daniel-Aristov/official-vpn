@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import type { ReactNode } from 'react'
 import { openInNewTab } from '@/js/helpers/browser'
 import { pollPaymentStatus } from '@/js/services/paymentService'
@@ -158,24 +158,41 @@ export function SubscriptionProvider({ children }: { children: ReactNode }) {
     [],
   )
 
+  const value = useMemo(
+    () => ({
+      subscription,
+      renewalPeriods,
+      isLoading,
+      purchaseSuccessPlanType,
+      fetchSubscription,
+      fetchRenewalPeriods,
+      getPeriodsForPlan,
+      getMinRenewalPrice,
+      removeDevice,
+      purchaseSubscription,
+      purchaseSlots,
+      upgradeSubscription,
+      clearPurchaseSuccess,
+    }),
+    [
+      subscription,
+      renewalPeriods,
+      isLoading,
+      purchaseSuccessPlanType,
+      fetchSubscription,
+      fetchRenewalPeriods,
+      getPeriodsForPlan,
+      getMinRenewalPrice,
+      removeDevice,
+      purchaseSubscription,
+      purchaseSlots,
+      upgradeSubscription,
+      clearPurchaseSuccess,
+    ],
+  )
+
   return (
-    <SubscriptionContext.Provider
-      value={{
-        subscription,
-        renewalPeriods,
-        isLoading,
-        purchaseSuccessPlanType,
-        fetchSubscription,
-        fetchRenewalPeriods,
-        getPeriodsForPlan,
-        getMinRenewalPrice,
-        removeDevice,
-        purchaseSubscription,
-        purchaseSlots,
-        upgradeSubscription,
-        clearPurchaseSuccess,
-      }}
-    >
+    <SubscriptionContext.Provider value={value}>
       {children}
     </SubscriptionContext.Provider>
   )

@@ -2,12 +2,10 @@ import { useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import type { PointerEvent as ReactPointerEvent } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { motion } from 'motion/react'
 import { GearIcon } from '@/components/icons/GearIcon'
 import { HeadphonesIcon } from '@/components/icons/HeadphonesIcon'
 import { HomeIcon } from '@/components/icons/HomeIcon'
 import { PersonIcon } from '@/components/icons/PersonIcon'
-import { TAB_PRESS_TRANSITION } from '@/js/constants/motion'
 
 const tabs = [
   { path: '/main', label: 'Главная', icon: HomeIcon, end: true },
@@ -185,7 +183,7 @@ export function BottomTabBar() {
           />
         )}
         {tabs.map((tab, index) => (
-          <motion.button
+          <button
             key={tab.path}
             type="button"
             onClick={() => {
@@ -194,17 +192,15 @@ export function BottomTabBar() {
             }}
             aria-label={tab.label}
             aria-current={isTabActive(tab, location.pathname) ? 'page' : undefined}
-            whileTap={{ scale: 0.82 }}
-            transition={TAB_PRESS_TRANSITION}
             className={[
-              'relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-200',
+              'tap-scale-strong relative z-10 flex flex-1 min-w-0 max-w-full items-center justify-center rounded-full transition-colors duration-200',
               isTabActive(tab, location.pathname)
                 ? 'text-white'
                 : 'text-white-40',
             ].join(' ')}
           >
             <tab.icon />
-          </motion.button>
+          </button>
         ))}
         {activeIndex >= 0 && (
           <div
