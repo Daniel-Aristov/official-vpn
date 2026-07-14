@@ -138,6 +138,13 @@
   display: none;
 }
 
+/* До первого видимого кадра держим анимацию входа на паузе,
+   чтобы при открытии через ссылку она не проигралась вхолостую */
+html:not(.app-ready) .page-enter,
+html:not(.app-ready) .page-enter-counter {
+  animation-play-state: paused;
+}
+
 /* Нажатие: CSS-замена motion whileTap (без runtime-оверхеда) */
 .tap-scale,
 .tap-scale-strong {
