@@ -53,6 +53,12 @@ function clamp(value: number, min: number, max: number) {
   return Math.min(Math.max(value, min), max)
 }
 
+// Откладываем навигацию на кадр после отрисовки, чтобы смещение
+// индикатора рисовалось мгновенно и не блокировалось загрузкой страницы.
+function deferNavigate(fn: () => void) {
+  requestAnimationFrame(() => requestAnimationFrame(fn))
+}
+
 export function BottomTabBar() {
   const location = useLocation()
   const navigate = useNavigate()
@@ -146,7 +152,7 @@ export function BottomTabBar() {
       0,
       tabs.length - 1,
     )
-    navigate(tabs[nearestIndex].path)
+    deferNavigate(() => navigate(tabs[nearestIndex].path))
     if (nearestIndex !== activeIndex) return
     leadingRef.current = activeIndex
     trailingRef.current = activeIndex + 1
@@ -184,7 +190,7 @@ export function BottomTabBar() {
             type="button"
             onClick={() => {
               if (index !== activeIndex && !isDragging) moveIndicatorTo(index)
-              navigate(tab.path)
+              deferNavigate(() => navigate(tab.path))
             }}
             aria-label={tab.label}
             aria-current={isTabActive(tab, location.pathname) ? 'page' : undefined}
