@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { motion } from 'motion/react'
 import { SegmentedTabs } from '@/components/UI/SegmentedTabs'
 import { CopyButton } from '@/components/UI/CopyButton'
@@ -227,7 +228,8 @@ export function ReferralProgramPage() {
       : (money?.referralLink ?? '')
 
   return (
-    <main className="flex flex-col flex-1 pt-4 px-4 pb-4 gap-4 max-w-[768px] mx-auto w-full">
+    <>
+      <main className="flex flex-col flex-1 pt-4 px-4 pb-4 gap-4 max-w-[768px] mx-auto w-full">
       <div className="rounded-[24px] p-4 flex flex-col gap-4 bg-white-10 border border-white-10">
         <div className="w-[56px] h-[56px] flex items-center justify-center rounded-[16px] bg-white-10 text-white">
           <ReferralGiftIcon className="w-6 h-6" />
@@ -249,25 +251,31 @@ export function ReferralProgramPage() {
         onChange={(tab) => setActiveTab(tab as ReferralTab)}
       />
 
-      {activeTab === 'bonuses' ? (
-        <BonusesTabContent
-          invitedCount={bonuses?.invitedCount ?? 0}
-          bonusDays={bonuses?.bonusDays ?? 0}
-        />
-      ) : (
-        <MoneyTabContent
-          invitedCount={money?.invitedCount ?? 0}
-          balance={money?.balance ?? 0}
-          earned={money?.earned ?? 0}
-          withdrawn={money?.withdrawn ?? 0}
-        />
-      )}
+      <div key={activeTab} className="page-enter flex flex-col gap-4">
+        {activeTab === 'bonuses' ? (
+          <BonusesTabContent
+            invitedCount={bonuses?.invitedCount ?? 0}
+            bonusDays={bonuses?.bonusDays ?? 0}
+          />
+        ) : (
+          <MoneyTabContent
+            invitedCount={money?.invitedCount ?? 0}
+            balance={money?.balance ?? 0}
+            earned={money?.earned ?? 0}
+            withdrawn={money?.withdrawn ?? 0}
+          />
+        )}
+      </div>
 
       <div className="shrink-0 h-[72px]" />
+      </main>
 
-      <div className="fixed bottom-[85px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
-        <ReferralLinkCard link={referralLink} />
-      </div>
-    </main>
+      {createPortal(
+        <div className="fixed bottom-[90px] left-0 right-0 px-4 z-40 max-w-[768px] mx-auto">
+          <ReferralLinkCard link={referralLink} />
+        </div>,
+        document.body,
+      )}
+    </>
   )
 }

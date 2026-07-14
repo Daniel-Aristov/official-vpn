@@ -306,24 +306,26 @@ export function PaymentHistoryPage() {
           onChange={(tab) => setActiveTab(tab as PaymentTab)}
         />
 
-        {activeTab === 'methods' ? (
-          <PaymentMethodsTabContent
-            availablePaymentMethodIds={availablePaymentMethodIds}
-            activePaymentMethodId={activePaymentMethodId}
-            isAutoRenewalEnabled={isAutoRenewalEnabled}
-            onDisableClick={disableSheet.open}
-            onEnableClick={handleEnableAutoRenewal}
-            onEnablePaymentMethods={() => void enablePaymentMethods()}
-            onSelectPaymentMethod={(id) => void setActivePaymentMethod(id)}
-          />
-        ) : (
-          <TransactionsTabContent
-            transactions={transactions}
-            hasMore={hasMoreTransactions}
-            isLoadingMore={isLoadingMoreTransactions}
-            onLoadMore={() => void fetchMoreTransactions()}
-          />
-        )}
+        <div key={activeTab} className="page-enter flex flex-col gap-4">
+          {activeTab === 'methods' ? (
+            <PaymentMethodsTabContent
+              availablePaymentMethodIds={availablePaymentMethodIds}
+              activePaymentMethodId={activePaymentMethodId}
+              isAutoRenewalEnabled={isAutoRenewalEnabled}
+              onDisableClick={disableSheet.open}
+              onEnableClick={handleEnableAutoRenewal}
+              onEnablePaymentMethods={() => void enablePaymentMethods()}
+              onSelectPaymentMethod={(id) => void setActivePaymentMethod(id)}
+            />
+          ) : (
+            <TransactionsTabContent
+              transactions={transactions}
+              hasMore={hasMoreTransactions}
+              isLoadingMore={isLoadingMoreTransactions}
+              onLoadMore={() => void fetchMoreTransactions()}
+            />
+          )}
+        </div>
       </main>
 
       <DisableAutoRenewalSheet
